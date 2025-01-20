@@ -18,7 +18,7 @@ def chatWithGpt(prompt):
                     "content": prompt
                 }
             ],
-            model="gpt-4o-mini",
+            model="gpt-4o",
         )
         # Extract the response content
         return str(response.choices[0].model_dump(mode='python')['message']['content'])

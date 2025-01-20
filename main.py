@@ -8,7 +8,7 @@ import chat_with_gpt
 # For interacting with the ChatGPT API
 
 # Set page configuration
-st.set_page_config(page_title="Multi-Page Streamlit App", layout="centered")
+st.set_page_config(page_title="QAI Model", layout="centered")
 
 # Initialize session state for navigation and API response
 if "page" not in st.session_state:
@@ -30,7 +30,7 @@ def show_result():
 if st.session_state.page == "form":
 
     # Form page
-    st.title("Input Form")
+    st.title("QAI Model")
     st.write("Please fill out the form below and submit.")
 
     # Input fields
@@ -75,7 +75,7 @@ if st.session_state.page == "form":
             prompt = prompts.getPromptForOptions(options)
 
             # Interact with ChatGPT API
-            with st.spinner("Communicating with ChatGPT..."):
+            with st.spinner("Generating report..."):
                 api_response = chat_with_gpt.chatWithGpt(prompt)
                 st.session_state.api_response = api_response
 
@@ -101,7 +101,7 @@ elif st.session_state.page == "result":
     st.write(f"**Power of drug**: {st.session_state.powerOfDrug}")
 
     # Display API response
-    st.write("### AI Summary")
+    st.write("### Report")
     if st.session_state.api_response:
         # st.success(st.session_state.api_response)
         components.html(st.session_state.api_response,height=1000,width=1000,scrolling=True)

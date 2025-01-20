@@ -24,7 +24,7 @@ Provide a comprehensive guide for the formulation and testing of $product_name $
 CHECK_RESULTS_PROMPT = Template("""
 Compare the following evaluation results of my $powerOfDrug $product_name for quantity $quanOfMed with the $jurisdiction standards:
 $resultsToCheck
-Please compare these results with the Indian Pharmacopoeia standards and assess whether they meet the required specifications.""")
+Please compare these results with the $jurisdiction standards and assess whether they meet the required specifications.""")
 
 
 def addTextToReturnOnlyHtmlTable(promptWithoutHtml):
@@ -40,7 +40,7 @@ def getPromptForOptions(options):
         prompt_template = METHOD_OF_PREPARATION_PROMPT
     elif options['typeOfInfo'] == "CHARACTARIZATION/EVALUATION":
         prompt_template = CHARACTARIZATION_EVALUATION_PROMPT
-    elif options['typeOfInfo'] == "ALL OF THEM":
+    elif options['typeOfInfo'] == "Both of above":
         prompt_template = COMBINED_PROMPT
     elif options['typeOfInfo'] == "CHECK RESULTS":
         prompt_template = CHECK_RESULTS_PROMPT
