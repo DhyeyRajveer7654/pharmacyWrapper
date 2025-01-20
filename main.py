@@ -91,6 +91,12 @@ if st.session_state.page == "form":
             show_result()
 
 elif st.session_state.page == "result":
+    # Button to go back to the form page
+    if st.button("Go Back"):
+        st.session_state.clear()  # Clears session state
+        st.experimental_rerun()
+        st.switch_page("main")
+        
     # Result page
     st.title("Submission Summary")
     st.write("Thank you for your submission! Here are the details:")
@@ -107,9 +113,3 @@ elif st.session_state.page == "result":
         components.html(st.session_state.api_response,height=1000,width=1000,scrolling=True)
     else:
         st.warning("No response from ChatGPT API.")
-
-    # Button to go back to the form page
-    if st.button("Go Back"):
-        st.session_state.clear()  # Clears session state
-        st.experimental_rerun()
-        st.switch_page("main")

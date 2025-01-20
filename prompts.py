@@ -48,7 +48,7 @@ def getPromptForOptions(options):
         return addTextToReturnOnlyHtmlTable(final_prompt)
     
     if options['jurisdiction'] == "COMPARE WITH ALL OF THEM":
-        jurisdiction = "Compare with all of these: INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA and UNITED STATES PHARMACOPOEIA"
+        jurisdiction = "Show different results according to all of these jurisdictions: INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA and UNITED STATES PHARMACOPOEIA"
     final_prompt = prompt_template.substitute(product_name=options['product_name'], quanOfMed=options['quanOfMed'], powerOfDrug=options['powerOfDrug'], jurisdiction=jurisdiction)
     final_prompt = addTextToReturnOnlyHtmlTable(final_prompt)
     print(final_prompt)
