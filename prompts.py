@@ -1,107 +1,135 @@
-from string import Template
+import streamlit as st
+import streamlit.components.v1 as components
+import openai
+import prompts
+import chat_with_gpt
+import re  # For URL validation
 
-# Templates for various types of pharmaceutical information
-METHOD_OF_PREPARATION_PROMPT = Template("""
-Provide a detailed method for preparing $product_name $quanOfMed, each containing $powerOfDrug of the active ingredient, based on $jurisdiction standards. 
-The information should include: 
-- A list of all materials required, including the active pharmaceutical ingredient (API) and excipients, with their specific quantities for $quanOfMed. 
-- The purpose of each material used in the formulation. 
-- Step-by-step instructions in all the details needed for the preparation process, including quantities and methods for mixing, granulation, drying, lubrication, and compression. 
+# Set page configuration
+st.set_page_config(page_title="QAI Model", layout="centered")
 
-Do not include any information related to evaluation, quality control, or testing procedures. The focus should solely be on the formulation and preparation steps.
-""")
+# Initialize session state for navigation and API response
+if "page" not in st.session_state:
+    st.session_state.page = "form"  # Default page is the form page
+if "api_response" not in st.session_state:
+    st.session_state.api_response = None
+if "chemical_response" not in st.session_state:
+    st.session_state.chemical_response = None
 
-CHARACTARIZATION_EVALUATION_PROMPT = Template("""
-Provide a detailed characterization of $quanOfMed of $product_name, each containing $powerOfDrug of the active ingredient, based on $jurisdiction standards. 
-The response should include: 
-- A list of characterization parameters for the tablets required as per $jurisdiction to test the standards of the prepared formulation, including: 
-  - Physical characteristics (e.g., size, shape, color, appearance) 
-  - Identification tests for $product_name (e.g., IR, UV, HPLC) 
-  - Weight variation 
-  - Hardness test 
-  - Friability test 
-  - Disintegration test 
-  - Dissolution test 
-  - Assay of $product_name content (for content uniformity) 
-  - Related substances (if applicable) 
+# Options
+def show_form():
+    st.session_state.page = "form"
 
-Step-by-step instructions for performing each of the characterization tests, including:
-- Specific methods or apparatus required for each test 
-- Standard operating procedures (SOPs) for each test as per $jurisdiction standards 
-- Acceptable limits and expected outcomes for each test. 
+def show_result():
+    st.session_state.page = "result"
 
-The response should focus solely on characterization parameters and testing procedures, excluding any information related to preparation, formulation, or quality control processes.
-""")
-
-COMBINED_PROMPT = Template("""
-Provide a comprehensive guide for the formulation and testing of $product_name $quanOfMed, each containing $powerOfDrug of the active ingredient, based on $jurisdiction standards. 
-The response should cover all necessary processes as outlined in the $jurisdiction guidelines.
-
-1. **Formulation Process**:
-   - Materials and Quantities: List all the required substances, including the active ingredient and excipients, with their specific quantities for preparing $quanOfMed. 
-   - For each ingredient, explain its role in the final product. (TABLE FORM)
-   - Detailed Instructions: Outline the complete procedure for preparing the tablets, including the precise quantities of materials to be used. 
-   - This should cover all necessary stages of the formulation, ensuring that each stage is in accordance with the standards prescribed in the $jurisdiction. 
-
-2. **Testing and Analysis**:
-   - Testing Criteria: Provide a full description of the criteria for testing the final product, in line with the $jurisdiction. 
-   - For each aspect of testing, describe the methods, tools, and procedures required to ensure the final product meets the prescribed specifications. 
-   - Standards and Expectations: For each test, detail the acceptable limits and expected results, as stated in the $jurisdiction guidelines, to ensure the formulation meets the required specifications for quality and efficacy. 
-
-The response should focus solely on the formulation and testing processes, with no inclusion of information related to quality control or unrelated procedures.
-""")
-
-CHECK_RESULTS_PROMPT = Template("""
-Compare the following evaluation results of my $powerOfDrug $product_name for quantity $quanOfMed with the $jurisdiction standards:
-$resultsToCheck
-
-Please compare these results with the $jurisdiction standards and assess whether they meet the required specifications.
-""")
-
-# **New prompt for retrieving the chemical structure of a drug**
-CHEMICAL_STRUCTURE_PROMPT = Template("""
-Provide a high-quality image (PNG, JPEG, or JPG) of the chemical structure of $product_name. 
-The structure must be sourced from trusted scientific databases such as:
-- **Pharmacopoeias**
-- **PubChem**
-- **PubMed**
-- **NCBI**
-- **Peer-reviewed scholarly articles** 
-
-Additionally, include the **IUPAC name** and **molecular formula** alongside the structure if available. 
-Ensure the structure matches the standard representation from these authoritative sources.
-""")
-
-# Function to ensure output is only an HTML table
-def addTextToReturnOnlyHtmlTable(promptWithoutHtml):
-    promptToOnlyGetHtmlTable = "\nEnsure the response is only a valid HTML table with no additional text or explanation. The table should have a black background (background-color: black) and all text should be white (color: white) with white borders and proper spacing. Format the response as clean, minimal HTML."
-    return promptWithoutHtml + promptToOnlyGetHtmlTable
-
-# Function to generate the required prompt based on user-selected options
-def getPromptForOptions(options):
-    jurisdiction = ""
-    if options['jurisdiction'] == "COMPARE WITH ALL OF THEM":
-        jurisdiction = "INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA, and UNITED STATES PHARMACOPOEIA"
+# Page logic
+if st.session_state.page == "form":
+    # Form page
+    st.title("QAI Model")
+    st.write("Please fill out the form below and submit.")
     
-    prompt_template = Template("")
-    if options['typeOfInfo'] == "METHOD OF PREPARATION":
-        prompt_template = METHOD_OF_PREPARATION_PROMPT
-    elif options['typeOfInfo'] == "CHARACTARIZATION/EVALUATION":
-        prompt_template = CHARACTARIZATION_EVALUATION_PROMPT
-    elif options['typeOfInfo'] == "Both of above":
-        prompt_template = COMBINED_PROMPT
-    elif options['typeOfInfo'] == "CHECK RESULTS":
-        prompt_template = CHECK_RESULTS_PROMPT
-        final_prompt = prompt_template.substitute(product_name=options['product_name'], quanOfMed=options['quanOfMed'], powerOfDrug=options['powerOfDrug'], jurisdiction=jurisdiction, resultsToCheck=options['resultsToCheck'])
-        return addTextToReturnOnlyHtmlTable(final_prompt)
+    # Input fields for full query
+    product_name = st.text_input("Product Name", placeholder="For example: Paracetamol")
+    quanOfMed = st.text_input("Quantity of medicine", placeholder="For example: 1000 capsules, 1000 ml")
+    powerOfDrug = st.text_input("Power of drug", placeholder="For example: 10 mg")
     
-    if options['jurisdiction'] == "COMPARE WITH ALL OF THEM":
-        jurisdiction = "Show different results according to all of these jurisdictions: INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA, and UNITED STATES PHARMACOPOEIA"
+    # Options
+    typeOfInfo = st.selectbox("Select information required", [
+        "METHOD OF PREPARATION",
+        "CHARACTERIZATION/EVALUATION",
+        "Both of above",
+        "CHECK RESULTS"
+    ])
     
-    final_prompt = prompt_template.substitute(product_name=options['product_name'], quanOfMed=options['quanOfMed'], powerOfDrug=options['powerOfDrug'], jurisdiction=jurisdiction)
-    final_prompt = addTextToReturnOnlyHtmlTable(final_prompt)
-    return final_prompt
+    jurisdiction = st.selectbox("Select jurisdiction", [
+        "INDIAN PHARMACOPIEA",
+        "BRITISH PHARMACOPIEA",
+        "UNITED STATES PHARMACOPOEIA",
+        "COMPARE WITH ALL OF THEM"
+    ])
+    
+    resultsToCheck = ""
+    if typeOfInfo == "CHECK RESULTS":
+        resultsToCheck = st.text_area("Write your results", placeholder="Enter evaluation results here...", height=250)
+    
+    # Submit button
+    if st.button("Submit"):
+        if not all([product_name.strip(), quanOfMed.strip(), powerOfDrug.strip()]):
+            st.error("Please fill in all the required fields!")
+        else:
+            # Prepare data for ChatGPT API request
+            options = {
+                "product_name": product_name,
+                "quanOfMed": quanOfMed,
+                "powerOfDrug": powerOfDrug,
+                "typeOfInfo": typeOfInfo,
+                "jurisdiction": jurisdiction,
+                "resultsToCheck": resultsToCheck if typeOfInfo == "CHECK RESULTS" else ""
+            }
+            prompt = prompts.getPromptForOptions(options)
+            
+            # Interact with ChatGPT API
+            with st.spinner("Generating report..."):
+                st.session_state.api_response = chat_with_gpt.chatWithGpt(prompt)
+            
+            # Save inputs in session state
+            st.session_state.update(options)
+            
+            # Navigate to result page
+            show_result()
+    
+    st.write("---")
+    
+    # New section for chemical structure query
+    st.subheader("Get Chemical Structure")
+    chemical_product_name = st.text_input("Enter only the Product Name", placeholder="For example: Aspirin")
+    
+    if st.button("Get Chemical Structure"):
+        if chemical_product_name.strip() == "":
+            st.error("Please enter a product name!")
+        else:
+            # Generate prompt for chemical structure
+            chemical_prompt = prompts.getPromptForChemicalStructure(chemical_product_name)
+            
+            # Interact with ChatGPT API for chemical structure
+            with st.spinner("Fetching chemical structure..."):
+                st.session_state.chemical_response = chat_with_gpt.chatWithGpt(chemical_prompt)
+            
+            # Navigate to result page
+            show_result()
 
-# Function to get the prompt for only the chemical structure
-def getPromptForChemicalStructure(product_name):
-    return CHEMICAL_STRUCTURE_PROMPT.substitute(product_name=product_name)
+elif st.session_state.page == "result":
+    # Button to go back to the form page
+    if st.button("Go Back"):
+        st.session_state.clear()  # Clears session state
+        st.experimental_rerun()
+    
+    # Result page
+    st.title("Submission Summary")
+    st.write("Thank you for your submission! Here are the details:")
+    
+    # Display submitted details
+    st.write(f"**Product Name**: {st.session_state.get('product_name', 'N/A')}")
+    st.write(f"**Quantity of meds**: {st.session_state.get('quanOfMed', 'N/A')}")
+    st.write(f"**Power of drug**: {st.session_state.get('powerOfDrug', 'N/A')}")
+    
+    # Display API response
+    st.write("### Report")
+    if st.session_state.api_response:
+        components.html(st.session_state.api_response, height=1000, width=1000, scrolling=True)
+    else:
+        st.warning("No response from ChatGPT API.")
+    
+    # Display Chemical Structure Result (Image)
+    st.write("### Chemical Structure")
+    
+    if st.session_state.chemical_response:
+        # Validate the response as a valid URL (e.g., from PubChem or other sources)
+        url_pattern = re.compile(r'^(https?:\/\/[^\s]+)$')
+        if url_pattern.match(st.session_state.chemical_response):
+            st.image(st.session_state.chemical_response, caption="Chemical Structure Image", use_column_width=True)
+        else:
+            st.warning("Invalid URL or chemical structure image not found.")
+    else:
+        st.warning("No chemical structure found.")
