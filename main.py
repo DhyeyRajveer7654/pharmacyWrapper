@@ -126,10 +126,16 @@ elif st.session_state.page == "result":
     if st.session_state.chemical_response:
         # Assuming the AI response is base64-encoded image data
         try:
-            # Convert base64 string to bytes
-            img_data = base64.b64decode(st.session_state.chemical_response)
-            st.image(img_data, caption="Chemical Structure Image", use_column_width=True)
-        except Exception as e:
-            st.warning("Failed to decode image data.")
+        import base64
+from io import BytesIO
+from PIL import Image
+
+if st.session_state.chemical_response:
+    # If the response is a base64 string, handle it
+    if st.session_state.chemical_response.startswith('data:image/png;base64,'):
+        img_data = st.session_state.chemical_response.split(",")[1]
+        img_data = base64.b64decode(img_data)
+        img = Image.open(BytesIO(img_data))
+        st.image(img, caption="Chemical Structure Image", use_column_width=True)
     else:
-        st.warning("No chemical structure found.")
+        st.warning("The provided response is not a valid image.")
