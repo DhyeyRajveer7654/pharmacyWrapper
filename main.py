@@ -15,9 +15,7 @@ if "api_response" not in st.session_state:
 if "chemical_response" not in st.session_state:
     st.session_state.chemical_response = None
 
-# Options\options = dict()
-
-# Define functions to handle navigation
+# Options
 def show_form():
     st.session_state.page = "form"
 
@@ -31,47 +29,51 @@ if st.session_state.page == "form":
     st.write("Please fill out the form below and submit.")
     
     # Input fields for full query
-    options["product_name"] = st.text_input("Product Name", placeholder="For example: Paracetamol")
-    options["quanOfMed"] = st.text_input("Quantity of medicine", placeholder="For example: 1000 capsules, 1000 ml")
-    options["powerOfDrug"] = st.text_input("Power of drug", placeholder="For example: 10 mg")
+    product_name = st.text_input("Product Name", placeholder="For example: Paracetamol")
+    quanOfMed = st.text_input("Quantity of medicine", placeholder="For example: 1000 capsules, 1000 ml")
+    powerOfDrug = st.text_input("Power of drug", placeholder="For example: 10 mg")
     
     # Options
-    options["typeOfInfo"] = st.selectbox("Select information required", [
+    typeOfInfo = st.selectbox("Select information required", [
         "METHOD OF PREPARATION",
-        "CHARACTARIZATION/EVALUATION",
+        "CHARACTERIZATION/EVALUATION",
         "Both of above",
         "CHECK RESULTS"
     ])
     
-    options["jurisdiction"] = st.selectbox("Select jurisdiction", [
+    jurisdiction = st.selectbox("Select jurisdiction", [
         "INDIAN PHARMACOPIEA",
         "BRITISH PHARMACOPIEA",
         "UNITED STATES PHARMACOPOEIA",
         "COMPARE WITH ALL OF THEM"
     ])
     
-    if options["typeOfInfo"] == "CHECK RESULTS":
-        options["resultsToCheck"] = st.text_area("Write your results", placeholder="Enter evaluation results here...", key="checkResults", height=250)
+    resultsToCheck = ""
+    if typeOfInfo == "CHECK RESULTS":
+        resultsToCheck = st.text_area("Write your results", placeholder="Enter evaluation results here...", height=250)
     
     # Submit button
     if st.button("Submit"):
-        if not all([options["product_name"].strip(), options["quanOfMed"].strip(), options["powerOfDrug"].strip()]):
+        if not all([product_name.strip(), quanOfMed.strip(), powerOfDrug.strip()]):
             st.error("Please fill in all the required fields!")
         else:
             # Prepare data for ChatGPT API request
+            options = {
+                "product_name": product_name,
+                "quanOfMed": quanOfMed,
+                "powerOfDrug": powerOfDrug,
+                "typeOfInfo": typeOfInfo,
+                "jurisdiction": jurisdiction,
+                "resultsToCheck": resultsToCheck if typeOfInfo == "CHECK RESULTS" else ""
+            }
             prompt = prompts.getPromptForOptions(options)
             
             # Interact with ChatGPT API
             with st.spinner("Generating report..."):
-                api_response = chat_with_gpt.chatWithGpt(prompt)
-                st.session_state.api_response = api_response
+                st.session_state.api_response = chat_with_gpt.chatWithGpt(prompt)
             
             # Save inputs in session state
-            st.session_state.product_name = options["product_name"]
-            st.session_state.quanOfMed = options["quanOfMed"]
-            st.session_state.powerOfDrug = options["powerOfDrug"]
-            st.session_state.typeOfInfo = options["typeOfInfo"]
-            st.session_state.jurisdiction = options["jurisdiction"]
+            st.session_state.update(options)
             
             # Navigate to result page
             show_result()
@@ -91,8 +93,7 @@ if st.session_state.page == "form":
             
             # Interact with ChatGPT API
             with st.spinner("Fetching chemical structure..."):
-                chemical_response = chat_with_gpt.chatWithGpt(chemical_prompt)
-                st.session_state.chemical_response = chemical_response
+                st.session_state.chemical_response = chat_with_gpt.chatWithGpt(chemical_prompt)
             
             # Navigate to result page
             show_result()
@@ -108,9 +109,9 @@ elif st.session_state.page == "result":
     st.write("Thank you for your submission! Here are the details:")
     
     # Display submitted details
-    st.write(f"**Product Name**: {st.session_state.product_name}")
-    st.write(f"**Quantity of meds**: {st.session_state.quanOfMed}")
-    st.write(f"**Power of drug**: {st.session_state.powerOfDrug}")
+    st.write(f"**Product Name**: {st.session_state.get('product_name', 'N/A')}")
+    st.write(f"**Quantity of meds**: {st.session_state.get('quanOfMed', 'N/A')}")
+    st.write(f"**Power of drug**: {st.session_state.get('powerOfDrug', 'N/A')}")
     
     # Display API response
     st.write("### Report")
