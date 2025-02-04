@@ -2,10 +2,8 @@ import streamlit as st
 import streamlit.components.v1 as components
 import openai
 import prompts
-from openai import OpenAI
 import chat_with_gpt
-
-# For interacting with the ChatGPT API
+import webbrowser
 
 # Set page configuration
 st.set_page_config(page_title="QAI Model", layout="centered")
@@ -33,14 +31,12 @@ if st.session_state.page == "form":
     st.title("QAI Model")
     st.write("Please fill out the form below and submit.")
 
-    # Input fields
+    # Input fields for full query
     options["product_name"] = st.text_input("Product Name", placeholder="For example: Paracetamol")
-    options["quanOfMed"] = st.text_input("Quantity of medicine", placeholder=" For example: 1000 capsules, 1000 ml")
-    options["powerOfDrug"] = st.text_input("Power of drug",placeholder=" For example: 10 mg")
-    # multiline_input = st.text_area("Multiline Text Input", placeholder="Enter detailed information here", height=100)
+    options["quanOfMed"] = st.text_input("Quantity of medicine", placeholder="For example: 1000 capsules, 1000 ml")
+    options["powerOfDrug"] = st.text_input("Power of drug", placeholder="For example: 10 mg")
 
     # Options
-    
     options["typeOfInfo"] = st.selectbox("Select information required", 
                               ["METHOD OF PREPARATION", 
                                "CHARACTARIZATION/EVALUATION", 
@@ -53,22 +49,12 @@ if st.session_state.page == "form":
                                "UNITED STATES PHARMACOPOEIA", 
                                "COMPARE WITH ALL OF THEM"])
 
-    if options["typeOfInfo"]=="CHECK RESULTS":
-        options["resultsToCheck"] = st.text_area("Write you results",placeholder="""For e.g. 
-        The tablet has an acceptable appearance with good shape and color.
-        The IR spectrum matches the expected profile for Azithromycin.
-        The HPLC results are consistent with the standard.
-        The weight variation is ±2.8%.
-        The tablet hardness is 5 kg.
-        The friability is 0.8325%.
-        The disintegration time is 23 minutes.
-        The dissolution rate is 96.5%.
-        The assay of Azithromycin content is 100%.
-        """,key="checkResults", height=250)
+    if options["typeOfInfo"] == "CHECK RESULTS":
+        options["resultsToCheck"] = st.text_area("Write your results", placeholder="Enter evaluation results here...", key="checkResults", height=250)
     
     # Submit button
     if st.button("Submit"):
-        if options["product_name"].strip() == "" or options["quanOfMed"].strip() == "" or options["powerOfDrug"].strip() == "":
+        if not all([options["product_name"].strip(), options["quanOfMed"].strip(), options["powerOfDrug"].strip()]):
             st.error("Please fill in all the required fields!")
         else:
             # Prepare data for ChatGPT API request
@@ -82,20 +68,40 @@ if st.session_state.page == "form":
             # Save inputs in session state
             st.session_state.product_name = options["product_name"]
             st.session_state.quanOfMed = options["quanOfMed"]
+            st.session_state.powerOfDrug = options["powerOfDrug"]
             st.session_state.typeOfInfo = options["typeOfInfo"]
             st.session_state.jurisdiction = options["jurisdiction"]
-            st.session_state.powerOfDrug = options["powerOfDrug"]
 
             # Navigate to result page
             st.write("Click submit again to see results")
             show_result()
+
+    st.write("---")
+
+    # New section for chemical structure query
+    st.subheader("Get Chemical Structure")
+    chemical_product_name = st.text_input("Enter only the Product Name", placeholder="For example: Aspirin")
+
+    if st.button("Get Chemical Structure"):
+        if chemical_product_name.strip() == "":
+            st.error("Please enter a product name!")
+        else:
+            # Generate prompt for chemical structure
+            chemical_prompt = prompts.getPromptForChemicalStructure(chemical_product_name)
+
+            # Interact with ChatGPT API
+            with st.spinner("Fetching chemical structure..."):
+                chemical_response = chat_with_gpt.chatWithGpt(chemical_prompt)
+
+            # Open the response in a new tab
+            new_tab_url = f"https://www.google.com/search?q={chemical_product_name}+chemical+structure"
+            webbrowser.open_new_tab(new_tab_url)
 
 elif st.session_state.page == "result":
     # Button to go back to the form page
     if st.button("Go Back"):
         st.session_state.clear()  # Clears session state
         st.experimental_rerun()
-        st.switch_page("main")
         
     # Result page
     st.title("Submission Summary")
@@ -109,7 +115,6 @@ elif st.session_state.page == "result":
     # Display API response
     st.write("### Report")
     if st.session_state.api_response:
-        # st.success(st.session_state.api_response)
-        components.html(st.session_state.api_response,height=1000,width=1000,scrolling=True)
+        components.html(st.session_state.api_response, height=1000, width=1000, scrolling=True)
     else:
         st.warning("No response from ChatGPT API.")
