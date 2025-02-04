@@ -3,6 +3,7 @@ import streamlit.components.v1 as components
 import openai
 import prompts
 import chat_with_gpt
+import re  # For URL validation
 
 # Set page configuration
 st.set_page_config(page_title="QAI Model", layout="centered")
@@ -122,8 +123,13 @@ elif st.session_state.page == "result":
     
     # Display Chemical Structure Result (Image)
     st.write("### Chemical Structure")
+    
     if st.session_state.chemical_response:
-        # Display the image URL as an image
-        st.image(st.session_state.chemical_response, caption="Chemical Structure Image", use_column_width=True)
+        # Validate the response as a valid URL (e.g., from PubChem or other sources)
+        url_pattern = re.compile(r'^(https?:\/\/[^\s]+)$')
+        if url_pattern.match(st.session_state.chemical_response):
+            st.image(st.session_state.chemical_response, caption="Chemical Structure Image", use_column_width=True)
+        else:
+            st.warning("Invalid URL or chemical structure image not found.")
     else:
         st.warning("No chemical structure found.")
