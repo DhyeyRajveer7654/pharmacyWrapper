@@ -2,6 +2,7 @@ import streamlit as st
 import openai
 import prompts  # Ensure that prompts is imported
 import chat_with_gpt  # Assuming this is the module for interacting with GPT
+import base64
 
 # Set page configuration
 st.set_page_config(page_title="QAI Model", layout="centered")
@@ -123,10 +124,12 @@ elif st.session_state.page == "result":
     st.write("### Chemical Structure")
     
     if st.session_state.chemical_response:
-        # Ensure the response contains a valid image URL
-        if st.session_state.chemical_response.strip().lower().endswith(('.png', '.jpg', '.jpeg')):
-            st.image(st.session_state.chemical_response, caption="Chemical Structure Image", use_column_width=True)
-        else:
-            st.warning("No valid image found in the response.")
+        # Assuming the AI response is base64-encoded image data
+        try:
+            # Convert base64 string to bytes
+            img_data = base64.b64decode(st.session_state.chemical_response)
+            st.image(img_data, caption="Chemical Structure Image", use_column_width=True)
+        except Exception as e:
+            st.warning("Failed to decode image data.")
     else:
         st.warning("No chemical structure found.")
