@@ -1,9 +1,7 @@
 import streamlit as st
-import streamlit.components.v1 as components
 import openai
-import prompts  # Make sure to import the prompts file
-import chat_with_gpt
-import re  # For URL validation
+import prompts  # Ensure that prompts is imported
+import chat_with_gpt  # Assuming this is the module for interacting with GPT
 
 # Set page configuration
 st.set_page_config(page_title="QAI Model", layout="centered")
@@ -69,7 +67,7 @@ if st.session_state.page == "form":
             }
             prompt = prompts.getPromptForOptions(options)
             
-            # Interact with ChatGPT API
+            # Interact with ChatGPT API request
             with st.spinner("Generating report..."):
                 st.session_state.api_response = chat_with_gpt.chatWithGpt(prompt)
             
@@ -117,7 +115,7 @@ elif st.session_state.page == "result":
     # Display API response
     st.write("### Report")
     if st.session_state.api_response:
-        components.html(st.session_state.api_response, height=1000, width=1000, scrolling=True)
+        st.write(st.session_state.api_response)
     else:
         st.warning("No response from ChatGPT API.")
     
@@ -125,11 +123,10 @@ elif st.session_state.page == "result":
     st.write("### Chemical Structure")
     
     if st.session_state.chemical_response:
-        # Validate the response as a valid URL (e.g., from PubChem or other sources)
-        url_pattern = re.compile(r'^(https?:\/\/[^\s]+)$')
-        if url_pattern.match(st.session_state.chemical_response):
+        # Ensure the response contains a valid image URL
+        if st.session_state.chemical_response.strip().lower().endswith(('.png', '.jpg', '.jpeg')):
             st.image(st.session_state.chemical_response, caption="Chemical Structure Image", use_column_width=True)
         else:
-            st.warning("Invalid URL or chemical structure image not found.")
+            st.warning("No valid image found in the response.")
     else:
         st.warning("No chemical structure found.")
