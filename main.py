@@ -1,7 +1,7 @@
 import streamlit as st
 import streamlit.components.v1 as components
 import openai
-import prompts
+import prompts  # Make sure to import the prompts file
 import chat_with_gpt
 import re  # For URL validation
 
@@ -37,7 +37,7 @@ if st.session_state.page == "form":
     # Options
     typeOfInfo = st.selectbox("Select information required", [
         "METHOD OF PREPARATION",
-        "CHARACTERIZATION/EVALUATION",
+        "CHARACTARIZATION/EVALUATION",
         "Both of above",
         "CHECK RESULTS"
     ])
@@ -92,7 +92,7 @@ if st.session_state.page == "form":
             # Generate prompt for chemical structure
             chemical_prompt = prompts.getPromptForChemicalStructure(chemical_product_name)
             
-            # Interact with ChatGPT API
+            # Interact with ChatGPT API for chemical structure
             with st.spinner("Fetching chemical structure..."):
                 st.session_state.chemical_response = chat_with_gpt.chatWithGpt(chemical_prompt)
             
