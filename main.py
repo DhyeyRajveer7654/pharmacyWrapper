@@ -125,4 +125,7 @@ elif st.session_state.page == "result":
     if st.session_state.chemical_response:
         components.html(st.session_state.chemical_response, height=500, width=800, scrolling=True)
     else:
-        st.warning("No chemical structure found.")
+        # Fetch image from PubChem
+chemical_image_url = f"https://pubchem.ncbi.nlm.nih.gov/image/imagefly.cgi?cid={pubchem_cid}&width=500&height=500"
+st.image(chemical_image_url, caption=f"Chemical Structure of {st.session_state.product_name}")
+
