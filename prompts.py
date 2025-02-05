@@ -60,18 +60,14 @@ Please compare these results with the $jurisdiction standards and assess whether
 """)
 
 # **New prompt for retrieving the chemical structure of a drug**
-CHEMICAL_STRUCTURE_PROMPT = Template("""
-Provide a high-quality image (PNG, JPEG, or JPG) of the chemical structure of $product_name. 
-The structure must be sourced from trusted scientific databases such as:
-- **Pharmacopoeias**
-- **PubChem**
-- **PubMed**
-- **NCBI**
-- **Peer-reviewed scholarly articles** 
+from string import Template
 
-Additionally, include the **IUPAC name** and **molecular formula** alongside the structure if available. 
-Ensure the structure matches the standard representation from these authoritative sources.
+CHEMICAL_STRUCTURE_PROMPT = Template("""
+Find and provide a direct URL to the chemical structure image of $product_name from trusted sources like PubChem, PubMed, or Google Scholar.
 """)
+
+def getChemicalStructurePrompt(product_name):
+    return CHEMICAL_STRUCTURE_PROMPT.substitute(product_name=product_name)
 
 # Function to ensure output is only an HTML table
 def addTextToReturnOnlyHtmlTable(promptWithoutHtml):
