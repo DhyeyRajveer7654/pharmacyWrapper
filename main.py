@@ -1,11 +1,9 @@
 import streamlit as st
 import streamlit.components.v1 as components
 import openai
+from string import Template
 import prompts
-from openai import OpenAI
 import chat_with_gpt
-
-# For interacting with the ChatGPT API
 
 # Set page configuration
 st.set_page_config(page_title="QAI Model", layout="centered")
@@ -36,36 +34,30 @@ if st.session_state.page == "form":
     # Input fields
     options["product_name"] = st.text_input("Product Name", placeholder="For example: Paracetamol")
     options["quanOfMed"] = st.text_input("Quantity of medicine", placeholder=" For example: 1000 capsules, 1000 ml")
-    options["powerOfDrug"] = st.text_input("Power of drug",placeholder=" For example: 10 mg")
-    # multiline_input = st.text_area("Multiline Text Input", placeholder="Enter detailed information here", height=100)
+    options["powerOfDrug"] = st.text_input("Power of drug", placeholder="For example: 10 mg")
 
-    # Options
-    
+    # Options for selection
     options["typeOfInfo"] = st.selectbox("Select information required", 
                               ["METHOD OF PREPARATION", 
                                "CHARACTARIZATION/EVALUATION", 
                                "Both of above",
-                               "CHECK RESULTS" 
-                               ])
+                               "CHECK RESULTS"])
     options["jurisdiction"] = st.selectbox("Select jurisdiction", 
                               ["INDIAN PHARMACOPIEA", 
                                "BRITISH PHARMACOPIEA", 
                                "UNITED STATES PHARMACOPOEIA", 
                                "COMPARE WITH ALL OF THEM"])
 
-    if options["typeOfInfo"]=="CHECK RESULTS":
-        options["resultsToCheck"] = st.text_area("Write you results",placeholder="""For e.g. 
+    if options["typeOfInfo"] == "CHECK RESULTS":
+        options["resultsToCheck"] = st.text_area("Write your results", placeholder="""For example: 
         The tablet has an acceptable appearance with good shape and color.
-        The IR spectrum matches the expected profile for Azithromycin.
-        The HPLC results are consistent with the standard.
-        The weight variation is ±2.8%.
-        The tablet hardness is 5 kg.
-        The friability is 0.8325%.
-        The disintegration time is 23 minutes.
-        The dissolution rate is 96.5%.
-        The assay of Azithromycin content is 100%.
-        """,key="checkResults", height=250)
-    
+        The IR spectrum matches the expected profile for Azithromycin.""", height=250)
+
+    # Button to get structure
+    if st.button("Get Structure"):
+        # Placeholder for future functionality
+        st.write("Functionality to retrieve structure will be added here.")
+
     # Submit button
     if st.button("Submit"):
         if options["product_name"].strip() == "" or options["quanOfMed"].strip() == "" or options["powerOfDrug"].strip() == "":
@@ -95,7 +87,6 @@ elif st.session_state.page == "result":
     if st.button("Go Back"):
         st.session_state.clear()  # Clears session state
         st.experimental_rerun()
-        st.switch_page("main")
         
     # Result page
     st.title("Submission Summary")
@@ -109,7 +100,6 @@ elif st.session_state.page == "result":
     # Display API response
     st.write("### Report")
     if st.session_state.api_response:
-        # st.success(st.session_state.api_response)
-        components.html(st.session_state.api_response,height=1000,width=1000,scrolling=True)
+        components.html(st.session_state.api_response, height=1000, width=1000, scrolling=True)
     else:
         st.warning("No response from ChatGPT API.")
