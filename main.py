@@ -1,8 +1,11 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import openai
-import prompts  # Ensure that prompts is imported
-import chat_with_gpt  # Assuming this is the module for interacting with GPT
-import base64
+import prompts
+from openai import OpenAI
+import chat_with_gpt
+
+# For interacting with the ChatGPT API
 
 # Set page configuration
 st.set_page_config(page_title="QAI Model", layout="centered")
@@ -12,10 +15,11 @@ if "page" not in st.session_state:
     st.session_state.page = "form"  # Default page is the form page
 if "api_response" not in st.session_state:
     st.session_state.api_response = None
-if "chemical_response" not in st.session_state:
-    st.session_state.chemical_response = None
 
 # Options
+options = dict()
+
+# Define functions to handle navigation
 def show_form():
     st.session_state.page = "form"
 
@@ -24,78 +28,66 @@ def show_result():
 
 # Page logic
 if st.session_state.page == "form":
+
     # Form page
     st.title("QAI Model")
     st.write("Please fill out the form below and submit.")
-    
-    # Input fields for full query
-    product_name = st.text_input("Product Name", placeholder="For example: Paracetamol")
-    quanOfMed = st.text_input("Quantity of medicine", placeholder="For example: 1000 capsules, 1000 ml")
-    powerOfDrug = st.text_input("Power of drug", placeholder="For example: 10 mg")
-    
+
+    # Input fields
+    options["product_name"] = st.text_input("Product Name", placeholder="For example: Paracetamol")
+    options["quanOfMed"] = st.text_input("Quantity of medicine", placeholder=" For example: 1000 capsules, 1000 ml")
+    options["powerOfDrug"] = st.text_input("Power of drug",placeholder=" For example: 10 mg")
+    # multiline_input = st.text_area("Multiline Text Input", placeholder="Enter detailed information here", height=100)
+
     # Options
-    typeOfInfo = st.selectbox("Select information required", [
-        "METHOD OF PREPARATION",
-        "CHARACTARIZATION/EVALUATION",
-        "Both of above",
-        "CHECK RESULTS"
-    ])
     
-    jurisdiction = st.selectbox("Select jurisdiction", [
-        "INDIAN PHARMACOPIEA",
-        "BRITISH PHARMACOPIEA",
-        "UNITED STATES PHARMACOPOEIA",
-        "COMPARE WITH ALL OF THEM"
-    ])
-    
-    resultsToCheck = ""
-    if typeOfInfo == "CHECK RESULTS":
-        resultsToCheck = st.text_area("Write your results", placeholder="Enter evaluation results here...", height=250)
+    options["typeOfInfo"] = st.selectbox("Select information required", 
+                              ["METHOD OF PREPARATION", 
+                               "CHARACTARIZATION/EVALUATION", 
+                               "Both of above",
+                               "CHECK RESULTS" 
+                               ])
+    options["jurisdiction"] = st.selectbox("Select jurisdiction", 
+                              ["INDIAN PHARMACOPIEA", 
+                               "BRITISH PHARMACOPIEA", 
+                               "UNITED STATES PHARMACOPOEIA", 
+                               "COMPARE WITH ALL OF THEM"])
+
+    if options["typeOfInfo"]=="CHECK RESULTS":
+        options["resultsToCheck"] = st.text_area("Write you results",placeholder="""For e.g. 
+        The tablet has an acceptable appearance with good shape and color.
+        The IR spectrum matches the expected profile for Azithromycin.
+        The HPLC results are consistent with the standard.
+        The weight variation is ±2.8%.
+        The tablet hardness is 5 kg.
+        The friability is 0.8325%.
+        The disintegration time is 23 minutes.
+        The dissolution rate is 96.5%.
+        The assay of Azithromycin content is 100%.
+        """,key="checkResults", height=250)
     
     # Submit button
     if st.button("Submit"):
-        if not all([product_name.strip(), quanOfMed.strip(), powerOfDrug.strip()]):
+        if options["product_name"].strip() == "" or options["quanOfMed"].strip() == "" or options["powerOfDrug"].strip() == "":
             st.error("Please fill in all the required fields!")
         else:
             # Prepare data for ChatGPT API request
-            options = {
-                "product_name": product_name,
-                "quanOfMed": quanOfMed,
-                "powerOfDrug": powerOfDrug,
-                "typeOfInfo": typeOfInfo,
-                "jurisdiction": jurisdiction,
-                "resultsToCheck": resultsToCheck if typeOfInfo == "CHECK RESULTS" else ""
-            }
             prompt = prompts.getPromptForOptions(options)
-            
-            # Interact with ChatGPT API request
+
+            # Interact with ChatGPT API
             with st.spinner("Generating report..."):
-                st.session_state.api_response = chat_with_gpt.chatWithGpt(prompt)
-            
+                api_response = chat_with_gpt.chatWithGpt(prompt)
+                st.session_state.api_response = api_response
+
             # Save inputs in session state
-            st.session_state.update(options)
-            
+            st.session_state.product_name = options["product_name"]
+            st.session_state.quanOfMed = options["quanOfMed"]
+            st.session_state.typeOfInfo = options["typeOfInfo"]
+            st.session_state.jurisdiction = options["jurisdiction"]
+            st.session_state.powerOfDrug = options["powerOfDrug"]
+
             # Navigate to result page
-            show_result()
-    
-    st.write("---")
-    
-    # New section for chemical structure query
-    st.subheader("Get Chemical Structure")
-    chemical_product_name = st.text_input("Enter only the Product Name", placeholder="For example: Aspirin")
-    
-    if st.button("Get Chemical Structure"):
-        if chemical_product_name.strip() == "":
-            st.error("Please enter a product name!")
-        else:
-            # Generate prompt for chemical structure
-            chemical_prompt = prompts.getPromptForChemicalStructure(chemical_product_name)
-            
-            # Interact with ChatGPT API for chemical structure
-            with st.spinner("Fetching chemical structure..."):
-                st.session_state.chemical_response = chat_with_gpt.chatWithGpt(chemical_prompt)
-            
-            # Navigate to result page
+            st.write("Click submit again to see results")
             show_result()
 
 elif st.session_state.page == "result":
@@ -103,39 +95,21 @@ elif st.session_state.page == "result":
     if st.button("Go Back"):
         st.session_state.clear()  # Clears session state
         st.experimental_rerun()
-    
+        st.switch_page("main")
+        
     # Result page
     st.title("Submission Summary")
     st.write("Thank you for your submission! Here are the details:")
-    
+
     # Display submitted details
-    st.write(f"**Product Name**: {st.session_state.get('product_name', 'N/A')}")
-    st.write(f"**Quantity of meds**: {st.session_state.get('quanOfMed', 'N/A')}")
-    st.write(f"**Power of drug**: {st.session_state.get('powerOfDrug', 'N/A')}")
-    
+    st.write(f"**Product Name**: {st.session_state.product_name}")
+    st.write(f"**Quantity of meds**: {st.session_state.quanOfMed}")
+    st.write(f"**Power of drug**: {st.session_state.powerOfDrug}")
+
     # Display API response
     st.write("### Report")
     if st.session_state.api_response:
-        st.write(st.session_state.api_response)
+        # st.success(st.session_state.api_response)
+        components.html(st.session_state.api_response,height=1000,width=1000,scrolling=True)
     else:
         st.warning("No response from ChatGPT API.")
-    
-    # Display Chemical Structure Result (Image)
-    st.write("### Chemical Structure")
-    
-import base64
-from io import BytesIO
-from PIL import Image
-
-if st.session_state.chemical_response:
-    try:
-        # If the response is a base64 string, handle it
-        if st.session_state.chemical_response.startswith('data:image/png;base64,'):
-            img_data = st.session_state.chemical_response.split(",")[1]
-            img_data = base64.b64decode(img_data)
-            img = Image.open(BytesIO(img_data))
-            st.image(img, caption="Chemical Structure Image", use_column_width=True)
-        else:
-            st.warning("The provided response is not a valid image.")
-    except Exception as e:
-        st.error(f"An error occurred: {str(e)}")
