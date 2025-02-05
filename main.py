@@ -2,114 +2,113 @@ import streamlit as st
 import streamlit.components.v1 as components
 import openai
 import prompts
-from openai import OpenAI
 import chat_with_gpt
-
-# For interacting with the ChatGPT API
+import requests
+from PIL import Image
+from io import BytesIO
 
 # Set page configuration
 st.set_page_config(page_title="QAI Model", layout="centered")
 
-# Initialize session state for navigation and API response
+# Initialize session state
 if "page" not in st.session_state:
-    st.session_state.page = "form"  # Default page is the form page
+    st.session_state.page = "form"
 if "api_response" not in st.session_state:
     st.session_state.api_response = None
+if "chemical_structure_image" not in st.session_state:
+    st.session_state.chemical_structure_image = None
 
-# Options
-options = dict()
-
-# Define functions to handle navigation
+# Navigation functions
 def show_form():
     st.session_state.page = "form"
 
 def show_result():
     st.session_state.page = "result"
 
-# Page logic
-if st.session_state.page == "form":
+# Fetch Chemical Structure Image
+def fetch_chemical_structure(drug_name):
+    prompt = f"Provide a high-quality image (PNG, JPEG, or JPG) of the chemical structure of {drug_name}. The structure must be sourced from trusted scientific databases such as Pharmacopoeias, PubChem, PubMed, NCBI, or peer-reviewed scholarly articles. Include the IUPAC name and molecular formula alongside the structure if available. Ensure the structure matches the standard representation from these authoritative sources."
+    
+    response = chat_with_gpt.chatWithGpt(prompt)
+    
+    # Simulate image fetching by interpreting the API response as a URL (adjust based on actual API behavior)
+    if response and response.startswith("http"):
+        img_response = requests.get(response)
+        if img_response.status_code == 200:
+            st.session_state.chemical_structure_image = Image.open(BytesIO(img_response.content))
+        else:
+            st.error("Failed to fetch the chemical structure image.")
+    else:
+        st.warning("No image URL found in API response.")
 
-    # Form page
+# Page Logic
+if st.session_state.page == "form":
     st.title("QAI Model")
     st.write("Please fill out the form below and submit.")
 
-    # Input fields
-    options["product_name"] = st.text_input("Product Name", placeholder="For example: Paracetamol")
-    options["quanOfMed"] = st.text_input("Quantity of medicine", placeholder=" For example: 1000 capsules, 1000 ml")
-    options["powerOfDrug"] = st.text_input("Power of drug",placeholder=" For example: 10 mg")
-    # multiline_input = st.text_area("Multiline Text Input", placeholder="Enter detailed information here", height=100)
-
-    # Options
+    # Input Fields
+    product_name = st.text_input("Product Name", placeholder="For example: Paracetamol")
+    st.session_state.product_name = product_name  # Save for later use
     
-    options["typeOfInfo"] = st.selectbox("Select information required", 
-                              ["METHOD OF PREPARATION", 
-                               "CHARACTARIZATION/EVALUATION", 
-                               "Both of above",
-                               "CHECK RESULTS" 
-                               ])
-    options["jurisdiction"] = st.selectbox("Select jurisdiction", 
-                              ["INDIAN PHARMACOPIEA", 
-                               "BRITISH PHARMACOPIEA", 
-                               "UNITED STATES PHARMACOPOEIA", 
-                               "COMPARE WITH ALL OF THEM"])
+    # Button to fetch chemical structure
+    if st.button("Get Chemical Structure"):
+        if product_name.strip():
+            with st.spinner("Fetching chemical structure image..."):
+                fetch_chemical_structure(product_name)
+        else:
+            st.error("Please enter a product name to fetch the chemical structure.")
 
-    if options["typeOfInfo"]=="CHECK RESULTS":
-        options["resultsToCheck"] = st.text_area("Write you results",placeholder="""For e.g. 
-        The tablet has an acceptable appearance with good shape and color.
-        The IR spectrum matches the expected profile for Azithromycin.
-        The HPLC results are consistent with the standard.
-        The weight variation is ±2.8%.
-        The tablet hardness is 5 kg.
-        The friability is 0.8325%.
-        The disintegration time is 23 minutes.
-        The dissolution rate is 96.5%.
-        The assay of Azithromycin content is 100%.
-        """,key="checkResults", height=250)
+    # Display fetched image
+    if st.session_state.chemical_structure_image:
+        st.image(st.session_state.chemical_structure_image, caption=f"Chemical Structure of {product_name}", use_column_width=True)
+
+    # Other Input Fields
+    quan_of_med = st.text_input("Quantity of medicine", placeholder="For example: 1000 capsules, 1000 ml")
+    power_of_drug = st.text_input("Power of drug", placeholder="For example: 10 mg")
     
-    # Submit button
+    type_of_info = st.selectbox("Select information required", ["METHOD OF PREPARATION", "CHARACTARIZATION/EVALUATION", "Both of above", "CHECK RESULTS"])
+    jurisdiction = st.selectbox("Select jurisdiction", ["INDIAN PHARMACOPIEA", "BRITISH PHARMACOPIEA", "UNITED STATES PHARMACOPOEIA", "COMPARE WITH ALL OF THEM"])
+
+    if type_of_info == "CHECK RESULTS":
+        results_to_check = st.text_area("Write your results", placeholder="Enter detailed evaluation results here", height=250)
+
+    # Submit Button
     if st.button("Submit"):
-        if options["product_name"].strip() == "" or options["quanOfMed"].strip() == "" or options["powerOfDrug"].strip() == "":
+        if not product_name.strip() or not quan_of_med.strip() or not power_of_drug.strip():
             st.error("Please fill in all the required fields!")
         else:
-            # Prepare data for ChatGPT API request
-            prompt = prompts.getPromptForOptions(options)
+            options = {
+                "product_name": product_name,
+                "quanOfMed": quan_of_med,
+                "powerOfDrug": power_of_drug,
+                "typeOfInfo": type_of_info,
+                "jurisdiction": jurisdiction
+            }
+            if type_of_info == "CHECK RESULTS":
+                options["resultsToCheck"] = results_to_check
 
-            # Interact with ChatGPT API
+            # Generate report
             with st.spinner("Generating report..."):
-                api_response = chat_with_gpt.chatWithGpt(prompt)
+                api_response = chat_with_gpt.chatWithGpt(prompts.getPromptForOptions(options))
                 st.session_state.api_response = api_response
-
-            # Save inputs in session state
-            st.session_state.product_name = options["product_name"]
-            st.session_state.quanOfMed = options["quanOfMed"]
-            st.session_state.typeOfInfo = options["typeOfInfo"]
-            st.session_state.jurisdiction = options["jurisdiction"]
-            st.session_state.powerOfDrug = options["powerOfDrug"]
 
             # Navigate to result page
             st.write("Click submit again to see results")
             show_result()
 
 elif st.session_state.page == "result":
-    # Button to go back to the form page
     if st.button("Go Back"):
-        st.session_state.clear()  # Clears session state
+        st.session_state.clear()
         st.experimental_rerun()
-        st.switch_page("main")
-        
-    # Result page
+
     st.title("Submission Summary")
-    st.write("Thank you for your submission! Here are the details:")
-
-    # Display submitted details
     st.write(f"**Product Name**: {st.session_state.product_name}")
-    st.write(f"**Quantity of meds**: {st.session_state.quanOfMed}")
-    st.write(f"**Power of drug**: {st.session_state.powerOfDrug}")
 
-    # Display API response
+    if st.session_state.chemical_structure_image:
+        st.image(st.session_state.chemical_structure_image, caption=f"Chemical Structure of {st.session_state.product_name}", use_column_width=True)
+
     st.write("### Report")
     if st.session_state.api_response:
-        # st.success(st.session_state.api_response)
-        components.html(st.session_state.api_response,height=1000,width=1000,scrolling=True)
+        components.html(st.session_state.api_response, height=1000, width=1000, scrolling=True)
     else:
         st.warning("No response from ChatGPT API.")
