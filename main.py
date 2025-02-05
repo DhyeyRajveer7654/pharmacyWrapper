@@ -31,32 +31,37 @@ if st.session_state.page == "form":
     st.title("QAI Model")
     st.write("Please fill out the form below and submit.")
 
-    # Input fields
-    options["product_name"] = st.text_input("Product Name", placeholder="For example: Paracetamol")
-    options["quanOfMed"] = st.text_input("Quantity of medicine", placeholder=" For example: 1000 capsules, 1000 ml")
-    options["powerOfDrug"] = st.text_input("Power of drug", placeholder="For example: 10 mg")
+    # Create columns for horizontal layout
+    col1, col2 = st.columns([3, 1])  # Adjust the ratio as needed
 
-    # Options for selection
-    options["typeOfInfo"] = st.selectbox("Select information required", 
-                              ["METHOD OF PREPARATION", 
-                               "CHARACTARIZATION/EVALUATION", 
-                               "Both of above",
-                               "CHECK RESULTS"])
-    options["jurisdiction"] = st.selectbox("Select jurisdiction", 
-                              ["INDIAN PHARMACOPIEA", 
-                               "BRITISH PHARMACOPIEA", 
-                               "UNITED STATES PHARMACOPOEIA", 
-                               "COMPARE WITH ALL OF THEM"])
+    with col1:
+        # Input fields
+        options["product_name"] = st.text_input("Product Name", placeholder="For example: Paracetamol")
+        options["quanOfMed"] = st.text_input("Quantity of medicine", placeholder=" For example: 1000 capsules, 1000 ml")
+        options["powerOfDrug"] = st.text_input("Power of drug", placeholder="For example: 10 mg")
 
-    if options["typeOfInfo"] == "CHECK RESULTS":
-        options["resultsToCheck"] = st.text_area("Write your results", placeholder="""For example: 
-        The tablet has an acceptable appearance with good shape and color.
-        The IR spectrum matches the expected profile for Azithromycin.""", height=250)
+        # Options for selection
+        options["typeOfInfo"] = st.selectbox("Select information required", 
+                                  ["METHOD OF PREPARATION", 
+                                   "CHARACTARIZATION/EVALUATION", 
+                                   "Both of above",
+                                   "CHECK RESULTS"])
+        options["jurisdiction"] = st.selectbox("Select jurisdiction", 
+                                  ["INDIAN PHARMACOPIEA", 
+                                   "BRITISH PHARMACOPIEA", 
+                                   "UNITED STATES PHARMACOPOEIA", 
+                                   "COMPARE WITH ALL OF THEM"])
 
-    # Button to get structure
-    if st.button("Get Structure"):
-        # Placeholder for future functionality
-        st.write("Functionality to retrieve structure will be added here.")
+        if options["typeOfInfo"] == "CHECK RESULTS":
+            options["resultsToCheck"] = st.text_area("Write your results", placeholder="""For example: 
+            The tablet has an acceptable appearance with good shape and color.
+            The IR spectrum matches the expected profile for Azithromycin.""", height=250)
+
+    with col2:
+        # Button to get structure
+        if st.button("Get Structure"):
+            # Placeholder for future functionality
+            st.write("Functionality to retrieve structure will be added here.")
 
     # Submit button
     if st.button("Submit"):
