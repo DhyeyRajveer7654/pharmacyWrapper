@@ -1,9 +1,11 @@
 import streamlit as st
 import streamlit.components.v1 as components
 import openai
-from string import Template
 import prompts
+from openai import OpenAI
 import chat_with_gpt
+
+# For interacting with the ChatGPT API
 
 # Set page configuration
 st.set_page_config(page_title="QAI Model", layout="centered")
@@ -24,19 +26,6 @@ def show_form():
 def show_result():
     st.session_state.page = "result"
 
-# Function to generate chemical structure image
-def generate_structure_image(product_name):
-    prompt = f"Provide a high-quality image (PNG, JPEG, or JPG) of the chemical structure of {product_name}. The structure must be sourced from trusted scientific databases such as Pharmacopoeias, PubChem, PubMed, NCBI, or peer-reviewed scholarly articles. Include the IUPAC name and molecular formula alongside the structure if available. Ensure the structure matches the standard representation from these authoritative sources."
-    
-    response = openai.Image.create(
-        prompt=prompt,
-        n=1,
-        size="1024x1024"
-    )
-    
-    image_url = response['data'][0]['url']
-    return image_url
-
 # Page logic
 if st.session_state.page == "form":
 
@@ -47,36 +36,36 @@ if st.session_state.page == "form":
     # Input fields
     options["product_name"] = st.text_input("Product Name", placeholder="For example: Paracetamol")
     options["quanOfMed"] = st.text_input("Quantity of medicine", placeholder=" For example: 1000 capsules, 1000 ml")
-    options["powerOfDrug"] = st.text_input("Power of drug", placeholder="For example: 10 mg")
+    options["powerOfDrug"] = st.text_input("Power of drug",placeholder=" For example: 10 mg")
+    # multiline_input = st.text_area("Multiline Text Input", placeholder="Enter detailed information here", height=100)
 
-    # Options for selection
+    # Options
+    
     options["typeOfInfo"] = st.selectbox("Select information required", 
                               ["METHOD OF PREPARATION", 
                                "CHARACTARIZATION/EVALUATION", 
                                "Both of above",
-                               "CHECK RESULTS"])
+                               "CHECK RESULTS" 
+                               ])
     options["jurisdiction"] = st.selectbox("Select jurisdiction", 
                               ["INDIAN PHARMACOPIEA", 
                                "BRITISH PHARMACOPIEA", 
                                "UNITED STATES PHARMACOPOEIA", 
                                "COMPARE WITH ALL OF THEM"])
 
-    if options["typeOfInfo"] == "CHECK RESULTS":
-        options["resultsToCheck"] = st.text_area("Write your results", placeholder="""For example: 
+    if options["typeOfInfo"]=="CHECK RESULTS":
+        options["resultsToCheck"] = st.text_area("Write you results",placeholder="""For e.g. 
         The tablet has an acceptable appearance with good shape and color.
-        The IR spectrum matches the expected profile for Azithromycin.""", height=250)
-
-    # Button to get structure
-    if st.button("Get Structure"):
-        if options["product_name"].strip():
-            # Generate the image
-            image_url = generate_structure_image(options["product_name"])
-
-            # Display the image
-            st.image(image_url, caption=f"Chemical Structure of {options['product_name']}")
-        else:
-            st.error("Please enter a product name.")
-
+        The IR spectrum matches the expected profile for Azithromycin.
+        The HPLC results are consistent with the standard.
+        The weight variation is ±2.8%.
+        The tablet hardness is 5 kg.
+        The friability is 0.8325%.
+        The disintegration time is 23 minutes.
+        The dissolution rate is 96.5%.
+        The assay of Azithromycin content is 100%.
+        """,key="checkResults", height=250)
+    
     # Submit button
     if st.button("Submit"):
         if options["product_name"].strip() == "" or options["quanOfMed"].strip() == "" or options["powerOfDrug"].strip() == "":
@@ -106,6 +95,7 @@ elif st.session_state.page == "result":
     if st.button("Go Back"):
         st.session_state.clear()  # Clears session state
         st.experimental_rerun()
+        st.switch_page("main")
         
     # Result page
     st.title("Submission Summary")
@@ -119,6 +109,7 @@ elif st.session_state.page == "result":
     # Display API response
     st.write("### Report")
     if st.session_state.api_response:
-        components.html(st.session_state.api_response, height=1000, width=1000, scrolling=True)
+        # st.success(st.session_state.api_response)
+        components.html(st.session_state.api_response,height=1000,width=1000,scrolling=True)
     else:
         st.warning("No response from ChatGPT API.")
