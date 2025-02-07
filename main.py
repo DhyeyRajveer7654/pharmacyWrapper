@@ -102,5 +102,5 @@ elif st.session_state.page == "result":
     if st.session_state.ftir_required:
         with st.spinner("Fetching FTIR Data..."):
             ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
-            st.write("### FTIR Data {st.session_state.product_name}")
+            st.write("### FTIR Data")
             st.write(ftir_data)
