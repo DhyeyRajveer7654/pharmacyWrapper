@@ -45,7 +45,7 @@ if st.session_state.page == "form":
                               ["INDIAN PHARMACOPIEA", 
                                "BRITISH PHARMACOPIEA", 
                                "UNITED STATES PHARMACOPOEIA",
-                               "MARTINDALE-EXTRA PHARMACOPIEA" 
+                               "MARTINDALE-EXTRA PHARMACOPIEA",
                                "COMPARE WITH ALL OF THEM"])
 
     if options["typeOfInfo"] == "CHECK RESULTS":
