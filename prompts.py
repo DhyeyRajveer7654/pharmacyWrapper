@@ -5,11 +5,11 @@ TABLE_STYLE = """
     table {
         width: 100%;
         border-collapse: collapse;
-        background-color: #121212;
-        color: white;
+        background-color: white;
+        color: black;
         border-radius: 10px;
         font-size: 16px;
-        border: 1px solid #444;
+        border: 1px solid #ddd;
     }
     th {
         background-color: #007BFF;
@@ -18,12 +18,12 @@ TABLE_STYLE = """
         text-align: center;
     }
     td {
-        border: 1px solid #444;
+        border: 1px solid #ddd;
         padding: 10px;
         text-align: left;
     }
     tr:nth-child(even) {
-        background-color: #292b2c;
+        background-color: #f2f2f2;
     }
     tr:hover {
         background-color: #007BFF;

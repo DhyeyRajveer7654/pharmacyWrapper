@@ -6,7 +6,7 @@ import chat_with_gpt
 # Set Page Configuration
 st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
 
-# Custom Styling
+# Apply Custom Styles
 st.markdown("""
     <style>
         body { background-color: #0e1117; color: white; font-family: 'Arial', sans-serif; }
@@ -84,7 +84,15 @@ if st.session_state.page == "form":
 
 # 📌 RESULT PAGE
 elif st.session_state.page == "result":
-    st.markdown('<div class="title">📑 Submission Summary</div>', unsafe_allow_html=True)
+
+    # Apply White Background for Result Page
+    st.markdown("""
+        <style>
+            body { background-color: white !important; color: black !important; }
+        </style>
+    """, unsafe_allow_html=True)
+
+    st.markdown('<div style="text-align:center; color:#007BFF; font-size:30px; font-weight:bold;">📑 Submission Summary</div>', unsafe_allow_html=True)
 
     st.markdown(f"**📌 Product Name:** {st.session_state.product_name}")
     st.markdown(f"**📦 Quantity of Medicine:** {st.session_state.quanOfMed}")
