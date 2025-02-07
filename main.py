@@ -44,7 +44,8 @@ if st.session_state.page == "form":
     options["jurisdiction"] = st.selectbox("Select jurisdiction", 
                               ["INDIAN PHARMACOPIEA", 
                                "BRITISH PHARMACOPIEA", 
-                               "UNITED STATES PHARMACOPOEIA", 
+                               "UNITED STATES PHARMACOPOEIA",
+                               "MARTINDALE-EXTRA PHARMACOPIEA" 
                                "COMPARE WITH ALL OF THEM"])
 
     if options["typeOfInfo"] == "CHECK RESULTS":
