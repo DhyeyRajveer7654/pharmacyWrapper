@@ -74,13 +74,13 @@ with st.form("input_form"):
     col1, col2 = st.columns(2)
 
     with col1:
-        options["product_name"] = st.text_input("📌 Product Name", placeholder="e.g., Paracetamol")
+        options["product_name"] = st.text_input("💊 Product Name", placeholder="e.g., Paracetamol")
         options["powerOfDrug"] = st.text_input("⚡ Power of Drug", placeholder="e.g., 500 mg")
         
     with col2:
         options["quanOfMed"] = st.text_input("📦 Quantity of Medicine", placeholder="e.g., 1000 tablets")
         options["jurisdiction"] = st.selectbox("🌎 Select Jurisdiction", 
-            ["INDIAN PHARMACOPIEA", "BRITISH PHARMACOPIEA", "UNITED STATES PHARMACOPOEIA", "COMPARE WITH ALL"])
+            ["INDIAN PHARMACOPIEA", "BRITISH PHARMACOPIEA", "UNITED STATES PHARMACOPOEIA", "MARTINDALE-EXTRA PHARMACOPIEA", "COMPARE WITH ALL"])
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
     
