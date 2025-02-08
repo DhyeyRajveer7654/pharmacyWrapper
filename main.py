@@ -56,7 +56,7 @@ if st.session_state.page == "form":
         with col2:
             options["quanOfMed"] = st.text_input("📦 Quantity of Medicine", placeholder="e.g., 1000 tablets")
             options["jurisdiction"] = st.selectbox("🌎 Select Jurisdiction", 
-                ["INDIAN PHARMACOPIEA", "BRITISH PHARMACOPIEA", "UNITED STATES PHARMACOPOEIA", "COMPARE WITH ALL"])
+                ["INDIAN PHARMACOPIEA", "BRITISH PHARMACOPIEA", "UNITED STATES PHARMACOPOEIA", "MARTINDALE-EXTRA PHARMACOPIEA", "COMPARE WITH ALL"])
 
         st.markdown('<div class="card">', unsafe_allow_html=True)
         options["typeOfInfo"] = st.radio("📊 Select Information Required:", 
@@ -94,7 +94,7 @@ elif st.session_state.page == "result":
 
     st.markdown('<div style="text-align:center; color:#007BFF; font-size:30px; font-weight:bold;">📑 Submission Summary</div>', unsafe_allow_html=True)
 
-    st.markdown(f"**📌 Product Name:** {st.session_state.product_name}")
+    st.markdown(f"**💊 Product Name:** {st.session_state.product_name}")
     st.markdown(f"**📦 Quantity of Medicine:** {st.session_state.quanOfMed}")
     st.markdown(f"**⚡ Power of Drug:** {st.session_state.powerOfDrug}")
 
@@ -107,7 +107,7 @@ elif st.session_state.page == "result":
     if st.session_state.ftir_required:
         with st.spinner("📡 Fetching FTIR Data..."):
             ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
-            st.markdown("### 🔬 FTIR Data from GPT-4")
+            st.markdown("### 🔬 FTIR Data")
             st.write(ftir_data)
 
     if st.button("🔙 Go Back to Form"):
