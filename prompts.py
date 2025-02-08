@@ -1,31 +1,25 @@
 from string import Template
 
-# 🌟 Modernized Table Styling with Better Contrast
+# ✅ **Enhanced Table Styling**
 TABLE_STYLE = """
 <style>
-    .table-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 20px;
-    }
     table {
         width: 90%;
         border-collapse: collapse;
-        background-color: rgba(255, 255, 255, 0.95); /* Light background for easy reading */
-        color: #222; /* Dark text for strong contrast */
+        background-color: white;
+        color: black;
         border-radius: 10px;
         font-size: 16px;
         text-align: left;
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     }
     th {
-        background: linear-gradient(90deg, #ff758c, #ff7eb3); /* Attractive gradient */
+        background: #007BFF;
         color: white;
         padding: 12px;
         text-align: center;
         font-weight: bold;
-        border-radius: 8px;
+        text-shadow: 0px 0px 10px #00BFFF;
     }
     td {
         border: 1px solid #ddd;
@@ -33,123 +27,156 @@ TABLE_STYLE = """
         text-align: left;
     }
     tr:nth-child(even) {
-        background-color: #f8f8f8; /* Soft gray for better readability */
+        background-color: #f8f8f8;
     }
     tr:hover {
-        background: #ff7eb3;
+        background: #007BFF;
         color: white;
     }
 </style>
 """
 
-# 📌 **Highly Detailed Method of Preparation with Excipients Quantity**
+# 📌 **Highly Detailed Method of Preparation**
 METHOD_OF_PREPARATION_PROMPT = Template("""
-Provide a **highly detailed, step-by-step** **method of preparation** for **$product_name** ($quanOfMed), each containing **$powerOfDrug** of the active ingredient, based on **$jurisdiction** standards.
+### **Manufacturing Process for $product_name ($quanOfMed)**
 
-Ensure the response is a **well-formatted HTML table** covering:
-- **Step Number**
-- **Step Description**
-- **Equipment Required**
-- **Time Duration**
-- **Critical Observations**
-- **Regulatory Considerations**
-
-Additionally, provide a **reference table** showing the **exact quantity** of excipients required based on **$quanOfMed**.  
-This table should include:
-- **Ingredient Name (API & Excipients)**
-- **Required Quantity per Dosage Unit**
-- **Total Quantity Required for $quanOfMed**
-- **Function in Formulation**
-- **Solubility & Stability Considerations**
-
-Each step must include **scientific justification**, including:
-- How **ingredients are selected and handled**.
-- Precautions to **avoid errors** during mixing, drying, compression, and packaging.
-- How to ensure **uniformity, stability, and compliance** with pharmacopeial standards.
-
-The response **must be in an easy-to-read HTML table**, with **hover effects and high contrast**.
+<table>
+    <tr>
+        <th>Step</th>
+        <th>Description</th>
+        <th>Equipment</th>
+        <th>Time</th>
+        <th>Critical Observations</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>Weigh all active and inactive ingredients precisely.</td>
+        <td>Weighing Scale</td>
+        <td>5 min</td>
+        <td>Ensure correct weights</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>Mix ingredients uniformly using a high-speed mixer.</td>
+        <td>High-speed Mixer</td>
+        <td>15 min</td>
+        <td>Ensure uniform blending</td>
+    </tr>
+</table>
 """)
 
-# 📌 **Highly Detailed Combined Formulation & Testing with Excipients Quantity**
+# 📌 **Highly Detailed Formulation & Testing**
 COMBINED_PROMPT = Template("""
-Provide a **fully detailed** combined **formulation and testing** report for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
+### **Formulation & Testing Report for $product_name ($quanOfMed)**
 
-The response should include **two separate tables**:
-1️⃣ **Formulation Process**:
-   - **Ingredient**
-   - **Quantity per Unit**
-   - **Total Quantity for $quanOfMed**
-   - **Purpose**
-   - **Mixing & Processing Steps**
-   - **Critical Processing Parameters**
-   - **Possible Risks & Precautions**
+#### **Formulation Process**
+<table>
+    <tr>
+        <th>Ingredient</th>
+        <th>Quantity per Unit</th>
+        <th>Total Quantity</th>
+        <th>Purpose</th>
+    </tr>
+    <tr>
+        <td>API (Active Ingredient)</td>
+        <td>$powerOfDrug</td>
+        <td>Calculated</td>
+        <td>Therapeutic effect</td>
+    </tr>
+</table>
 
-2️⃣ **Testing & Quality Control**:
-   - **Test Name**
-   - **Testing Procedure**
-   - **Equipment Used**
-   - **Acceptance Criteria**
-   - **Deviation Handling**
-   - **Regulatory Considerations**
-
-The response **must be in a visually appealing table format**, with **modern styling and high readability**.
+#### **Testing & Quality Control**
+<table>
+    <tr>
+        <th>Test Name</th>
+        <th>Procedure</th>
+        <th>Equipment Used</th>
+        <th>Acceptance Criteria</th>
+    </tr>
+    <tr>
+        <td>Disintegration Test</td>
+        <td>Check breakdown in water</td>
+        <td>USP Disintegration Tester</td>
+        <td>< 15 min</td>
+    </tr>
+</table>
 """)
 
-# 📌 **Highly Detailed Quality Control & Results Checking**
+# 📌 **Quality Control & Results Checking**
 CHECK_RESULTS_PROMPT = Template("""
-Compare the **quality control evaluation results** of **$product_name** ($powerOfDrug) for **$quanOfMed** with the **$jurisdiction** standards.
+### **Quality Control Evaluation for $product_name ($powerOfDrug)**
 
-Ensure the response is a **cleanly formatted HTML table** covering:
-- **Test Parameter**
-- **User Result**
-- **Pharmacopeial Standard Requirement**
-- **Deviation Analysis**
-- **Corrective Action Plan**
-- **Pass/Fail Status**
-
-Each parameter must be explained in **scientific depth**, including:
-- Why the parameter is **critical for drug quality**.
-- What **failures indicate** about formulation issues.
-- **How to correct issues** based on pharmacopeial standards.
-
-The response **must be in an easy-to-read HTML table**, ensuring **high contrast and clarity**.
+<table>
+    <tr>
+        <th>Test Parameter</th>
+        <th>User Result</th>
+        <th>Pharmacopeial Standard</th>
+        <th>Deviation Analysis</th>
+        <th>Corrective Action</th>
+    </tr>
+    <tr>
+        <td>Weight Variation</td>
+        <td>Within ±5%</td>
+        <td>±5%</td>
+        <td>Pass</td>
+        <td>None</td>
+    </tr>
+</table>
 """)
 
-# 📌 **Highly Detailed FTIR Spectrum Analysis**
+# 📌 **FTIR Spectrum Analysis**
 FTIR_PROMPT = Template("""
-Provide a **detailed FTIR spectrum analysis** for **$product_name**.
+### **FTIR Spectrum Analysis for $product_name**
 
-Ensure the response is a **clear, formatted HTML table** covering:
-- **Wavenumber (cm⁻¹)**
-- **Functional Group**
-- **Peak Description**
-- **Significance in Drug Identification**
-- **Potential Interferences**
-- **Regulatory Considerations**
-
-Explain:
-- How FTIR confirms **drug identity**.
-- What **peak deviations** indicate about formulation errors.
-- How to **ensure FTIR compliance** with pharmacopeial standards.
-
-The response **must be in an easy-to-read table**, with **alternating row colors and gradient headers**.
+<table>
+    <tr>
+        <th>Wavenumber (cm⁻¹)</th>
+        <th>Functional Group</th>
+        <th>Peak Description</th>
+        <th>Significance</th>
+    </tr>
+    <tr>
+        <td>3200-3500</td>
+        <td>O-H Stretch</td>
+        <td>Strong, Broad</td>
+        <td>Indicates presence of alcohol</td>
+    </tr>
+</table>
 """)
 
-# 📌 **Highly Detailed Dissolution & Stability Studies**
+# 📌 **Dissolution & Stability Studies**
 DISSOLUTION_STABILITY_PROMPT = Template("""
-Provide a **comprehensive dissolution and stability study** for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
+### **Dissolution & Stability Study for $product_name**
 
-Ensure the response is a **clear and structured HTML table** covering:
-- **Study Type (Dissolution/Stability)**
-- **Test Conditions**
-- **Sampling Time Points**
-- **Equipment Used**
-- **Acceptance Limits**
-- **Stability Period**
-- **Corrective Actions for Failures**
-- **Regulatory Considerations**
+#### **Dissolution Study**
+<table>
+    <tr>
+        <th>Condition</th>
+        <th>pH</th>
+        <th>Time Point</th>
+        <th>Result</th>
+    </tr>
+    <tr>
+        <td>Simulated Gastric Fluid</td>
+        <td>1.2</td>
+        <td>30 min</td>
+        <td>80% release</td>
+    </tr>
+</table>
 
-The response **must be in an easy-to-read table format**, with **hover effects and clear contrast**.
+#### **Stability Study**
+<table>
+    <tr>
+        <th>Storage Condition</th>
+        <th>Duration</th>
+        <th>Observed Changes</th>
+    </tr>
+    <tr>
+        <td>25°C, 60% RH</td>
+        <td>3 months</td>
+        <td>No significant change</td>
+    </tr>
+</table>
 """)
 
 # 📌 **GPT Prompt Selection**
