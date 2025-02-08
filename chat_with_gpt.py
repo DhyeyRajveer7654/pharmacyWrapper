@@ -14,7 +14,7 @@ def chatWithGpt(prompt):
     except Exception as e:
         return f"Error: {str(e)}"
 
-# ✅ Keep FTIR function
+# ✅ New function to get FTIR data
 def get_ftir_from_gpt(drug_name):
     prompt = f"Provide the standard FTIR peak values for {drug_name}, listing wavenumbers (cm⁻¹) and corresponding functional groups."
     return chatWithGpt(prompt)

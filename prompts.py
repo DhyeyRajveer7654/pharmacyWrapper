@@ -1,64 +1,125 @@
 from string import Template
 
+# Styling for a centered, left-aligned table with white text
+TABLE_STYLE = """
+<style>
+    .table-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+    }
+    table {
+        width: 85%;
+        border-collapse: collapse;
+        background-color: #1e1e1e;
+        color: white;
+        border-radius: 10px;
+        font-size: 16px;
+        border: 1px solid #444;
+        text-align: left;
+    }
+    th {
+        background-color: #007BFF;
+        color: white;
+        padding: 12px;
+        text-align: center;
+    }
+    td {
+        border: 1px solid #444;
+        padding: 10px;
+        text-align: left;
+    }
+    tr:nth-child(even) {
+        background-color: #292b2c;
+    }
+    tr:hover {
+        background-color: #007BFF;
+        color: white;
+    }
+</style>
+"""
+
 # 📌 **Highly Detailed Method of Preparation with Excipients Quantity**
 METHOD_OF_PREPARATION_PROMPT = Template("""
-Provide a detailed method for preparing **$product_name** ($quanOfMed), each containing **$powerOfDrug** of the active ingredient, based on **$jurisdiction** standards. 
+Provide a **highly detailed, step-by-step** **method of preparation** for **$product_name** ($quanOfMed), each containing **$powerOfDrug** of the active ingredient, based on **$jurisdiction** standards.
 
-Ensure the response includes:
-- **A list of materials**, including API and excipients with quantities.
-- **Purpose of each material** in the formulation.
-- **Step-by-step preparation instructions**, covering:
-  - Mixing, granulation, drying, lubrication, and compression.
-- **Excludes** evaluation, quality control, or testing procedures.
+Ensure the response is a **centered HTML table** covering:
+- **Step Number**
+- **Step Description**
+- **Equipment Required**
+- **Time Duration**
+- **Critical Observations**
+- **Regulatory Considerations**
 
-Ensure the response is formatted as **a clean, minimal HTML table** with a **black background, white text, and properly spaced borders**.
+Additionally, provide a **reference table** showing the **exact quantity** of excipients required based on **$quanOfMed**.  
+This table should include:
+- **Ingredient Name (API & Excipients)**
+- **Required Quantity per Dosage Unit**
+- **Total Quantity Required for $quanOfMed**
+- **Function in Formulation**
+- **Solubility & Stability Considerations**
+
+Each step must include **scientific justification**, including:
+- How **ingredients are selected and handled**.
+- Precautions to **avoid errors** during mixing, drying, compression, and packaging.
+- How to ensure **uniformity, stability, and compliance** with pharmacopeial standards.
+
+The response **must be in HTML table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
 """)
 
-# 📌 **Characterization & Evaluation**
-CHARACTERIZATION_EVALUATION_PROMPT = Template("""
-Provide a detailed **characterization and evaluation** report for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
-
-The response should include:
-- **Physical characteristics** (size, shape, color, appearance).
-- **Identification tests** (IR, UV, HPLC).
-- **Weight variation, hardness, friability, disintegration, dissolution**.
-- **Assay of content** for content uniformity.
-- **Step-by-step instructions** for each test.
-- **Equipment and SOPs** as per **$jurisdiction**.
-
-The response **must be in table format only**, with **black background, white text, and proper formatting**.
-""")
-
-# 📌 **Combined Formulation & Testing**
+# 📌 **Highly Detailed Combined Formulation & Testing with Excipients Quantity**
 COMBINED_PROMPT = Template("""
-Provide a **comprehensive guide** for the **formulation and testing** of **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
+Provide a **fully detailed** combined **formulation and testing** report for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
 
-The response should cover:
-1️⃣ **Formulation Process**
-   - List of ingredients with **roles and quantities**.
-   - **Step-by-step formulation process**.
-   
-2️⃣ **Testing & Quality Control**
-   - **Testing criteria** and required procedures.
-   - **Standards & expected results** as per **$jurisdiction**.
+The response should include **two separate centered tables**:
+1️⃣ **Formulation Process**:
+   - **Ingredient**
+   - **Quantity per Unit**
+   - **Total Quantity for $quanOfMed**
+   - **Purpose**
+   - **Mixing & Processing Steps**
+   - **Critical Processing Parameters**
+   - **Possible Risks & Precautions**
 
-Ensure the response **remains in a table format with a dark theme**.
+2️⃣ **Testing & Quality Control**:
+   - **Test Name**
+   - **Testing Procedure**
+   - **Equipment Used**
+   - **Acceptance Criteria**
+   - **Deviation Handling**
+   - **Regulatory Considerations**
+
+The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
 """)
 
-# 📌 **Check Results Against Standards**
+# 📌 **Highly Detailed Quality Control & Results Checking**
 CHECK_RESULTS_PROMPT = Template("""
-Compare the following **evaluation results** of **$powerOfDrug $product_name** ($quanOfMed) with the **$jurisdiction** standards:
+Compare the **quality control evaluation results** of **$product_name** ($powerOfDrug) for **$quanOfMed** with the **$jurisdiction** standards.
+
+Ensure the response is a **centered HTML table** covering:
+- **Test Parameter**
+- **User Result**
+- **Pharmacopeial Standard Requirement**
+- **Deviation Analysis**
+- **Corrective Action Plan**
+- **Pass/Fail Status**
+
+Each parameter must be explained in **scientific depth**, including:
+- Why the parameter is **critical for drug quality**.
+- What **failures indicate** about formulation issues.
+- **How to correct issues** based on pharmacopeial standards.
+
+The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
 
 $resultsToCheck
-
-Ensure the response is **formatted as an HTML table only**, with black background and white text.
 """)
 
-# 📌 **FTIR Spectrum Analysis (Kept from Newer File)**
+# 📌 **Highly Detailed FTIR Spectrum Analysis**
 FTIR_PROMPT = Template("""
 Provide a **detailed FTIR spectrum analysis** for **$product_name**.
 
-Ensure the response includes:
+Ensure the response is a **centered HTML table** covering:
 - **Wavenumber (cm⁻¹)**
 - **Functional Group**
 - **Peak Description**
@@ -66,19 +127,41 @@ Ensure the response includes:
 - **Potential Interferences**
 - **Regulatory Considerations**
 
-Ensure the response **remains in a dark-themed HTML table**.
+Explain:
+- How FTIR confirms **drug identity**.
+- What **peak deviations** indicate about formulation errors.
+- How to **ensure FTIR compliance** with pharmacopeial standards.
+
+The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
 """)
 
-# 📌 **Prompt Selection Function**
+# 📌 **Highly Detailed Dissolution & Stability Studies**
+DISSOLUTION_STABILITY_PROMPT = Template("""
+Provide a **comprehensive dissolution and stability study** for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
+
+Ensure the response is a **centered HTML table** covering:
+- **Study Type (Dissolution/Stability)**
+- **Test Conditions**
+- **Sampling Time Points**
+- **Equipment Used**
+- **Acceptance Limits**
+- **Stability Period**
+- **Corrective Actions for Failures**
+- **Regulatory Considerations**
+
+The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
+""")
+
+# 📌 **GPT Prompt Selection**
 def getPromptForOptions(options):
     if options['typeOfInfo'] == "METHOD OF PREPARATION":
         return METHOD_OF_PREPARATION_PROMPT.substitute(options)
-    elif options['typeOfInfo'] == "CHARACTERIZATION/EVALUATION":
-        return CHARACTERIZATION_EVALUATION_PROMPT.substitute(options)
     elif options['typeOfInfo'] == "Both of above":
         return COMBINED_PROMPT.substitute(options)
     elif options['typeOfInfo'] == "CHECK RESULTS":
         return CHECK_RESULTS_PROMPT.substitute(options)
+    elif options['typeOfInfo'] == "DISSOLUTION & STABILITY":
+        return DISSOLUTION_STABILITY_PROMPT.substitute(options)
     elif options['typeOfInfo'] == "FTIR ANALYSIS":
         return FTIR_PROMPT.substitute(options)
     return ""
