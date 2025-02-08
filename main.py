@@ -1,5 +1,6 @@
 import streamlit as st
 import streamlit.components.v1 as components
+import requests
 import prompts
 import chat_with_gpt
 
@@ -31,11 +32,21 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+# Function to fetch structure from PubChem
+def fetch_pubchem_structure(drug_name):
+    url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{drug_name}/PNG"
+    response = requests.get(url)
+    if response.status_code == 200:
+        return url
+    return None
+
 # Page Navigation
 if "page" not in st.session_state:
     st.session_state.page = "form"
 if "api_response" not in st.session_state:
     st.session_state.api_response = None
+if "structure_image" not in st.session_state:
+    st.session_state.structure_image = None
 
 options = dict()
 
@@ -47,15 +58,33 @@ if st.session_state.page == "form":
 
     # User Input Form
     with st.form("input_form"):
-        col1, col2 = st.columns(2)
+        col1, col2 = st.columns([3, 1])
 
         with col1:
             options["product_name"] = st.text_input("💊 Product Name", placeholder="e.g., Paracetamol")
-            options["powerOfDrug"] = st.text_input("⚡ Power of Drug", placeholder="e.g., 500 mg")
 
         with col2:
+            if st.form_submit_button("🔍 Get Structure"):
+                if options["product_name"]:
+                    structure_url = fetch_pubchem_structure(options["product_name"])
+                    if structure_url:
+                        st.session_state.structure_image = structure_url
+                    else:
+                        st.session_state.structure_image = None
+                        st.warning("⚠️ No structure found on PubChem.")
+
+        if st.session_state.structure_image:
+            st.image(st.session_state.structure_image, caption="Chemical Structure from PubChem", use_column_width=True)
+
+        col3, col4 = st.columns(2)
+
+        with col3:
+            options["powerOfDrug"] = st.text_input("⚡ Power of Drug", placeholder="e.g., 500 mg")
+
+        with col4:
             options["quanOfMed"] = st.text_input("📦 Quantity of Medicine", placeholder="e.g., 1000 tablets")
-            options["jurisdiction"] = st.selectbox("🌎 Select Jurisdiction", 
+
+        options["jurisdiction"] = st.selectbox("🌎 Select Jurisdiction", 
                 ["INDIAN PHARMACOPIEA", "BRITISH PHARMACOPIEA", "UNITED STATES PHARMACOPOEIA", "MARTINDALE-EXTRA PHARMACOPIEA", "COMPARE WITH ALL"])
 
         st.markdown('<div class="card">', unsafe_allow_html=True)
