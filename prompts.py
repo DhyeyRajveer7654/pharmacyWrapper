@@ -40,25 +40,7 @@ TABLE_STYLE = """
 </style>
 """
 
-# Function to format responses as a detailed HTML table
-def format_as_table(data):
-    table_html = TABLE_STYLE + '<div class="table-container"><table><tr>'
-    headers = data[0].keys()
-
-    for header in headers:
-        table_html += f"<th>{header}</th>"
-    table_html += "</tr>"
-
-    for row in data:
-        table_html += "<tr>"
-        for value in row.values():
-            table_html += f"<td>{value}</td>"
-        table_html += "</tr>"
-
-    table_html += "</table></div>"
-    return table_html
-
-# 📌 **Highly Detailed Method of Preparation**
+# 📌 **Highly Detailed Method of Preparation with Excipients Quantity**
 METHOD_OF_PREPARATION_PROMPT = Template("""
 Provide a **highly detailed, step-by-step** **method of preparation** for **$product_name** ($quanOfMed), each containing **$powerOfDrug** of the active ingredient, based on **$jurisdiction** standards.
 
@@ -70,44 +52,31 @@ Ensure the response is a **centered HTML table** covering:
 - **Critical Observations**
 - **Regulatory Considerations**
 
-Each step must be detailed with **scientific justification**, including:
+Additionally, provide a **reference table** showing the **exact quantity** of excipients required based on **$quanOfMed**.  
+This table should include:
+- **Ingredient Name (API & Excipients)**
+- **Required Quantity per Dosage Unit**
+- **Total Quantity Required for $quanOfMed**
+- **Function in Formulation**
+- **Solubility & Stability Considerations**
+
+Each step must include **scientific justification**, including:
 - How **ingredients are selected and handled**.
 - Precautions to **avoid errors** during mixing, drying, compression, and packaging.
 - How to ensure **uniformity, stability, and compliance** with pharmacopeial standards.
 
-The response **must be in table format only** with **white text inside a dark background**, all text **left-aligned**, and no extra text outside the table.
+The response **must be in HTML table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
 """)
 
-# 📌 **Highly Detailed Characterization & Evaluation**
-CHARACTERIZATION_EVALUATION_PROMPT = Template("""
-Provide a **comprehensive and detailed** characterization and evaluation of **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
-
-Ensure the response is a **centered HTML table** covering:
-- **Test Name**
-- **Objective**
-- **Procedure (Step-by-step)**
-- **Equipment Required**
-- **Acceptable Limits**
-- **Expected Outcomes**
-- **Common Errors & Corrective Actions**
-- **Regulatory Considerations**
-
-Every test should include **scientific justification** explaining:
-- Why the test is critical for **quality assurance**.
-- What **deviations indicate** about product failure.
-- **How to correct failures** to meet pharmacopeial standards.
-
-The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
-""")
-
-# 📌 **Highly Detailed Combined Formulation & Testing**
+# 📌 **Highly Detailed Combined Formulation & Testing with Excipients Quantity**
 COMBINED_PROMPT = Template("""
-Provide a **detailed** combined **formulation and testing** report for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
+Provide a **fully detailed** combined **formulation and testing** report for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
 
 The response should include **two separate centered tables**:
 1️⃣ **Formulation Process**:
    - **Ingredient**
-   - **Quantity**
+   - **Quantity per Unit**
+   - **Total Quantity for $quanOfMed**
    - **Purpose**
    - **Mixing & Processing Steps**
    - **Critical Processing Parameters**
@@ -187,8 +156,6 @@ The response **must be in table format only**, with **white text inside a dark b
 def getPromptForOptions(options):
     if options['typeOfInfo'] == "METHOD OF PREPARATION":
         return METHOD_OF_PREPARATION_PROMPT.substitute(options)
-    elif options['typeOfInfo'] == "CHARACTARIZATION/EVALUATION":
-        return CHARACTERIZATION_EVALUATION_PROMPT.substitute(options)
     elif options['typeOfInfo'] == "Both of above":
         return COMBINED_PROMPT.substitute(options)
     elif options['typeOfInfo'] == "CHECK RESULTS":
