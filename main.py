@@ -50,7 +50,7 @@ if st.session_state.page == "form":
         col1, col2 = st.columns(2)
 
         with col1:
-            options["product_name"] = st.text_input("📌 Product Name", placeholder="e.g., Paracetamol")
+            options["product_name"] = st.text_input("💊 Product Name", placeholder="e.g., Paracetamol")
             options["powerOfDrug"] = st.text_input("⚡ Power of Drug", placeholder="e.g., 500 mg")
 
         with col2:
@@ -88,7 +88,7 @@ elif st.session_state.page == "result":
     # Apply White Background for Result Page
     st.markdown("""
         <style>
-            body { background-color: white !important; color: black !important; }
+            body { background-color: black !important; color: white !important; }
         </style>
     """, unsafe_allow_html=True)
 
