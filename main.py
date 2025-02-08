@@ -1,167 +1,124 @@
-from string import Template
+import streamlit as st
+import streamlit.components.v1 as components
+import prompts
+import chat_with_gpt
 
-# 🌟 Modernized Table Styling with Better Contrast
-TABLE_STYLE = """
-<style>
-    .table-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 20px;
-    }
-    table {
-        width: 90%;
-        border-collapse: collapse;
-        background-color: rgba(255, 255, 255, 0.95); /* Light background for easy reading */
-        color: #222; /* Dark text for strong contrast */
-        border-radius: 10px;
-        font-size: 16px;
-        text-align: left;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    }
-    th {
-        background: linear-gradient(90deg, #ff758c, #ff7eb3); /* Attractive gradient */
-        color: white;
-        padding: 12px;
-        text-align: center;
-        font-weight: bold;
-        border-radius: 8px;
-    }
-    td {
-        border: 1px solid #ddd;
-        padding: 10px;
-        text-align: left;
-    }
-    tr:nth-child(even) {
-        background-color: #f8f8f8; /* Soft gray for better readability */
-    }
-    tr:hover {
-        background: #ff7eb3;
-        color: white;
-    }
-</style>
-"""
+# Set Page Configuration
+st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
 
-# 📌 **Highly Detailed Method of Preparation with Excipients Quantity**
-METHOD_OF_PREPARATION_PROMPT = Template("""
-Provide a **highly detailed, step-by-step** **method of preparation** for **$product_name** ($quanOfMed), each containing **$powerOfDrug** of the active ingredient, based on **$jurisdiction** standards.
+# Apply Enhanced Styling with Transparent Background
+st.markdown("""
+    <style>
+        /* Transparent and Modern Background */
+        .stApp {
+            background: url('https://source.unsplash.com/1600x900/?science,technology') no-repeat center center fixed;
+            background-size: cover;
+        }
 
-Ensure the response is a **well-formatted HTML table** covering:
-- **Step Number**
-- **Step Description**
-- **Equipment Required**
-- **Time Duration**
-- **Critical Observations**
-- **Regulatory Considerations**
+        /* Blur Effect */
+        .main-container {
+            background: rgba(255, 255, 255, 0.2); /* Light glass effect */
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
+        }
 
-Additionally, provide a **reference table** showing the **exact quantity** of excipients required based on **$quanOfMed**.  
-This table should include:
-- **Ingredient Name (API & Excipients)**
-- **Required Quantity per Dosage Unit**
-- **Total Quantity Required for $quanOfMed**
-- **Function in Formulation**
-- **Solubility & Stability Considerations**
+        /* Input Fields */
+        .stTextInput > div > div > input, .stSelectbox > div > div > select, .stTextArea > div > textarea { 
+            background-color: rgba(255, 255, 255, 0.7) !important;
+            color: black !important;
+            border-radius: 8px !important;
+            padding: 10px;
+        }
 
-Each step must include **scientific justification**, including:
-- How **ingredients are selected and handled**.
-- Precautions to **avoid errors** during mixing, drying, compression, and packaging.
-- How to ensure **uniformity, stability, and compliance** with pharmacopeial standards.
+        /* Buttons */
+        .stButton>button { 
+            background: linear-gradient(90deg, #ff758c, #ff7eb3); 
+            color: white; border-radius: 10px; font-size: 16px; padding: 12px; font-weight: bold; border: none;
+            transition: all 0.3s ease-in-out; cursor: pointer;
+        }
+        .stButton>button:hover { 
+            background: linear-gradient(90deg, #ff7eb3, #ff758c);
+            transform: scale(1.05);
+        }
 
-The response **must be in an easy-to-read HTML table**, with **hover effects and high contrast**.
-""")
+        /* Titles */
+        .title { color: #ff758c; text-align: center; font-size: 32px; font-weight: bold; text-shadow: 2px 2px 10px rgba(255, 117, 140, 0.6); }
+        .subtitle { color: #ffffff; text-align: center; font-size: 18px; margin-bottom: 20px; }
 
-# 📌 **Highly Detailed Combined Formulation & Testing with Excipients Quantity**
-COMBINED_PROMPT = Template("""
-Provide a **fully detailed** combined **formulation and testing** report for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
+    </style>
+""", unsafe_allow_html=True)
 
-The response should include **two separate tables**:
-1️⃣ **Formulation Process**:
-   - **Ingredient**
-   - **Quantity per Unit**
-   - **Total Quantity for $quanOfMed**
-   - **Purpose**
-   - **Mixing & Processing Steps**
-   - **Critical Processing Parameters**
-   - **Possible Risks & Precautions**
+# Page Navigation
+if "page" not in st.session_state:
+    st.session_state.page = "form"
+if "api_response" not in st.session_state:
+    st.session_state.api_response = None
 
-2️⃣ **Testing & Quality Control**:
-   - **Test Name**
-   - **Testing Procedure**
-   - **Equipment Used**
-   - **Acceptance Criteria**
-   - **Deviation Handling**
-   - **Regulatory Considerations**
+options = {}
 
-The response **must be in a visually appealing table format**, with **modern styling and high readability**.
-""")
+# 📌 FORM PAGE
+if st.session_state.page == "form":
 
-# 📌 **Highly Detailed Quality Control & Results Checking**
-CHECK_RESULTS_PROMPT = Template("""
-Compare the **quality control evaluation results** of **$product_name** ($powerOfDrug) for **$quanOfMed** with the **$jurisdiction** standards.
+    st.markdown('<div class="title">🧪 QAI Model - AI-Powered Quality Assurance</div>', unsafe_allow_html=True)
+    st.markdown('<div class="subtitle">🔍 Enter details below to generate a pharmaceutical quality report.</div>', unsafe_allow_html=True)
 
-Ensure the response is a **cleanly formatted HTML table** covering:
-- **Test Parameter**
-- **User Result**
-- **Pharmacopeial Standard Requirement**
-- **Deviation Analysis**
-- **Corrective Action Plan**
-- **Pass/Fail Status**
+    with st.form("input_form"):
+        col1, col2 = st.columns(2)
 
-Each parameter must be explained in **scientific depth**, including:
-- Why the parameter is **critical for drug quality**.
-- What **failures indicate** about formulation issues.
-- **How to correct issues** based on pharmacopeial standards.
+        with col1:
+            options["product_name"] = st.text_input("💊 Product Name", placeholder="e.g., Paracetamol")
+            options["powerOfDrug"] = st.text_input("⚡ Power of Drug", placeholder="e.g., 500 mg")
 
-The response **must be in an easy-to-read HTML table**, ensuring **high contrast and clarity**.
-""")
+        with col2:
+            options["quanOfMed"] = st.text_input("📦 Quantity of Medicine", placeholder="e.g., 1000 tablets")
+            options["jurisdiction"] = st.selectbox("🌎 Select Jurisdiction", 
+                ["INDIAN PHARMACOPIEA", "BRITISH PHARMACOPIEA", "UNITED STATES PHARMACOPOEIA", "COMPARE WITH ALL"])
 
-# 📌 **Highly Detailed FTIR Spectrum Analysis**
-FTIR_PROMPT = Template("""
-Provide a **detailed FTIR spectrum analysis** for **$product_name**.
+        options["typeOfInfo"] = st.radio("📊 Select Information Required:", 
+                ["METHOD OF PREPARATION", "CHARACTERIZATION/EVALUATION", "Both of above", "CHECK RESULTS"])
 
-Ensure the response is a **clear, formatted HTML table** covering:
-- **Wavenumber (cm⁻¹)**
-- **Functional Group**
-- **Peak Description**
-- **Significance in Drug Identification**
-- **Potential Interferences**
-- **Regulatory Considerations**
+        if options["typeOfInfo"] == "CHECK RESULTS":
+            options["resultsToCheck"] = st.text_area("🔍 Enter Your Results:", height=150, placeholder="Paste lab results here...")
 
-Explain:
-- How FTIR confirms **drug identity**.
-- What **peak deviations** indicate about formulation errors.
-- How to **ensure FTIR compliance** with pharmacopeial standards.
+        options["ftir_required"] = st.checkbox("📡 Retrieve FTIR Data")
 
-The response **must be in an easy-to-read table**, with **alternating row colors and gradient headers**.
-""")
+        submit_button = st.form_submit_button("🚀 Generate Report")
 
-# 📌 **Highly Detailed Dissolution & Stability Studies**
-DISSOLUTION_STABILITY_PROMPT = Template("""
-Provide a **comprehensive dissolution and stability study** for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
+    if submit_button:
+        if not all([options["product_name"], options["quanOfMed"], options["powerOfDrug"]]):
+            st.error("⚠️ Please fill in all required fields!")
+        else:
+            prompt = prompts.getPromptForOptions(options)
+            with st.spinner("🛠️ Processing... Please wait"):
+                api_response = chat_with_gpt.chatWithGpt(prompt)
+                st.session_state.api_response = api_response
 
-Ensure the response is a **clear and structured HTML table** covering:
-- **Study Type (Dissolution/Stability)**
-- **Test Conditions**
-- **Sampling Time Points**
-- **Equipment Used**
-- **Acceptance Limits**
-- **Stability Period**
-- **Corrective Actions for Failures**
-- **Regulatory Considerations**
+            st.session_state.update(options)
+            st.session_state.page = "result"
+            st.experimental_rerun()
 
-The response **must be in an easy-to-read table format**, with **hover effects and clear contrast**.
-""")
+# 📌 RESULT PAGE
+elif st.session_state.page == "result":
+    st.markdown('<div class="title">📑 Submission Summary</div>', unsafe_allow_html=True)
 
-# 📌 **GPT Prompt Selection**
-def getPromptForOptions(options):
-    if options['typeOfInfo'] == "METHOD OF PREPARATION":
-        return METHOD_OF_PREPARATION_PROMPT.substitute(options)
-    elif options['typeOfInfo'] == "Both of above":
-        return COMBINED_PROMPT.substitute(options)
-    elif options['typeOfInfo'] == "CHECK RESULTS":
-        return CHECK_RESULTS_PROMPT.substitute(options)
-    elif options['typeOfInfo'] == "DISSOLUTION & STABILITY":
-        return DISSOLUTION_STABILITY_PROMPT.substitute(options)
-    elif options['typeOfInfo'] == "FTIR ANALYSIS":
-        return FTIR_PROMPT.substitute(options)
-    return ""
+    st.markdown(f"**💊 Product Name:** {st.session_state.product_name}")
+    st.markdown(f"**📦 Quantity of Medicine:** {st.session_state.quanOfMed}")
+    st.markdown(f"**⚡ Power of Drug:** {st.session_state.powerOfDrug}")
+
+    st.markdown("### 📋 Generated Report")
+    if st.session_state.api_response:
+        components.html(st.session_state.api_response, height=1000, width=1000, scrolling=True)
+    else:
+        st.warning("⚠️ No response received from GPT API.")
+
+    if st.session_state.ftir_required:
+        with st.spinner("📡 Fetching FTIR Data..."):
+            ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
+            st.markdown("### 🔬 FTIR Data")
+            st.write(ftir_data)
+
+    if st.button("🔙 Go Back to Form"):
+        st.session_state.page = "form"
+        st.experimental_rerun()
