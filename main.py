@@ -2,6 +2,13 @@ import streamlit as st
 import streamlit.components.v1 as components
 import prompts
 import chat_with_gpt
+from string import Template
+from rdkit import Chem
+from rdkit.Chem import Draw
+import requests
+
+size = (250, 250)
+
 
 # Set Page Configuration
 st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
@@ -11,12 +18,35 @@ st.markdown("""
     <style>
         body { background-color: #0e1117; color: white; font-family: 'Arial', sans-serif; }
         .stTextInput>div>div>input, .stSelectbox>div>div>select, .stTextArea>div>textarea { 
-            background-color: #1e222a !important; color: white !important; border-radius: 10px !important; padding: 10px;
+            border-radius: 5px !important; padding: 10px;
         }
-        .stButton>button { 
-            background: linear-gradient(90deg, #007BFF, #00D4FF); 
-            color: white; border-radius: 10px; font-size: 16px; padding: 10px; font-weight: bold; border: none;
-            transition: 0.3s;
+        div[data-testid="stTextInput"] input,
+        div[data-testid="stTextArea"] textarea,
+        div[data-testid="stNumberInput"] input,
+        div[data-testid="stSelectbox"] > div[data-baseweb="select"],
+        div[data-testid="stSlider"] > div[data-baseweb="slider"] {
+            background-color: white !important;
+            color: black !important;
+            border: 1px solid #ccc !important;
+            border-radius: 10px !important;
+            box-shadow: none !important; /* Remove focus glow */
+        }
+
+        /* Add hover effect for better UX */
+        div[data-testid="stTextInput"] input:hover,
+        div[data-testid="stTextArea"] textarea:hover,
+        div[data-testid="stNumberInput"] input:hover,
+        div[data-testid="stSelectbox"] > div[role="combobox"]:hover {
+            border: 1px solid #888 !important; /* Darker border on hover */
+        }
+
+        /* Ensure focus border stands out */
+        div[data-testid="stTextInput"] input:focus,
+        div[data-testid="stTextArea"] textarea:focus,
+        div[data-testid="stNumberInput"] input:focus,
+        div[data-testid="stSelectbox"] > div[role="combobox"]:focus {
+            border: 1px solid #007BFF !important; /* Blue border on focus */
+            outline: none !important;
         }
         .stButton>button:hover { 
             background: linear-gradient(90deg, #00D4FF, #007BFF);
@@ -39,6 +69,54 @@ if "api_response" not in st.session_state:
 
 options = dict()
 
+def get_cid_from_name(drug_name):
+    url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{drug_name}/cids/JSON"
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        try:
+            cids = response.json()["IdentifierList"]["CID"]
+            return cids[0]  # Return the first matching CID
+        except (KeyError, IndexError):
+            return None
+    else:
+        return None
+    
+def get_pubchem_product_code(product_name):
+    product_code_from_pubchem = ""
+    url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{product_name}/property/CanonicalSMILES/JSON"
+    response = requests.get(url)
+    if response.status_code == 200:
+        try:
+            smiles = response.json()["PropertyTable"]["Properties"][0]["CanonicalSMILES"]
+            product_code_from_pubchem=smiles
+        except (KeyError, IndexError):
+            product_code_from_pubchem = "NO DRUG FOUND"
+    else:
+        product_code_from_pubchem="NO DRUG FOUND"
+    if product_code_from_pubchem=="NO DRUG FOUND":
+        return ""
+    else:
+        return product_code_from_pubchem
+
+def showStructure(product_name):
+    product_code = ""
+    product_code_from_pubchem = get_pubchem_product_code(product_name)
+    if product_code_from_pubchem=="":
+        product_code_prompt = prompts.STRUCTURE_PROMPT.substitute(product_name=product_name)
+        print("Prompt is: "+product_code_prompt)
+        product_code = chat_with_gpt.chatWithGpt(product_code_prompt)
+        if product_code == "NO DRUG FOUND":
+            return ""
+    else:
+        product_code = product_code_from_pubchem
+    
+    print("product code is: "+product_code)
+    print("product code from pubchem: "+product_code_from_pubchem)
+    m = Chem.MolFromSmiles(product_code)
+    fig = Draw.MolToImage(m, size=size)
+    return fig
+    
 # 📌 FORM PAGE
 if st.session_state.page == "form":
 
@@ -46,29 +124,39 @@ if st.session_state.page == "form":
     st.markdown('<div class="subtitle">🔍 Enter details below to generate a pharmaceutical quality report.</div>', unsafe_allow_html=True)
 
     # User Input Form
-    with st.form("input_form"):
-        col1, col2 = st.columns(2)
+    # with st.form("input_form"):
+    col1, col2 = st.columns(2)
 
-        with col1:
-            options["product_name"] = st.text_input("💊 Product Name", placeholder="e.g., Paracetamol")
-            options["powerOfDrug"] = st.text_input("⚡ Power of Drug", placeholder="e.g., 500 mg")
+    with col1:
+        options["product_name"] = st.text_input("💊 Product Name", placeholder="e.g., Paracetamol")
+        if st.button("Get structure"):
+            if ("product_name" not in options) or ("product_name" in options and options["product_name"]==""):
+                st.error("⚠️ Please write product name!")
+            else:
+                with st.spinner("🛠️ Processing... Please wait"):
+                    fig = showStructure(options["product_name"])
+                if fig=="":
+                    st.error("⚠️ Drug not found, please input a valid drug name")
+                else:
+                    st.image(fig, caption=f"{options["product_name"]} Molecule")
+                
 
-        with col2:
-            options["quanOfMed"] = st.text_input("📦 Quantity of Medicine", placeholder="e.g., 1000 tablets")
-            options["jurisdiction"] = st.selectbox("🌎 Select Jurisdiction", 
-                ["INDIAN PHARMACOPIEA", "BRITISH PHARMACOPIEA", "UNITED STATES PHARMACOPOEIA", "MARTINDALE-EXTRA PHARMACOPIEA", "COMPARE WITH ALL"])
+    with col2:
+        options["quanOfMed"] = st.text_input("📦 Quantity of Medicine", placeholder="e.g., 1000 tablets")
+        options["jurisdiction"] = st.selectbox("🌎 Select Jurisdiction", 
+            ["INDIAN PHARMACOPIEA", "BRITISH PHARMACOPIEA", "UNITED STATES PHARMACOPOEIA", "MARTINDALE-EXTRA PHARMACOPIEA", "COMPARE WITH ALL"])
+        options["powerOfDrug"] = st.text_input("⚡ Power of Drug", placeholder="e.g., 500 mg")
 
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        options["typeOfInfo"] = st.radio("📊 Select Information Required:", 
-                ["METHOD OF PREPARATION", "CHARACTARIZATION/EVALUATION", "Both of above", "CHECK RESULTS"])
+    # st.markdown('<div class="card">', unsafe_allow_html=True)
+    options["typeOfInfo"] = st.selectbox("📊 Select Information Required:", 
+            ["METHOD OF PREPARATION", "CHARACTARIZATION/EVALUATION", "Both of above", "CHECK RESULTS"])
 
-        if options["typeOfInfo"] == "CHECK RESULTS":
-            options["resultsToCheck"] = st.text_area("🔍 Enter Your Results:", height=200, placeholder="Paste lab results here...")
+    if options["typeOfInfo"] == "CHECK RESULTS":
+        options["resultsToCheck"] = st.text_area("🔍 Enter Your Results:", height=200, placeholder="Paste lab results here...",key="checkResults")
 
-        options["ftir_required"] = st.checkbox("📡 Retrieve FTIR Data")
+    options["ftir_required"] = st.checkbox("📡 Retrieve FTIR Data")
 
-        submit_button = st.form_submit_button("🚀 Submit & Generate Report")
-
+    submit_button = st.button("🚀 Submit & Generate Report")
     if submit_button:
         if not all([options["product_name"], options["quanOfMed"], options["powerOfDrug"]]):
             st.error("⚠️ Please fill in all required fields!")
@@ -85,6 +173,9 @@ if st.session_state.page == "form":
 # 📌 RESULT PAGE
 elif st.session_state.page == "result":
 
+    if st.button("🔙 Go Back to Form"):
+        st.session_state.page = "form"
+        st.experimental_rerun()
     # Apply White Background for Result Page
     st.markdown("""
         <style>
@@ -100,9 +191,10 @@ elif st.session_state.page == "result":
 
     st.markdown("### 📋 Generated Report")
     if st.session_state.api_response:
-        components.html(st.session_state.api_response, height=1000, width=1000, scrolling=True)
+        st.markdown(st.session_state.api_response)
+        # components.html(st.session_state.api_response, height=1000, width=1000, scrolling=True)
     else:
-        st.warning("⚠️ No response received from GPT API.")
+        st.warning("⚠️ No response received from API.")
 
     if st.session_state.ftir_required:
         with st.spinner("📡 Fetching FTIR Data..."):
@@ -110,6 +202,3 @@ elif st.session_state.page == "result":
             st.markdown("### 🔬 FTIR Data")
             st.write(ftir_data)
 
-    if st.button("🔙 Go Back to Form"):
-        st.session_state.page = "form"
-        st.experimental_rerun()
