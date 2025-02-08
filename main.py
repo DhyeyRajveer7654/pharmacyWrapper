@@ -6,56 +6,27 @@ import chat_with_gpt
 # Set Page Configuration
 st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
 
-# ✅ **Modern Styling**
+# Apply Custom Styles
 st.markdown("""
     <style>
-        /* Transparent Background */
-        .stApp {
-            background: url('https://source.unsplash.com/1600x900/?science,technology') no-repeat center center fixed;
-            background-size: cover;
+        body { background-color: #0e1117; color: white; font-family: 'Arial', sans-serif; }
+        .stTextInput>div>div>input, .stSelectbox>div>div>select, .stTextArea>div>textarea { 
+            background-color: #1e222a !important; color: white !important; border-radius: 10px !important; padding: 10px;
         }
-
-        /* Report Container */
-        .report-container {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
-        }
-
-        /* Glowing Blue Headings */
-        .title {
-            text-align: center;
-            font-size: 32px;
-            font-weight: bold;
-            color: #00BFFF;
-            text-shadow: 0px 0px 10px #00BFFF;
-        }
-
-        /* Print Button */
-        .print-button {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            background: linear-gradient(90deg, #007BFF, #00D4FF);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
+        .stButton>button { 
+            background: linear-gradient(90deg, #007BFF, #00D4FF); 
+            color: white; border-radius: 10px; font-size: 16px; padding: 10px; font-weight: bold; border: none;
             transition: 0.3s;
         }
-        .print-button:hover {
+        .stButton>button:hover { 
             background: linear-gradient(90deg, #00D4FF, #007BFF);
             transform: scale(1.05);
         }
-
-        /* Hide Print Button when printing */
-        @media print {
-            .print-button { display: none; }
+        .title { color: #00D4FF; text-align: center; font-size: 30px; font-weight: bold; }
+        .subtitle { color: #cccccc; text-align: center; font-size: 18px; }
+        .card {
+            background-color: #1e222a; padding: 20px; border-radius: 12px; 
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1); margin: 20px;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -66,12 +37,15 @@ if "page" not in st.session_state:
 if "api_response" not in st.session_state:
     st.session_state.api_response = None
 
-options = {}
+options = dict()
 
 # 📌 FORM PAGE
 if st.session_state.page == "form":
-    st.markdown('<div class="title">🧪 QAI Model - AI-Powered Quality Assurance</div>', unsafe_allow_html=True)
 
+    st.markdown('<div class="title">🧪 QAI Model - AI-Powered Quality Assurance</div>', unsafe_allow_html=True)
+    st.markdown('<div class="subtitle">🔍 Enter details below to generate a pharmaceutical quality report.</div>', unsafe_allow_html=True)
+
+    # User Input Form
     with st.form("input_form"):
         col1, col2 = st.columns(2)
 
@@ -82,17 +56,18 @@ if st.session_state.page == "form":
         with col2:
             options["quanOfMed"] = st.text_input("📦 Quantity of Medicine", placeholder="e.g., 1000 tablets")
             options["jurisdiction"] = st.selectbox("🌎 Select Jurisdiction", 
-                ["INDIAN PHARMACOPIEA", "BRITISH PHARMACOPIEA", "UNITED STATES PHARMACOPOEIA", "COMPARE WITH ALL"])
+                ["INDIAN PHARMACOPIEA", "BRITISH PHARMACOPIEA", "UNITED STATES PHARMACOPOEIA", "MARTINDALE-EXTRA PHARMACOPIEA", "COMPARE WITH ALL"])
 
+        st.markdown('<div class="card">', unsafe_allow_html=True)
         options["typeOfInfo"] = st.radio("📊 Select Information Required:", 
-                ["METHOD OF PREPARATION", "CHARACTERIZATION/EVALUATION", "Both of above", "CHECK RESULTS"])
+                ["METHOD OF PREPARATION", "CHARACTARIZATION/EVALUATION", "Both of above", "CHECK RESULTS"])
 
         if options["typeOfInfo"] == "CHECK RESULTS":
-            options["resultsToCheck"] = st.text_area("🔍 Enter Your Results:", height=150, placeholder="Paste lab results here...")
+            options["resultsToCheck"] = st.text_area("🔍 Enter Your Results:", height=200, placeholder="Paste lab results here...")
 
         options["ftir_required"] = st.checkbox("📡 Retrieve FTIR Data")
 
-        submit_button = st.form_submit_button("🚀 Generate Report")
+        submit_button = st.form_submit_button("🚀 Submit & Generate Report")
 
     if submit_button:
         if not all([options["product_name"], options["quanOfMed"], options["powerOfDrug"]]):
@@ -109,38 +84,31 @@ if st.session_state.page == "form":
 
 # 📌 RESULT PAGE
 elif st.session_state.page == "result":
-    st.markdown('<div class="title">📑 Submission Summary</div>', unsafe_allow_html=True)
+
+    # Apply White Background for Result Page
+    st.markdown("""
+        <style>
+            body { background-color: black !important; color: white !important; }
+        </style>
+    """, unsafe_allow_html=True)
+
+    st.markdown('<div style="text-align:center; color:#007BFF; font-size:30px; font-weight:bold;">📑 Submission Summary</div>', unsafe_allow_html=True)
 
     st.markdown(f"**💊 Product Name:** {st.session_state.product_name}")
     st.markdown(f"**📦 Quantity of Medicine:** {st.session_state.quanOfMed}")
     st.markdown(f"**⚡ Power of Drug:** {st.session_state.powerOfDrug}")
 
-    # ✅ **Working Print Button**
-    print_js = """
-        <script>
-            function printReport() {
-                var divContents = document.getElementById("report").innerHTML;
-                var newWindow = window.open('', '', 'height=900, width=1200');
-                newWindow.document.write('<html><head><title>Report</title></head><body>');
-                newWindow.document.write(divContents);
-                newWindow.document.write('</body></html>');
-                newWindow.document.close();
-                newWindow.print();
-            }
-        </script>
-    """
-
-    st.markdown(print_js, unsafe_allow_html=True)
-    st.markdown('<button onclick="printReport()" class="print-button">🖨️ Print Report</button>', unsafe_allow_html=True)
-
-    # ✅ **Display Report in a TABLE**
-    st.markdown('<div id="report">', unsafe_allow_html=True)
+    st.markdown("### 📋 Generated Report")
     if st.session_state.api_response:
-        st.markdown(prompts.TABLE_STYLE, unsafe_allow_html=True)
         components.html(st.session_state.api_response, height=1000, width=1000, scrolling=True)
     else:
         st.warning("⚠️ No response received from GPT API.")
-    st.markdown('</div>', unsafe_allow_html=True)
+
+    if st.session_state.ftir_required:
+        with st.spinner("📡 Fetching FTIR Data..."):
+            ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
+            st.markdown("### 🔬 FTIR Data")
+            st.write(ftir_data)
 
     if st.button("🔙 Go Back to Form"):
         st.session_state.page = "form"
