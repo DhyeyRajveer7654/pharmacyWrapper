@@ -1,54 +1,52 @@
 import streamlit as st
 import streamlit.components.v1 as components
-import requests
 import prompts
 import chat_with_gpt
 
-# Set Page Configuration
+# Set Page Configuration with custom theme
 st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
 
-# Apply Custom Styles
+# Apply Enhanced Styling
 st.markdown("""
     <style>
-        body { background-color: #0e1117; color: white; font-family: 'Arial', sans-serif; }
-        .stTextInput>div>div>input, .stSelectbox>div>div>select, .stTextArea>div>textarea { 
-            background-color: #1e222a !important; color: white !important; border-radius: 10px !important; padding: 10px;
+        /* Background and Main App */
+        .stApp { background: linear-gradient(135deg, #1e1e2e, #3a3a55) !important; color: white; }
+        body { font-family: 'Arial', sans-serif; }
+
+        /* Form Cards */
+        .card { background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 12px; box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2); margin: 20px; }
+
+        /* Input Fields */
+        .stTextInput > div > div > input, .stSelectbox > div > div > select, .stTextArea > div > textarea { 
+            background-color: #2a2d40 !important; color: white !important; border-radius: 8px !important; padding: 10px;
+            border: 1px solid #555;
         }
+
+        /* Buttons */
         .stButton>button { 
-            background: linear-gradient(90deg, #007BFF, #00D4FF); 
-            color: white; border-radius: 10px; font-size: 16px; padding: 10px; font-weight: bold; border: none;
-            transition: 0.3s;
+            background: linear-gradient(90deg, #ff7eb3, #ff758c); 
+            color: white; border-radius: 10px; font-size: 16px; padding: 12px; font-weight: bold; border: none;
+            transition: all 0.3s ease-in-out; cursor: pointer;
         }
         .stButton>button:hover { 
-            background: linear-gradient(90deg, #00D4FF, #007BFF);
+            background: linear-gradient(90deg, #ff758c, #ff7eb3);
             transform: scale(1.05);
         }
-        .title { color: #00D4FF; text-align: center; font-size: 30px; font-weight: bold; }
-        .subtitle { color: #cccccc; text-align: center; font-size: 18px; }
-        .card {
-            background-color: #1e222a; padding: 20px; border-radius: 12px; 
-            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1); margin: 20px;
-        }
+
+        /* Titles and Headers */
+        .title { color: #ff758c; text-align: center; font-size: 32px; font-weight: bold; text-shadow: 2px 2px 10px rgba(255, 117, 140, 0.6); }
+        .subtitle { color: #dddddd; text-align: center; font-size: 18px; margin-bottom: 20px; }
+
     </style>
 """, unsafe_allow_html=True)
-
-# Function to fetch structure from PubChem
-def fetch_pubchem_structure(drug_name):
-    url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{drug_name}/PNG"
-    response = requests.get(url)
-    if response.status_code == 200:
-        return url
-    return None
 
 # Page Navigation
 if "page" not in st.session_state:
     st.session_state.page = "form"
 if "api_response" not in st.session_state:
     st.session_state.api_response = None
-if "structure_image" not in st.session_state:
-    st.session_state.structure_image = None
 
-options = dict()
+options = {}
 
 # 📌 FORM PAGE
 if st.session_state.page == "form":
@@ -56,47 +54,28 @@ if st.session_state.page == "form":
     st.markdown('<div class="title">🧪 QAI Model - AI-Powered Quality Assurance</div>', unsafe_allow_html=True)
     st.markdown('<div class="subtitle">🔍 Enter details below to generate a pharmaceutical quality report.</div>', unsafe_allow_html=True)
 
-    # User Input Form
     with st.form("input_form"):
-        col1, col2 = st.columns([3, 1])
+        col1, col2 = st.columns(2)
 
         with col1:
             options["product_name"] = st.text_input("💊 Product Name", placeholder="e.g., Paracetamol")
-
-        with col2:
-            if st.form_submit_button("🔍 Get Structure"):
-                if options["product_name"]:
-                    structure_url = fetch_pubchem_structure(options["product_name"])
-                    if structure_url:
-                        st.session_state.structure_image = structure_url
-                    else:
-                        st.session_state.structure_image = None
-                        st.warning("⚠️ No structure found on PubChem.")
-
-        if st.session_state.structure_image:
-            st.image(st.session_state.structure_image, caption="Chemical Structure from PubChem", use_column_width=True)
-
-        col3, col4 = st.columns(2)
-
-        with col3:
             options["powerOfDrug"] = st.text_input("⚡ Power of Drug", placeholder="e.g., 500 mg")
 
-        with col4:
+        with col2:
             options["quanOfMed"] = st.text_input("📦 Quantity of Medicine", placeholder="e.g., 1000 tablets")
-
-        options["jurisdiction"] = st.selectbox("🌎 Select Jurisdiction", 
-                ["INDIAN PHARMACOPIEA", "BRITISH PHARMACOPIEA", "UNITED STATES PHARMACOPOEIA", "MARTINDALE-EXTRA PHARMACOPIEA", "COMPARE WITH ALL"])
+            options["jurisdiction"] = st.selectbox("🌎 Select Jurisdiction", 
+                ["INDIAN PHARMACOPIEA", "BRITISH PHARMACOPIEA", "UNITED STATES PHARMACOPOEIA", "COMPARE WITH ALL"])
 
         st.markdown('<div class="card">', unsafe_allow_html=True)
         options["typeOfInfo"] = st.radio("📊 Select Information Required:", 
-                ["METHOD OF PREPARATION", "CHARACTARIZATION/EVALUATION", "Both of above", "CHECK RESULTS"])
+                ["METHOD OF PREPARATION", "CHARACTERIZATION/EVALUATION", "Both of above", "CHECK RESULTS"])
 
         if options["typeOfInfo"] == "CHECK RESULTS":
-            options["resultsToCheck"] = st.text_area("🔍 Enter Your Results:", height=200, placeholder="Paste lab results here...")
+            options["resultsToCheck"] = st.text_area("🔍 Enter Your Results:", height=150, placeholder="Paste lab results here...")
 
         options["ftir_required"] = st.checkbox("📡 Retrieve FTIR Data")
 
-        submit_button = st.form_submit_button("🚀 Submit & Generate Report")
+        submit_button = st.form_submit_button("🚀 Generate Report")
 
     if submit_button:
         if not all([options["product_name"], options["quanOfMed"], options["powerOfDrug"]]):
@@ -113,15 +92,7 @@ if st.session_state.page == "form":
 
 # 📌 RESULT PAGE
 elif st.session_state.page == "result":
-
-    # Apply White Background for Result Page
-    st.markdown("""
-        <style>
-            body { background-color: black !important; color: white !important; }
-        </style>
-    """, unsafe_allow_html=True)
-
-    st.markdown('<div style="text-align:center; color:#007BFF; font-size:30px; font-weight:bold;">📑 Submission Summary</div>', unsafe_allow_html=True)
+    st.markdown('<div class="title">📑 Submission Summary</div>', unsafe_allow_html=True)
 
     st.markdown(f"**💊 Product Name:** {st.session_state.product_name}")
     st.markdown(f"**📦 Quantity of Medicine:** {st.session_state.quanOfMed}")

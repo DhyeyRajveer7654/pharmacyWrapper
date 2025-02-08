@@ -1,6 +1,6 @@
 from string import Template
 
-# Styling for a centered, left-aligned table with white text
+# Styling for a modern, sleek, dark-themed table
 TABLE_STYLE = """
 <style>
     .table-container {
@@ -10,20 +10,22 @@ TABLE_STYLE = """
         margin-top: 20px;
     }
     table {
-        width: 85%;
+        width: 90%;
         border-collapse: collapse;
-        background-color: #1e1e1e;
-        color: white;
+        background-color: #1e1e2e; /* Deep dark background */
+        color: #ffffff;
         border-radius: 10px;
         font-size: 16px;
-        border: 1px solid #444;
         text-align: left;
+        box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
     }
     th {
-        background-color: #007BFF;
+        background: linear-gradient(90deg, #ff758c, #ff7eb3); /* Attractive gradient */
         color: white;
         padding: 12px;
         text-align: center;
+        font-weight: bold;
+        border-radius: 8px;
     }
     td {
         border: 1px solid #444;
@@ -31,10 +33,10 @@ TABLE_STYLE = """
         text-align: left;
     }
     tr:nth-child(even) {
-        background-color: #292b2c;
+        background-color: #292b3a; /* Slight contrast for alternating rows */
     }
     tr:hover {
-        background-color: #007BFF;
+        background: linear-gradient(90deg, #ff7eb3, #ff758c); /* Smooth hover effect */
         color: white;
     }
 </style>
@@ -65,7 +67,7 @@ Each step must include **scientific justification**, including:
 - Precautions to **avoid errors** during mixing, drying, compression, and packaging.
 - How to ensure **uniformity, stability, and compliance** with pharmacopeial standards.
 
-The response **must be in HTML table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
+The response **must be in HTML table format only**, with **modern styling**, **hover effects**, and **gradient headers**.
 """)
 
 # 📌 **Highly Detailed Combined Formulation & Testing with Excipients Quantity**
@@ -90,7 +92,7 @@ The response should include **two separate centered tables**:
    - **Deviation Handling**
    - **Regulatory Considerations**
 
-The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
+The response **must be in table format only**, using **modern styling**, with **hover effects and alternating row contrast**.
 """)
 
 # 📌 **Highly Detailed Quality Control & Results Checking**
@@ -110,9 +112,7 @@ Each parameter must be explained in **scientific depth**, including:
 - What **failures indicate** about formulation issues.
 - **How to correct issues** based on pharmacopeial standards.
 
-The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
-
-$resultsToCheck
+The response **must be in a clean, visually appealing HTML table**, with **smooth hover effects** and **modern fonts**.
 """)
 
 # 📌 **Highly Detailed FTIR Spectrum Analysis**
@@ -132,7 +132,7 @@ Explain:
 - What **peak deviations** indicate about formulation errors.
 - How to **ensure FTIR compliance** with pharmacopeial standards.
 
-The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
+The response **must be in a modern, well-styled HTML table**, using **gradient headers and alternating row colors**.
 """)
 
 # 📌 **Highly Detailed Dissolution & Stability Studies**
@@ -149,7 +149,7 @@ Ensure the response is a **centered HTML table** covering:
 - **Corrective Actions for Failures**
 - **Regulatory Considerations**
 
-The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
+The response **must be in a visually appealing table**, with **hover effects, alternating colors, and clear fonts**.
 """)
 
 # 📌 **GPT Prompt Selection**
