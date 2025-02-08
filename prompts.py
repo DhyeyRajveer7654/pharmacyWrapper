@@ -111,7 +111,7 @@ Ensure the response is **only** in HTML table format with no extra text.
 def getPromptForOptions(options):
     jurisdiction = options['jurisdiction']
     if jurisdiction == "COMPARE WITH ALL OF THEM":
-        jurisdiction = "INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA, and UNITED STATES PHARMACOPOEIA"
+        jurisdiction = "INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA, MARTINDALE-EXTRA PHARMACOPIEA and UNITED STATES PHARMACOPOEIA"
 
     if options['typeOfInfo'] == "METHOD OF PREPARATION":
         prompt = METHOD_OF_PREPARATION_PROMPT.substitute(options)
