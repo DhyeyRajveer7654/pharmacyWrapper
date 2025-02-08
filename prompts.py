@@ -42,64 +42,54 @@ TABLE_STYLE = """
 </style>
 """
 
-# 📌 **Highly Detailed Method of Preparation with Excipients Quantity**
+# 📌 **Highly Detailed Method of Preparation**
 METHOD_OF_PREPARATION_PROMPT = Template("""
-Provide a **highly detailed, step-by-step** **method of preparation** for **$product_name** ($quanOfMed), each containing **$powerOfDrug** of the active ingredient, based on **$jurisdiction** standards.
+Provide a **step-by-step, highly detailed method of preparation** for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, following **$jurisdiction** standards.
 
-Ensure the response is a **well-formatted HTML table** covering:
-- **Step Number**
-- **Step Description**
-- **Equipment Required**
-- **Time Duration**
-- **Critical Observations**
-- **Regulatory Considerations**
+Ensure the response follows a **structured manufacturing process** with these steps:
 
-Additionally, provide a **reference table** showing the **exact quantity** of excipients required based on **$quanOfMed**.  
-This table should include:
-- **Ingredient Name (API & Excipients)**
-- **Required Quantity per Dosage Unit**
-- **Total Quantity Required for $quanOfMed**
-- **Function in Formulation**
-- **Solubility & Stability Considerations**
+1️⃣ **Ingredient Selection & Pre-processing**  
+   - List all active & inactive ingredients with functions.  
+   - Pre-treatment or purification methods.  
+   
+2️⃣ **Pre-formulation Studies**  
+   - Solubility, pH adjustments, compatibility testing.  
 
-Each step must include **scientific justification**, including:
-- How **ingredients are selected and handled**.
-- Precautions to **avoid errors** during mixing, drying, compression, and packaging.
-- How to ensure **uniformity, stability, and compliance** with pharmacopeial standards.
+3️⃣ **Manufacturing Process (Detailed Steps)**  
+   - Exact **processing conditions** (temperature, pressure, mixing time).  
+   - **Critical parameters** & precautions.  
+   - **Scientific justifications** for each step.  
 
-The response **must be in an easy-to-read HTML table**, with **hover effects and high contrast**.
+4️⃣ **Final Processing & Quality Control Checks**  
+   - **Final drying, compression, or filling** procedures.  
+   - **Quality control tests** before release.  
+
+🔹 **Ensure clarity with scientific justifications and GMP-compliant precautions.**
 """)
 
-# 📌 **Highly Detailed Combined Formulation & Testing with Excipients Quantity**
+# 📌 **Detailed Formulation & Testing Report**
 COMBINED_PROMPT = Template("""
-Provide a **fully detailed** combined **formulation and testing** report for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
+Generate a **highly structured** combined **formulation and testing** report for **$product_name** ($quanOfMed), based on **$jurisdiction** standards.
 
-The response should include **two separate tables**:
-1️⃣ **Formulation Process**:
-   - **Ingredient**
-   - **Quantity per Unit**
-   - **Total Quantity for $quanOfMed**
-   - **Purpose**
-   - **Mixing & Processing Steps**
-   - **Critical Processing Parameters**
-   - **Possible Risks & Precautions**
+The response should include **two structured tables**:
+1️⃣ **Formulation Process**  
+   - **Ingredient** | **Quantity per Unit** | **Total Quantity for $quanOfMed**  
+   - **Purpose & Role in Formulation**  
+   - **Mixing Steps & Processing Parameters**  
 
-2️⃣ **Testing & Quality Control**:
-   - **Test Name**
-   - **Testing Procedure**
-   - **Equipment Used**
-   - **Acceptance Criteria**
-   - **Deviation Handling**
-   - **Regulatory Considerations**
+2️⃣ **Testing & Quality Control**  
+   - **Test Name** | **Testing Procedure** | **Equipment Used**  
+   - **Acceptance Criteria & Deviation Handling**  
+   - **Regulatory Compliance & Stability Considerations**  
 
-The response **must be in a visually appealing table format**, with **modern styling and high readability**.
+🔹 **Ensure precise scientific justifications for ingredient selection and process control.**
 """)
 
-# 📌 **Highly Detailed Quality Control & Results Checking**
+# 📌 **Enhanced Quality Control & Results Checking**
 CHECK_RESULTS_PROMPT = Template("""
 Compare the **quality control evaluation results** of **$product_name** ($powerOfDrug) for **$quanOfMed** with the **$jurisdiction** standards.
 
-Ensure the response is a **cleanly formatted HTML table** covering:
+Ensure the response is a **well-structured HTML table** covering:
 - **Test Parameter**
 - **User Result**
 - **Pharmacopeial Standard Requirement**
@@ -107,49 +97,42 @@ Ensure the response is a **cleanly formatted HTML table** covering:
 - **Corrective Action Plan**
 - **Pass/Fail Status**
 
-Each parameter must be explained in **scientific depth**, including:
-- Why the parameter is **critical for drug quality**.
-- What **failures indicate** about formulation issues.
-- **How to correct issues** based on pharmacopeial standards.
-
-The response **must be in an easy-to-read HTML table**, ensuring **high contrast and clarity**.
+🔹 **For each parameter, include scientific justifications on its importance, failure impact, and corrective actions.**
 """)
 
-# 📌 **Highly Detailed FTIR Spectrum Analysis**
+# 📌 **Comprehensive FTIR Spectrum Analysis**
 FTIR_PROMPT = Template("""
 Provide a **detailed FTIR spectrum analysis** for **$product_name**.
 
-Ensure the response is a **clear, formatted HTML table** covering:
+Ensure the response is a **structured HTML table** covering:
 - **Wavenumber (cm⁻¹)**
 - **Functional Group**
 - **Peak Description**
 - **Significance in Drug Identification**
 - **Potential Interferences**
-- **Regulatory Considerations**
+- **Regulatory Compliance Considerations**
 
-Explain:
-- How FTIR confirms **drug identity**.
-- What **peak deviations** indicate about formulation errors.
-- How to **ensure FTIR compliance** with pharmacopeial standards.
-
-The response **must be in an easy-to-read table**, with **alternating row colors and gradient headers**.
+🔹 **Explain how deviations in peak values affect formulation quality and corrective actions to address issues.**
 """)
 
-# 📌 **Highly Detailed Dissolution & Stability Studies**
+# 📌 **Advanced Dissolution & Stability Studies**
 DISSOLUTION_STABILITY_PROMPT = Template("""
-Provide a **comprehensive dissolution and stability study** for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
+Provide a **comprehensive dissolution and stability study** for **$product_name** ($quanOfMed), following **$jurisdiction** standards.
 
-Ensure the response is a **clear and structured HTML table** covering:
-- **Study Type (Dissolution/Stability)**
-- **Test Conditions**
-- **Sampling Time Points**
-- **Equipment Used**
-- **Acceptance Limits**
-- **Stability Period**
-- **Corrective Actions for Failures**
-- **Regulatory Considerations**
+Ensure the response is structured into **two key sections**:
+1️⃣ **Dissolution Study**  
+   - **Study Type (Single-point or Multi-point Analysis)**  
+   - **Test Conditions (pH, buffer system, agitation speed, temperature)**  
+   - **Sampling Time Points & Equipment Used**  
+   - **Acceptance Limits & Corrective Actions for Failures**  
 
-The response **must be in an easy-to-read table format**, with **hover effects and clear contrast**.
+2️⃣ **Stability Study**  
+   - **Storage Conditions (Temperature, Humidity, Light Sensitivity)**  
+   - **Stability Period & Observations**  
+   - **Impact on Drug Potency & Safety**  
+   - **GMP Compliance Considerations**  
+
+🔹 **Ensure highly structured formatting with scientific justifications for each decision.**
 """)
 
 # 📌 **GPT Prompt Selection**

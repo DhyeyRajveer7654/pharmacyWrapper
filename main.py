@@ -9,44 +9,45 @@ st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
 # Apply Enhanced Styling with Transparent Background
 st.markdown("""
     <style>
-        /* Transparent and Modern Background */
+        /* Transparent Background */
         .stApp {
             background: url('https://source.unsplash.com/1600x900/?science,technology') no-repeat center center fixed;
             background-size: cover;
         }
 
-        /* Blur Effect */
+        /* Main Content Box */
         .main-container {
-            background: rgba(255, 255, 255, 0.2); /* Light glass effect */
+            background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
         }
 
-        /* Input Fields */
-        .stTextInput > div > div > input, .stSelectbox > div > div > select, .stTextArea > div > textarea { 
-            background-color: rgba(255, 255, 255, 0.7) !important;
-            color: black !important;
-            border-radius: 8px !important;
-            padding: 10px;
+        /* Print Button */
+        .print-button {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: linear-gradient(90deg, #007BFF, #00D4FF);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: 0.3s;
         }
-
-        /* Buttons */
-        .stButton>button { 
-            background: linear-gradient(90deg, #ff758c, #ff7eb3); 
-            color: white; border-radius: 10px; font-size: 16px; padding: 12px; font-weight: bold; border: none;
-            transition: all 0.3s ease-in-out; cursor: pointer;
-        }
-        .stButton>button:hover { 
-            background: linear-gradient(90deg, #ff7eb3, #ff758c);
+        .print-button:hover {
+            background: linear-gradient(90deg, #00D4FF, #007BFF);
             transform: scale(1.05);
         }
 
-        /* Titles */
-        .title { color: #ff758c; text-align: center; font-size: 32px; font-weight: bold; text-shadow: 2px 2px 10px rgba(255, 117, 140, 0.6); }
-        .subtitle { color: #ffffff; text-align: center; font-size: 18px; margin-bottom: 20px; }
-
+        /* Button to print */
+        @media print {
+            .print-button { display: none; }
+        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -106,6 +107,9 @@ elif st.session_state.page == "result":
     st.markdown(f"**💊 Product Name:** {st.session_state.product_name}")
     st.markdown(f"**📦 Quantity of Medicine:** {st.session_state.quanOfMed}")
     st.markdown(f"**⚡ Power of Drug:** {st.session_state.powerOfDrug}")
+
+    # Print Button
+    st.markdown('<button class="print-button" onclick="window.print()">🖨️ Print Report</button>', unsafe_allow_html=True)
 
     st.markdown("### 📋 Generated Report")
     if st.session_state.api_response:
