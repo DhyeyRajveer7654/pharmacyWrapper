@@ -1,10 +1,10 @@
 from string import Template
 
-# ✅ **Enhanced Table Styling**
+# ✅ **Table Styling for Better Readability**
 TABLE_STYLE = """
 <style>
     table {
-        width: 90%;
+        width: 100%;
         border-collapse: collapse;
         background-color: white;
         color: black;
@@ -19,7 +19,6 @@ TABLE_STYLE = """
         padding: 12px;
         text-align: center;
         font-weight: bold;
-        text-shadow: 0px 0px 10px #00BFFF;
     }
     td {
         border: 1px solid #ddd;
@@ -38,7 +37,9 @@ TABLE_STYLE = """
 
 # 📌 **Highly Detailed Method of Preparation**
 METHOD_OF_PREPARATION_PROMPT = Template("""
-### **Manufacturing Process for $product_name ($quanOfMed)**
+### **Step-by-Step Manufacturing Process for $product_name ($quanOfMed)**
+
+The following table provides a structured breakdown of the preparation steps:
 
 <table>
     <tr>
@@ -53,20 +54,68 @@ METHOD_OF_PREPARATION_PROMPT = Template("""
         <td>Weigh all active and inactive ingredients precisely.</td>
         <td>Weighing Scale</td>
         <td>5 min</td>
-        <td>Ensure correct weights</td>
+        <td>Ensure accuracy in measurement.</td>
     </tr>
     <tr>
         <td>2</td>
-        <td>Mix ingredients uniformly using a high-speed mixer.</td>
+        <td>Mix ingredients uniformly.</td>
         <td>High-speed Mixer</td>
         <td>15 min</td>
-        <td>Ensure uniform blending</td>
+        <td>Ensure homogenous blending.</td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>Granulation process.</td>
+        <td>Fluid Bed Granulator</td>
+        <td>30 min</td>
+        <td>Check granule size and moisture content.</td>
     </tr>
 </table>
 """)
 
-# 📌 **Highly Detailed Formulation & Testing**
-COMBINED_PROMPT = Template("""
+# 📌 **Detailed Characterization Process (Step-by-Step for Each Test)**
+CHARACTERIZATION_PROMPT = Template("""
+### **Step-by-Step Characterization for $product_name**
+
+#### **1️⃣ Particle Size Analysis**
+<table>
+    <tr>
+        <th>Step</th>
+        <th>Description</th>
+        <th>Equipment</th>
+        <th>Time</th>
+        <th>Critical Observations</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>Load sample into particle analyzer.</td>
+        <td>Laser Diffraction Analyzer</td>
+        <td>10 min</td>
+        <td>Avoid sample contamination.</td>
+    </tr>
+</table>
+
+#### **2️⃣ Surface Morphology (SEM)**
+<table>
+    <tr>
+        <th>Step</th>
+        <th>Description</th>
+        <th>Equipment</th>
+        <th>Time</th>
+        <th>Critical Observations</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>Place sample on SEM stub.</td>
+        <td>Scanning Electron Microscope</td>
+        <td>15 min</td>
+        <td>Ensure uniform distribution.</td>
+    </tr>
+</table>
+""")
+
+# 📌 **Formulation & Testing**
+FORMULATION_TESTING_PROMPT = Template("""
 ### **Formulation & Testing Report for $product_name ($quanOfMed)**
 
 #### **Formulation Process**
@@ -98,28 +147,6 @@ COMBINED_PROMPT = Template("""
         <td>Check breakdown in water</td>
         <td>USP Disintegration Tester</td>
         <td>< 15 min</td>
-    </tr>
-</table>
-""")
-
-# 📌 **Quality Control & Results Checking**
-CHECK_RESULTS_PROMPT = Template("""
-### **Quality Control Evaluation for $product_name ($powerOfDrug)**
-
-<table>
-    <tr>
-        <th>Test Parameter</th>
-        <th>User Result</th>
-        <th>Pharmacopeial Standard</th>
-        <th>Deviation Analysis</th>
-        <th>Corrective Action</th>
-    </tr>
-    <tr>
-        <td>Weight Variation</td>
-        <td>Within ±5%</td>
-        <td>±5%</td>
-        <td>Pass</td>
-        <td>None</td>
     </tr>
 </table>
 """)
@@ -183,11 +210,11 @@ DISSOLUTION_STABILITY_PROMPT = Template("""
 def getPromptForOptions(options):
     if options['typeOfInfo'] == "METHOD OF PREPARATION":
         return METHOD_OF_PREPARATION_PROMPT.substitute(options)
+    elif options['typeOfInfo'] == "CHARACTERIZATION/EVALUATION":
+        return CHARACTERIZATION_PROMPT.substitute(options)
     elif options['typeOfInfo'] == "Both of above":
-        return COMBINED_PROMPT.substitute(options)
+        return FORMULATION_TESTING_PROMPT.substitute(options)
     elif options['typeOfInfo'] == "CHECK RESULTS":
-        return CHECK_RESULTS_PROMPT.substitute(options)
-    elif options['typeOfInfo'] == "DISSOLUTION & STABILITY":
         return DISSOLUTION_STABILITY_PROMPT.substitute(options)
     elif options['typeOfInfo'] == "FTIR ANALYSIS":
         return FTIR_PROMPT.substitute(options)
