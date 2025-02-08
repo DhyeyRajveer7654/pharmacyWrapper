@@ -1,6 +1,6 @@
 from string import Template
 
-# Styling for a modern, sleek, dark-themed table
+# 🌟 Modernized Table Styling with Better Contrast
 TABLE_STYLE = """
 <style>
     .table-container {
@@ -12,12 +12,12 @@ TABLE_STYLE = """
     table {
         width: 90%;
         border-collapse: collapse;
-        background-color: #1e1e2e; /* Deep dark background */
-        color: #ffffff;
+        background-color: rgba(255, 255, 255, 0.95); /* Light background for easy reading */
+        color: #222; /* Dark text for strong contrast */
         border-radius: 10px;
         font-size: 16px;
         text-align: left;
-        box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     }
     th {
         background: linear-gradient(90deg, #ff758c, #ff7eb3); /* Attractive gradient */
@@ -28,15 +28,15 @@ TABLE_STYLE = """
         border-radius: 8px;
     }
     td {
-        border: 1px solid #444;
+        border: 1px solid #ddd;
         padding: 10px;
         text-align: left;
     }
     tr:nth-child(even) {
-        background-color: #292b3a; /* Slight contrast for alternating rows */
+        background-color: #f8f8f8; /* Soft gray for better readability */
     }
     tr:hover {
-        background: linear-gradient(90deg, #ff7eb3, #ff758c); /* Smooth hover effect */
+        background: #ff7eb3;
         color: white;
     }
 </style>
@@ -46,7 +46,7 @@ TABLE_STYLE = """
 METHOD_OF_PREPARATION_PROMPT = Template("""
 Provide a **highly detailed, step-by-step** **method of preparation** for **$product_name** ($quanOfMed), each containing **$powerOfDrug** of the active ingredient, based on **$jurisdiction** standards.
 
-Ensure the response is a **centered HTML table** covering:
+Ensure the response is a **well-formatted HTML table** covering:
 - **Step Number**
 - **Step Description**
 - **Equipment Required**
@@ -67,14 +67,14 @@ Each step must include **scientific justification**, including:
 - Precautions to **avoid errors** during mixing, drying, compression, and packaging.
 - How to ensure **uniformity, stability, and compliance** with pharmacopeial standards.
 
-The response **must be in HTML table format only**, with **modern styling**, **hover effects**, and **gradient headers**.
+The response **must be in an easy-to-read HTML table**, with **hover effects and high contrast**.
 """)
 
 # 📌 **Highly Detailed Combined Formulation & Testing with Excipients Quantity**
 COMBINED_PROMPT = Template("""
 Provide a **fully detailed** combined **formulation and testing** report for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
 
-The response should include **two separate centered tables**:
+The response should include **two separate tables**:
 1️⃣ **Formulation Process**:
    - **Ingredient**
    - **Quantity per Unit**
@@ -92,14 +92,14 @@ The response should include **two separate centered tables**:
    - **Deviation Handling**
    - **Regulatory Considerations**
 
-The response **must be in table format only**, using **modern styling**, with **hover effects and alternating row contrast**.
+The response **must be in a visually appealing table format**, with **modern styling and high readability**.
 """)
 
 # 📌 **Highly Detailed Quality Control & Results Checking**
 CHECK_RESULTS_PROMPT = Template("""
 Compare the **quality control evaluation results** of **$product_name** ($powerOfDrug) for **$quanOfMed** with the **$jurisdiction** standards.
 
-Ensure the response is a **centered HTML table** covering:
+Ensure the response is a **cleanly formatted HTML table** covering:
 - **Test Parameter**
 - **User Result**
 - **Pharmacopeial Standard Requirement**
@@ -112,14 +112,14 @@ Each parameter must be explained in **scientific depth**, including:
 - What **failures indicate** about formulation issues.
 - **How to correct issues** based on pharmacopeial standards.
 
-The response **must be in a clean, visually appealing HTML table**, with **smooth hover effects** and **modern fonts**.
+The response **must be in an easy-to-read HTML table**, ensuring **high contrast and clarity**.
 """)
 
 # 📌 **Highly Detailed FTIR Spectrum Analysis**
 FTIR_PROMPT = Template("""
 Provide a **detailed FTIR spectrum analysis** for **$product_name**.
 
-Ensure the response is a **centered HTML table** covering:
+Ensure the response is a **clear, formatted HTML table** covering:
 - **Wavenumber (cm⁻¹)**
 - **Functional Group**
 - **Peak Description**
@@ -132,14 +132,14 @@ Explain:
 - What **peak deviations** indicate about formulation errors.
 - How to **ensure FTIR compliance** with pharmacopeial standards.
 
-The response **must be in a modern, well-styled HTML table**, using **gradient headers and alternating row colors**.
+The response **must be in an easy-to-read table**, with **alternating row colors and gradient headers**.
 """)
 
 # 📌 **Highly Detailed Dissolution & Stability Studies**
 DISSOLUTION_STABILITY_PROMPT = Template("""
 Provide a **comprehensive dissolution and stability study** for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
 
-Ensure the response is a **centered HTML table** covering:
+Ensure the response is a **clear and structured HTML table** covering:
 - **Study Type (Dissolution/Stability)**
 - **Test Conditions**
 - **Sampling Time Points**
@@ -149,7 +149,7 @@ Ensure the response is a **centered HTML table** covering:
 - **Corrective Actions for Failures**
 - **Regulatory Considerations**
 
-The response **must be in a visually appealing table**, with **hover effects, alternating colors, and clear fonts**.
+The response **must be in an easy-to-read table format**, with **hover effects and clear contrast**.
 """)
 
 # 📌 **GPT Prompt Selection**
