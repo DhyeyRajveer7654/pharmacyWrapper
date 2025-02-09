@@ -286,8 +286,45 @@ if st.session_state.ftir_required:
         
         if ftir_data:
             ftir_table = f"""
+            <style>
+                table {{
+                    width: 100%;
+                    border-collapse: collapse;
+                    font-family: 'Arial', sans-serif;
+                    font-size: 16px;
+                    border: 1px solid black;
+                }}
+                th {{
+                    background-color: #0B3D91; /* Dark Blue Header */
+                    color: white;
+                    font-weight: bold;
+                    font-style: italic;
+                    padding: 12px;
+                    text-align: center;
+                    border: 1px solid black;
+                }}
+                td {{
+                    padding: 12px;
+                    text-align: center;
+                    border: 1px solid black;
+                    color: black;
+                }}
+                tr:nth-child(even) {{
+                    background-color: #E3F2FD; /* Light Blue */
+                }}
+                tr:nth-child(odd) {{
+                    background-color: white;
+                }}
+                tr:hover {{
+                    background-color: #CFE2FF; /* Slightly darker blue hover effect */
+                }}
+            </style>
             <table>
-                <tr><th>Wavenumber (cm⁻¹)</th><th>Functional Group</th><th>Peak Description</th></tr>
+                <tr>
+                    <th>Wavenumber (cm⁻¹)</th>
+                    <th>Functional Group</th>
+                    <th>Peak Description</th>
+                </tr>
                 {ftir_data}
             </table>
             """
