@@ -8,7 +8,7 @@ import requests
 
 st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
 
-# Apply Professional Pharma UI
+# **Apply Pharma UI**
 st.markdown("""
     <style>
         body { background-color: #f8fbff; color: #0b3d91; font-family: 'Arial', sans-serif; }
@@ -67,17 +67,16 @@ if st.session_state.page == "form":
 # **RESULT PAGE**
 elif st.session_state.page == "result":
     st.markdown('<div class="title">📑 Generated Report</div>', unsafe_allow_html=True)
-    st.markdown(f"💊 **{st.session_state.product_name}** | ⚡ **{st.session_state.powerOfDrug}** | 📦 **{st.session_state.quanOfMed}**")
     
     if st.session_state.api_response:
-        st.write(st.session_state.api_response)
+        components.html(st.session_state.api_response, height=700, scrolling=True)
     else:
         st.warning("⚠️ No response received.")
-    
+
     if st.session_state.ftir_required:
         with st.spinner("Fetching FTIR Data..."):
             ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
-            st.write("🔬 **FTIR Data**")
+            st.markdown("### 🔬 FTIR Data")
             st.write(ftir_data)
 
     if st.button("🔙 Back"):

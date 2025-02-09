@@ -1,84 +1,61 @@
 from string import Template
 
-# Styling for a professional pharma-based UI
+# 📌 **Table Styling for Pharma-Themed Reports**
 TABLE_STYLE = """
 <style>
-    .table-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 20px;
-    }
-    table {
-        width: 90%;
-        border-collapse: collapse;
-        background-color: #f4f8fb;
-        color: #0b3d91;
-        border-radius: 10px;
-        font-size: 16px;
-        border: 1px solid #004080;
-        text-align: left;
-    }
-    th {
-        background-color: #007BFF;
-        color: white;
-        padding: 12px;
-        text-align: center;
-    }
-    td {
-        border: 1px solid #004080;
-        padding: 10px;
-        text-align: left;
-    }
-    tr:nth-child(even) {
-        background-color: #e6f0ff;
-    }
-    tr:hover {
-        background-color: #cce0ff;
-    }
+    .table-container { display: flex; justify-content: center; align-items: center; margin-top: 20px; }
+    table { width: 90%; border-collapse: collapse; background-color: #f4f8fb; color: #0b3d91; border-radius: 10px; font-size: 16px; border: 1px solid #004080; text-align: left; }
+    th { background-color: #007BFF; color: white; padding: 12px; text-align: center; }
+    td { border: 1px solid #004080; padding: 10px; text-align: left; }
+    tr:nth-child(even) { background-color: #e6f0ff; }
+    tr:hover { background-color: #cce0ff; }
 </style>
 """
 
-# 📌 **Highly Detailed Method of Preparation**
+# 📌 **Method of Preparation (Forces Table Output)**
 METHOD_OF_PREPARATION_PROMPT = Template("""
-Provide a **detailed step-by-step** **method of preparation** for **$product_name** ($quanOfMed), each containing **$powerOfDrug** based on **$jurisdiction** standards.
+Generate a **detailed step-by-step method of preparation** for **$product_name** ($quanOfMed), each containing **$powerOfDrug** based on **$jurisdiction** standards.
 
-Ensure the response covers:
-- **Step Number, Description, Equipment Required, Time Duration, Critical Observations, Regulatory Considerations**
-- **A table with exact excipient quantities**
-- **Justification for ingredient selection and handling**
-- **Precautions for uniformity, stability, and pharmacopeial compliance**
-
+Ensure the response follows this **strict table format**:
 $TABLE_STYLE
+<table>
+    <tr><th>Step Number</th><th>Step Description</th><th>Equipment Required</th><th>Time Duration</th><th>Critical Observations</th><th>Regulatory Considerations</th></tr>
+</table>
+
+Additionally, generate a **Reference Table** with excipient details in the same format.
 """)
 
-# 📌 **Characterization & Evaluation**
+# 📌 **Characterization & Evaluation (Forces Table Output)**
 CHARACTERIZATION_EVALUATION_PROMPT = Template("""
-Provide a **detailed characterization and evaluation** for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
+Generate a **detailed characterization and evaluation** for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
 
-Include:
-- **Physical characteristics, Identification tests (IR, UV, HPLC), Hardness, Friability, Disintegration, Dissolution, Assay of content**
-- **Step-by-step testing instructions, required equipment, SOPs, acceptance limits**
+Ensure the response follows this **strict table format**:
 $TABLE_STYLE
+<table>
+    <tr><th>Test Name</th><th>Testing Procedure</th><th>Equipment Used</th><th>Acceptance Criteria</th><th>Deviation Handling</th><th>Regulatory Considerations</th></tr>
+</table>
 """)
 
-# 📌 **Check Results**
+# 📌 **Check Results (Forces Table Output)**
 CHECK_RESULTS_PROMPT = Template("""
 Compare the **quality control results** for **$product_name** ($quanOfMed) with the **$jurisdiction** standards.
 
-Include:
-- **Test Parameter, User Result, Pharmacopeial Standard Requirement, Deviation Analysis, Corrective Action Plan, Pass/Fail Status**
-- **Scientific explanations on parameter importance, failures, and corrective actions**
+Ensure the response follows this **strict table format**:
 $TABLE_STYLE
+<table>
+    <tr><th>Test Parameter</th><th>User Result</th><th>Pharmacopeial Standard</th><th>Deviation Analysis</th><th>Corrective Action Plan</th><th>Pass/Fail Status</th></tr>
+</table>
 """)
 
-# 📌 **FTIR Spectrum Analysis (Kept from Latest File)**
+# 📌 **FTIR Spectrum Analysis (Forces Table Output)**
 FTIR_PROMPT = Template("""
-Provide an **FTIR spectrum analysis** for **$product_name**.
+Generate an **FTIR spectrum analysis** for **$product_name**.
 
-Include:
-- **Wavenumber (cm⁻¹), Functional Group, Peak Description, Significance in Drug Identification, Potential Interferences, Regulatory Considerations**
+Ensure the response follows this **strict table format**:
 $TABLE_STYLE
+<table>
+    <tr><th>Wavenumber (cm⁻¹)</th><th>Functional Group</th><th>Peak Description</th><th>Significance in Drug Identification</th><th>Potential Interferences</th><th>Regulatory Considerations</th></tr>
+</table>
 """)
 
 # 📌 **SMILES Notation for Structure Feature**
