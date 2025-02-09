@@ -115,11 +115,10 @@ The response **must be in table format only**, with **white text inside a dark b
 $resultsToCheck
 """)
 
-# 📌 **Highly Detailed FTIR Spectrum Analysis**
 FTIR_PROMPT = Template("""
 Provide a **detailed FTIR spectrum analysis** for **$product_name**.
 
-Ensure the response is a **centered HTML table** covering:
+Ensure the response is a **professionally styled HTML table** covering:
 - **Wavenumber (cm⁻¹)**
 - **Functional Group**
 - **Peak Description**
@@ -127,30 +126,81 @@ Ensure the response is a **centered HTML table** covering:
 - **Potential Interferences**
 - **Regulatory Considerations**
 
-Explain:
-- How FTIR confirms **drug identity**.
-- What **peak deviations** indicate about formulation errors.
-- How to **ensure FTIR compliance** with pharmacopeial standards.
+### **💠 Table Formatting Requirements**:
+- Use a **dark blue header** (`#0B3D91`) with **white text**.
+- Apply **alternating row colors**: 
+  - Even rows: **Light blue (`#E3F2FD`)**
+  - Odd rows: **White**
+- Ensure **left-aligned text** for readability.
+- Include **hover effect** (`#CFE2FF`) for better visibility.
+- **No extra text** outside the table.
 
-The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
-""")
+### **💡 Key Considerations for FTIR Analysis**:
+- Explain how FTIR confirms **drug identity**.
+- Identify what **peak deviations** indicate about formulation errors.
+- Provide guidance on ensuring **FTIR compliance** with pharmacopeial standards.
 
-# 📌 **Highly Detailed Dissolution & Stability Studies**
-DISSOLUTION_STABILITY_PROMPT = Template("""
-Provide a **comprehensive dissolution and stability study** for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
-
-Ensure the response is a **centered HTML table** covering:
-- **Study Type (Dissolution/Stability)**
-- **Test Conditions**
-- **Sampling Time Points**
-- **Equipment Used**
-- **Acceptance Limits**
-- **Stability Period**
-- **Corrective Actions for Failures**
-- **Regulatory Considerations**
-
-The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
-""")
+### **⚡ Response Format (STRICTLY TABLE ONLY, NO EXTRA TEXT)**:
+```html
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: 'Arial', sans-serif;
+        font-size: 16px;
+        border: 1px solid black;
+    }
+    th {
+        background-color: #0B3D91; /* Dark Blue Header */
+        color: white;
+        font-weight: bold;
+        font-style: italic;
+        padding: 12px;
+        text-align: left;
+        border: 1px solid black;
+    }
+    td {
+        padding: 12px;
+        text-align: left;
+        border: 1px solid black;
+        color: black;
+    }
+    tr:nth-child(even) {
+        background-color: #E3F2FD; /* Light Blue */
+    }
+    tr:nth-child(odd) {
+        background-color: white;
+    }
+    tr:hover {
+        background-color: #CFE2FF; /* Slightly darker blue hover effect */
+    }
+</style>
+<table>
+    <tr>
+        <th>Wavenumber (cm⁻¹)</th>
+        <th>Functional Group</th>
+        <th>Peak Description</th>
+        <th>Significance in Drug Identification</th>
+        <th>Potential Interferences</th>
+        <th>Regulatory Considerations</th>
+    </tr>
+    <tr>
+        <td>Example 1</td>
+        <td>Functional Group 1</td>
+        <td>Description 1</td>
+        <td>Significance 1</td>
+        <td>Interferences 1</td>
+        <td>Regulatory 1</td>
+    </tr>
+    <tr>
+        <td>Example 2</td>
+        <td>Functional Group 2</td>
+        <td>Description 2</td>
+        <td>Significance 2</td>
+        <td>Interferences 2</td>
+        <td>Regulatory 2</td>
+    </tr>
+</table>
 
 STRUCTURE_PROMPT = Template("""
 Provide the **canonical SMILES notation** for the drug $product_name based on PubChem's database. Ensure that the SMILES code is accurate and matches PubChem's standard molecular structure for the drug. Return only the canonical SMILES code as provided by PubChem, and no other extra text. If the drug name is not valid, return only "NO DRUG FOUND".

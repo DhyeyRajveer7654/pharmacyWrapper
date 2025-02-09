@@ -284,7 +284,12 @@ if st.session_state.ftir_required:
         ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
         st.markdown("### 🔬 FTIR Data")
         
-        if ftir_data:
+        if ftir_data and isinstance(ftir_data, list):  # Ensure data is a list of lists or tuples
+            table_rows = "".join(
+                f"<tr><td>{row[0]}</td><td>{row[1]}</td><td>{row[2]}</td></tr>" 
+                for row in ftir_data
+            )
+
             ftir_table = f"""
             <style>
                 table {{
@@ -325,9 +330,9 @@ if st.session_state.ftir_required:
                     <th>Functional Group</th>
                     <th>Peak Description</th>
                 </tr>
-                {ftir_data}
+                {table_rows}
             </table>
             """
             st.markdown(ftir_table, unsafe_allow_html=True)
         else:
-            st.warning("⚠️ No FTIR data available.")
+            st.warning("⚠️ No FTIR data available or incorrect format.")
