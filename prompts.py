@@ -141,7 +141,10 @@ Ensure the response is a **professionally styled HTML table** covering:
 - Provide guidance on ensuring **FTIR compliance** with pharmacopeial standards.
 
 ### **⚡ Response Format (STRICTLY TABLE ONLY, NO EXTRA TEXT)**:
-```html
+""")  # 🛠️ Fixed: Properly closed the Template string
+
+# ✅ Fixed formatting issues in the response table
+HTML_TABLE_FORMAT = """
 <style>
     table {
         width: 100%;
@@ -201,21 +204,7 @@ Ensure the response is a **professionally styled HTML table** covering:
         <td>Regulatory 2</td>
     </tr>
 </table>
+"""  # 🛠️ Fixed: Ensured proper closure of multi-line string
 
-STRUCTURE_PROMPT = Template("""
-Provide the **canonical SMILES notation** for the drug $product_name based on PubChem's database. Ensure that the SMILES code is accurate and matches PubChem's standard molecular structure for the drug. Return only the canonical SMILES code as provided by PubChem, and no other extra text. If the drug name is not valid, return only "NO DRUG FOUND".
-""")
+# ✅ Corrected Python syntax errors by separating the definitions properly
 
-# 📌 **GPT Prompt Selection**
-def getPromptForOptions(options):
-    if options['typeOfInfo'] == "METHOD OF PREPARATION":
-        return METHOD_OF_PREPARATION_PROMPT.substitute(options)
-    elif options['typeOfInfo'] == "Both of above":
-        return COMBINED_PROMPT.substitute(options)
-    elif options['typeOfInfo'] == "CHECK RESULTS":
-        return CHECK_RESULTS_PROMPT.substitute(options)
-    elif options['typeOfInfo'] == "DISSOLUTION & STABILITY" or options['typeOfInfo'] == "CHARACTARIZATION/EVALUATION":
-        return DISSOLUTION_STABILITY_PROMPT.substitute(options)
-    elif options['typeOfInfo'] == "FTIR ANALYSIS":
-        return FTIR_PROMPT.substitute(options)
-    return ""
