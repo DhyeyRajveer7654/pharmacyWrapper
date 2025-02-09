@@ -284,55 +284,13 @@ if st.session_state.ftir_required:
         ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
         st.markdown("### 🔬 FTIR Data")
         
-        if ftir_data and isinstance(ftir_data, list):  # Ensure data is a list of lists or tuples
-            table_rows = "".join(
-                f"<tr><td>{row[0]}</td><td>{row[1]}</td><td>{row[2]}</td></tr>" 
-                for row in ftir_data
-            )
-
+        if ftir_data:
             ftir_table = f"""
-            <style>
-                table {{
-                    width: 100%;
-                    border-collapse: collapse;
-                    font-family: 'Arial', sans-serif;
-                    font-size: 16px;
-                    border: 1px solid black;
-                }}
-                th {{
-                    background-color: #0B3D91; /* Dark Blue Header */
-                    color: white;
-                    font-weight: bold;
-                    font-style: italic;
-                    padding: 12px;
-                    text-align: center;
-                    border: 1px solid black;
-                }}
-                td {{
-                    padding: 12px;
-                    text-align: center;
-                    border: 1px solid black;
-                    color: black;
-                }}
-                tr:nth-child(even) {{
-                    background-color: #E3F2FD; /* Light Blue */
-                }}
-                tr:nth-child(odd) {{
-                    background-color: white;
-                }}
-                tr:hover {{
-                    background-color: #CFE2FF; /* Slightly darker blue hover effect */
-                }}
-            </style>
             <table>
-                <tr>
-                    <th>Wavenumber (cm⁻¹)</th>
-                    <th>Functional Group</th>
-                    <th>Peak Description</th>
-                </tr>
-                {table_rows}
+                <tr><th>Wavenumber (cm⁻¹)</th><th>Functional Group</th><th>Peak Description</th></tr>
+                {ftir_data}
             </table>
             """
             st.markdown(ftir_table, unsafe_allow_html=True)
         else:
-            st.warning("⚠️ No FTIR data available or incorrect format.")
+            st.warning("⚠️ No FTIR data available.")
