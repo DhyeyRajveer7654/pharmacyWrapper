@@ -85,7 +85,7 @@ The response should include **two separate centered tables**:
 2️⃣ **Testing & Quality Control**:
    - **Test Name**
    - **Testing Procedure**
-   - **Equipment Used**
+   - **Equipment Used with steps of using equipment**
    - **Acceptance Criteria**
    - **Deviation Handling**
    - **Regulatory Considerations**
