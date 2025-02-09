@@ -114,6 +114,7 @@ if "api_response" not in st.session_state:
 options = dict()
 
 def get_cid_from_name(drug_name):
+    """Fetches the PubChem CID for a given drug name."""
     url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{drug_name}/cids/JSON"
     response = requests.get(url)
     
@@ -123,42 +124,44 @@ def get_cid_from_name(drug_name):
             return cids[0]  # Return the first matching CID
         except (KeyError, IndexError):
             return None
-    else:
-        return None
-    
+    return None
+
 def get_pubchem_product_code(product_name):
-    product_code_from_pubchem = ""
+    """Fetches the PubChem Canonical SMILES code for a given product name."""
     url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{product_name}/property/CanonicalSMILES/JSON"
     response = requests.get(url)
+    
     if response.status_code == 200:
         try:
             smiles = response.json()["PropertyTable"]["Properties"][0]["CanonicalSMILES"]
-            product_code_from_pubchem=smiles
+            return smiles
         except (KeyError, IndexError):
-            product_code_from_pubchem = "NO DRUG FOUND"
-    else:
-        product_code_from_pubchem="NO DRUG FOUND"
-    if product_code_from_pubchem=="NO DRUG FOUND":
-        return ""
-    else:
-        return product_code_from_pubchem
+            return None
+    return None
 
 def showStructure(product_name):
-    product_code = ""
-    product_code_from_pubchem = get_pubchem_product_code(product_name)
-    if product_code_from_pubchem=="":
-        product_code_prompt = prompts.STRUCTURE_PROMPT.substitute(product_name=product_name)
-        print("Prompt is: "+product_code_prompt)
-        product_code = chat_with_gpt.chatWithGpt(product_code_prompt)
-        if product_code == "NO DRUG FOUND":
-            return ""
-    else:
-        product_code = product_code_from_pubchem
+    """Generates and returns a molecular structure image from PubChem data."""
+    product_code = get_pubchem_product_code(product_name)
     
-    print("product code is: "+product_code)
-    print("product code from pubchem: "+product_code_from_pubchem)
-    m = Chem.MolFromSmiles(product_code)
-    return fig
+    if not product_code:
+        product_code_prompt = prompts.STRUCTURE_PROMPT.substitute(product_name=product_name)
+        print("Prompt is: " + product_code_prompt)
+        product_code = chat_with_gpt.chatWithGpt(product_code_prompt)
+        
+        if product_code == "NO DRUG FOUND":
+            return None  # Return None if no valid structure
+
+    print("Product code is: " + product_code)
+
+    try:
+        m = Chem.MolFromSmiles(product_code)
+        if m is not None:
+            fig = Draw.MolToImage(m, size=(250, 250))
+            return fig  # Return the generated molecular image
+    except Exception as e:
+        print(f"Error generating molecular structure: {e}")
+    
+    return None  # If structure generation fails, return None
     
 # 📌 FORM PAGE
 if st.session_state.page == "form":
