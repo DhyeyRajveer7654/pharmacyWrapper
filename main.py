@@ -13,11 +13,24 @@ size = (250, 250)
 # Set Page Configuration
 st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
 
+# Apply Custom Styles
+st.markdown("""
     <style>
-        body { background-color: #E3F2FD; color: #0B3D91; font-family: 'Arial', sans-serif; }
-        .stTextInput>div>div>input, .stSelectbox>div>div>select, .stTextArea>div>textarea { 
-            border-radius: 8px !important; padding: 12px;
+        body { 
+            background-color: #E3F2FD; /* Light sky blue */
+            color: #0B3D91; /* Deep pharma blue */
+            font-family: 'Arial', sans-serif;
         }
+        
+        /* Styled input fields */
+        .stTextInput>div>div>input, 
+        .stSelectbox>div>div>select, 
+        .stTextArea>div>textarea { 
+            border-radius: 8px !important; 
+            padding: 12px;
+        }
+
+        /* Input field styling */
         div[data-testid="stTextInput"] input,
         div[data-testid="stTextArea"] textarea,
         div[data-testid="stNumberInput"] input,
@@ -30,7 +43,7 @@ st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
             box-shadow: 2px 2px 8px rgba(0, 123, 255, 0.2) !important;
         }
 
-        /* Add hover effect for better UX */
+        /* Hover effect for inputs */
         div[data-testid="stTextInput"] input:hover,
         div[data-testid="stTextArea"] textarea:hover,
         div[data-testid="stNumberInput"] input:hover,
@@ -38,7 +51,7 @@ st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
             border: 2px solid #0056b3 !important;
         }
 
-        /* Ensure focus border stands out */
+        /* Focus effect for inputs */
         div[data-testid="stTextInput"] input:focus,
         div[data-testid="stTextArea"] textarea:focus,
         div[data-testid="stNumberInput"] input:focus,
@@ -47,6 +60,7 @@ st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
             outline: none !important;
         }
 
+        /* Button Styling */
         .stButton>button {
             background: linear-gradient(90deg, #00B4DB, #0083B0);
             color: white;
@@ -54,18 +68,22 @@ st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
             padding: 10px 20px;
             font-weight: bold;
             transition: all 0.3s ease-in-out;
+            border: none;
         }
+
         .stButton>button:hover {
             background: linear-gradient(90deg, #007BFF, #004085);
             transform: scale(1.07);
         }
         
+        /* Title and subtitle */
         .title {
             color: #004085;
             text-align: center;
             font-size: 32px;
             font-weight: bold;
             text-transform: uppercase;
+            margin-bottom: 20px;
         }
         
         .subtitle {
@@ -75,6 +93,7 @@ st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
             font-weight: 600;
         }
         
+        /* Card-style sections */
         .card {
             background-color: #FFFFFF;
             padding: 20px;
@@ -84,6 +103,7 @@ st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
             border-left: 5px solid #007BFF;
         }
     </style>
+""", unsafe_allow_html=True)
 
 # Page Navigation
 if "page" not in st.session_state:
