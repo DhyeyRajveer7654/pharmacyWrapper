@@ -285,12 +285,6 @@ if st.session_state.ftir_required:
         st.markdown("### 🔬 FTIR Data")
         
         if ftir_data:
-            ftir_table = f"""
-            <table>
-                <tr><th>Wavenumber (cm⁻¹)</th><th>Functional Group</th><th>Peak Description</th></tr>
-                {ftir_data}
-            </table>
-            """
-            st.markdown(ftir_table, unsafe_allow_html=True)
+            st.markdown(ftir_data, unsafe_allow_html=True)
         else:
             st.warning("⚠️ No FTIR data available.")
