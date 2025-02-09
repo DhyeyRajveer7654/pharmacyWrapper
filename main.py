@@ -236,15 +236,57 @@ elif st.session_state.page == "result":
     st.markdown(f"**⚡ Power of Drug:** {st.session_state.powerOfDrug}")
 
     st.markdown("### 📋 Generated Report")
-    if st.session_state.api_response:
-        st.markdown(st.session_state.api_response)
-        # components.html(st.session_state.api_response, height=1000, width=1000, scrolling=True)
-    else:
-        st.warning("⚠️ No response received from API.")
 
-    if st.session_state.ftir_required:
-        with st.spinner("📡 Fetching FTIR Data..."):
-            ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
-            st.markdown("### 🔬 FTIR Data")
-            st.write(ftir_data)
+if st.session_state.api_response:
+    response_table = f"""
+    <style>
+        table {{
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #f8f9fa; /* Light grey background for readability */
+            color: #0B3D91; /* Professional deep blue */
+            font-family: 'Arial', sans-serif;
+            font-size: 16px;
+            border-radius: 8px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }}
+        th, td {{
+            border: 1px solid #007BFF; /* Blue border */
+            padding: 12px;
+            text-align: left;
+        }}
+        th {{
+            background-color: #007BFF; /* Header background */
+            color: white;
+        }}
+        tr:nth-child(even) {{
+            background-color: #e3f2fd; /* Light blue for alternate rows */
+        }}
+        tr:hover {{
+            background-color: #cce5ff; /* Light hover effect */
+        }}
+    </style>
+    {st.session_state.api_response}
+    """
+    st.markdown(response_table, unsafe_allow_html=True)
+else:
+    st.warning("⚠️ No response received from API.")
+
+# 📌 FTIR Data Section
+if st.session_state.ftir_required:
+    with st.spinner("📡 Fetching FTIR Data..."):
+        ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
+        st.markdown("### 🔬 FTIR Data")
+        
+        if ftir_data:
+            ftir_table = f"""
+            <table>
+                <tr><th>Wavenumber (cm⁻¹)</th><th>Functional Group</th><th>Peak Description</th></tr>
+                {ftir_data}
+            </table>
+            """
+            st.markdown(ftir_table, unsafe_allow_html=True)
+        else:
+            st.warning("⚠️ No FTIR data available.")
+
 
