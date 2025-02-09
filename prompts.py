@@ -156,6 +156,15 @@ STRUCTURE_PROMPT = Template("""
 Provide the **canonical SMILES notation** for the drug $product_name based on PubChem's database. Ensure that the SMILES code is accurate and matches PubChem's standard molecular structure for the drug. Return only the canonical SMILES code as provided by PubChem, and no other extra text. If the drug name is not valid, return only "NO DRUG FOUND".
 """)
 
+# 📌 **Fix: Force Output into Proper Table Format**
+def format_table(response):
+    """Ensure the GPT response is returned as a proper HTML table format."""
+    if "<table>" not in response:  # Prevents raw HTML output issue
+        rows = response.strip().split("\n")
+        formatted_rows = ["<tr><td>" + "</td><td>".join(row.split(":")) + "</td></tr>" for row in rows if ":" in row]
+        return f"<table border='1' style='border-collapse:collapse;width:100%'><tr><th>Parameter</th><th>Value</th></tr>{''.join(formatted_rows)}</table>"
+    return response  # Return as-is if already a valid table
+
 # 📌 **GPT Prompt Selection**
 def getPromptForOptions(options):
     if options['typeOfInfo'] == "METHOD OF PREPARATION":
@@ -169,3 +178,4 @@ def getPromptForOptions(options):
     elif options['typeOfInfo'] == "FTIR ANALYSIS":
         return FTIR_PROMPT.substitute(options)
     return ""
+
