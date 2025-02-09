@@ -9,7 +9,6 @@ import requests
 
 size = (250, 250)
 
-
 # Set Page Configuration
 st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
 
@@ -29,23 +28,19 @@ st.markdown("""
             color: black !important;
             border: 1px solid #ccc !important;
             border-radius: 10px !important;
-            box-shadow: none !important; /* Remove focus glow */
+            box-shadow: none !important;
         }
-
-        /* Add hover effect for better UX */
         div[data-testid="stTextInput"] input:hover,
         div[data-testid="stTextArea"] textarea:hover,
         div[data-testid="stNumberInput"] input:hover,
         div[data-testid="stSelectbox"] > div[role="combobox"]:hover {
-            border: 1px solid #888 !important; /* Darker border on hover */
+            border: 1px solid #888 !important;
         }
-
-        /* Ensure focus border stands out */
         div[data-testid="stTextInput"] input:focus,
         div[data-testid="stTextArea"] textarea:focus,
         div[data-testid="stNumberInput"] input:focus,
         div[data-testid="stSelectbox"] > div[role="combobox"]:focus {
-            border: 1px solid #007BFF !important; /* Blue border on focus */
+            border: 1px solid #007BFF !important;
             outline: none !important;
         }
         .stButton>button:hover { 
@@ -69,113 +64,13 @@ if "api_response" not in st.session_state:
 
 options = dict()
 
-def get_cid_from_name(drug_name):
-    url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{drug_name}/cids/JSON"
-    response = requests.get(url)
-    
-    if response.status_code == 200:
-        try:
-            cids = response.json()["IdentifierList"]["CID"]
-            return cids[0]  # Return the first matching CID
-        except (KeyError, IndexError):
-            return None
-    else:
-        return None
-    
-def get_pubchem_product_code(product_name):
-    product_code_from_pubchem = ""
-    url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{product_name}/property/CanonicalSMILES/JSON"
-    response = requests.get(url)
-    if response.status_code == 200:
-        try:
-            smiles = response.json()["PropertyTable"]["Properties"][0]["CanonicalSMILES"]
-            product_code_from_pubchem=smiles
-        except (KeyError, IndexError):
-            product_code_from_pubchem = "NO DRUG FOUND"
-    else:
-        product_code_from_pubchem="NO DRUG FOUND"
-    if product_code_from_pubchem=="NO DRUG FOUND":
-        return ""
-    else:
-        return product_code_from_pubchem
-
-def showStructure(product_name):
-    product_code = ""
-    product_code_from_pubchem = get_pubchem_product_code(product_name)
-    if product_code_from_pubchem=="":
-        product_code_prompt = prompts.STRUCTURE_PROMPT.substitute(product_name=product_name)
-        print("Prompt is: "+product_code_prompt)
-        product_code = chat_with_gpt.chatWithGpt(product_code_prompt)
-        if product_code == "NO DRUG FOUND":
-            return ""
-    else:
-        product_code = product_code_from_pubchem
-    
-    print("product code is: "+product_code)
-    print("product code from pubchem: "+product_code_from_pubchem)
-    m = Chem.MolFromSmiles(product_code)
-    return fig
-    
-# 📌 FORM PAGE
-if st.session_state.page == "form":
-
-    st.markdown('<div class="title">🧪 QAI Model - AI-Powered Quality Assurance</div>', unsafe_allow_html=True)
-    st.markdown('<div class="subtitle">🔍 Enter details below to generate a pharmaceutical quality report.</div>', unsafe_allow_html=True)
-
-    # User Input Form
-    # with st.form("input_form"):
-    col1, col2 = st.columns(2)
-
-    with col1:
-        options["product_name"] = st.text_input("💊 Product Name", placeholder="e.g., Paracetamol")
-        if st.button("Get structure"):
-            if ("product_name" not in options) or ("product_name" in options and options["product_name"]==""):
-                st.error("⚠️ Please write product name!")
-            else:
-                with st.spinner("🛠️ Processing... Please wait"):
-                    fig = showStructure(options["product_name"])
-                if fig=="":
-                    st.error("⚠️ Drug not found, please input a valid drug name")
-                else:
-                    st.image(fig, caption=f"{options["product_name"]} Molecule")
-                
-
-    with col2:
-        options["quanOfMed"] = st.text_input("📦 Quantity of Medicine", placeholder="e.g., 1000 tablets")
-        options["jurisdiction"] = st.selectbox("🌎 Select Jurisdiction", 
-            ["INDIAN PHARMACOPIEA", "BRITISH PHARMACOPIEA", "UNITED STATES PHARMACOPOEIA", "MARTINDALE-EXTRA PHARMACOPIEA", "COMPARE WITH ALL"])
-        options["powerOfDrug"] = st.text_input("⚡ Power of Drug", placeholder="e.g., 500 mg")
-
-    # st.markdown('<div class="card">', unsafe_allow_html=True)
-    options["typeOfInfo"] = st.selectbox("📊 Select Information Required:", 
-            ["METHOD OF PREPARATION", "CHARACTARIZATION/EVALUATION", "Both of above", "CHECK RESULTS"])
-
-    if options["typeOfInfo"] == "CHECK RESULTS":
-        options["resultsToCheck"] = st.text_area("🔍 Enter Your Results:", height=200, placeholder="Paste lab results here...",key="checkResults")
-
-    options["ftir_required"] = st.checkbox("📡 Retrieve FTIR Data")
-
-    submit_button = st.button("🚀 Submit & Generate Report")
-    if submit_button:
-        if not all([options["product_name"], options["quanOfMed"], options["powerOfDrug"]]):
-            st.error("⚠️ Please fill in all required fields!")
-        else:
-            prompt = prompts.getPromptForOptions(options)
-            with st.spinner("🛠️ Processing... Please wait"):
-                api_response = chat_with_gpt.chatWithGpt(prompt)
-                st.session_state.api_response = api_response
-
-            st.session_state.update(options)
-            st.session_state.page = "result"
-            st.experimental_rerun()
-
 # 📌 RESULT PAGE
 elif st.session_state.page == "result":
 
     if st.button("🔙 Go Back to Form"):
         st.session_state.page = "form"
         st.experimental_rerun()
-    # Apply White Background for Result Page
+
     st.markdown("""
         <style>
             body { background-color: black !important; color: white !important; }
@@ -190,8 +85,15 @@ elif st.session_state.page == "result":
 
     st.markdown("### 📋 Generated Report")
     if st.session_state.api_response:
-        st.markdown(st.session_state.api_response)
-        # components.html(st.session_state.api_response, height=1000, width=1000, scrolling=True)
+        response_table = f"""
+        <style>
+            table {{ border-collapse: collapse; width: 100%; }}
+            th, td {{ border: 1px solid black; padding: 8px; text-align: left; }}
+            th {{ background-color: #007BFF; color: white; }}
+        </style>
+        {st.session_state.api_response.replace('<html>', '').replace('</html>', '')}
+        """
+        st.markdown(response_table, unsafe_allow_html=True)
     else:
         st.warning("⚠️ No response received from API.")
 
@@ -200,4 +102,3 @@ elif st.session_state.page == "result":
             ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
             st.markdown("### 🔬 FTIR Data")
             st.write(ftir_data)
-
