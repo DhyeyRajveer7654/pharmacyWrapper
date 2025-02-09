@@ -243,24 +243,30 @@ if st.session_state.api_response:
         table {{
             width: 100%;
             border-collapse: collapse;
-            background-color: #FFFFFF; /* White background for clarity */
-            color: #0B3D91; /* Professional deep blue text */
             font-family: 'Arial', sans-serif;
             font-size: 16px;
-            border-radius: 8px;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-        }}
-        th, td {{
-            border: 1px solid #007BFF; /* Blue border */
-            padding: 12px;
-            text-align: left;
+            border: 1px solid black;
         }}
         th {{
-            background-color: #007BFF; /* White header background */
+            background-color: #0B3D91; /* Dark Blue Header */
             color: white;
+            font-weight: bold;
+            font-style: italic;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid black;
+        }}
+        td {{
+            padding: 12px;
+            text-align: center;
+            border: 1px solid black;
+            color: black;
         }}
         tr:nth-child(even) {{
-            background-color: #007BFF; /* Blue for alternate rows */
+            background-color: #E3F2FD; /* Light Blue */
+        }}
+        tr:nth-child(odd) {{
+            background-color: white;
         }}
         tr:hover {{
             background-color: #CFE2FF; /* Slightly darker blue hover effect */
@@ -288,4 +294,3 @@ if st.session_state.ftir_required:
             st.markdown(ftir_table, unsafe_allow_html=True)
         else:
             st.warning("⚠️ No FTIR data available.")
-
