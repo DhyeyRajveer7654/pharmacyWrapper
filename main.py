@@ -256,7 +256,7 @@ if st.session_state.api_response:
             text-align: left;
         }}
         th {{
-            background-color: #007BFF; /* Blue header background */
+            background-color: #007BFF; /* White header background */
             color: white;
         }}
         tr:nth-child(even) {{
