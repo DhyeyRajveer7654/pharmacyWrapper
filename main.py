@@ -40,18 +40,6 @@ if "api_response" not in st.session_state:
 
 options = dict()
 
-def get_cid_from_name(drug_name):
-    url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{drug_name}/cids/JSON"
-    response = requests.get(url)
-    
-    if response.status_code == 200:
-        try:
-            cids = response.json()["IdentifierList"]["CID"]
-            return cids[0]  # Return the first matching CID
-        except (KeyError, IndexError):
-            return None
-    return None
-
 def showStructure(product_name):
     product_code_prompt = prompts.STRUCTURE_PROMPT.substitute(product_name=product_name)
     product_code = chat_with_gpt.chatWithGpt(product_code_prompt)
@@ -92,7 +80,7 @@ if st.session_state.page == "form":
     if options["typeOfInfo"] == "CHECK RESULTS":
         options["resultsToCheck"] = st.text_area("🔍 Enter Your Results:", height=200, placeholder="Paste lab results here...", key="checkResults")
 
-    options["ftir_required"] = st.checkbox("📡 Retrieve FTIR Data")
+    options["ftir_required"] = st.checkbox("📱 Retrieve FTIR Data")
 
     submit_button = st.button("🚀 Submit & Generate Report")
     if submit_button:
@@ -114,20 +102,19 @@ elif st.session_state.page == "result":
         st.session_state.page = "form"
         st.experimental_rerun()
 
-    st.markdown('<div style="text-align:center; color:#007BFF; font-size:30px; font-weight:bold;">📑 Submission Summary</div>', unsafe_allow_html=True)
-
+    st.markdown('<div style="text-align:center; color:#007BFF; font-size:30px; font-weight:bold;">📝 Submission Summary</div>', unsafe_allow_html=True)
     st.markdown(f"**💊 Product Name:** {st.session_state.product_name}")
     st.markdown(f"**📦 Quantity of Medicine:** {st.session_state.quanOfMed}")
     st.markdown(f"**⚡ Power of Drug:** {st.session_state.powerOfDrug}")
 
     st.markdown("### 📋 Generated Report")
     if st.session_state.api_response:
-        components.html(st.session_state.api_response, height=800, scrolling=True)  # ✅ FIXED: Proper HTML table rendering
+        components.html(st.session_state.api_response, height=800, scrolling=True)
     else:
         st.warning("⚠️ No response received from API.")
 
     if st.session_state.ftir_required:
-        with st.spinner("📡 Fetching FTIR Data..."):
+        with st.spinner("📱 Fetching FTIR Data..."):
             ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
             st.markdown("### 🔬 FTIR Data")
             st.write(ftir_data)
