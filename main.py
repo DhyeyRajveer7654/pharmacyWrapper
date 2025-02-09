@@ -260,7 +260,7 @@ if st.session_state.api_response:
             color: white;
         }}
         tr:nth-child(even) {{
-            background-color: #E3F2FD; /* Light blue for alternate rows */
+            background-color: #007BFF; /* Blue for alternate rows */
         }}
         tr:hover {{
             background-color: #CFE2FF; /* Slightly darker blue hover effect */
