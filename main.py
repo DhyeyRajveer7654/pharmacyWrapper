@@ -19,8 +19,8 @@ st.markdown("""
 
         body { 
             font-family: 'Inter', sans-serif;
-            background-color: #E3F2FD; /* Light sky blue */
-            color: #0B3D91;
+            background-color: #F4F6F9; /* Light professional pharma background */
+            color: #1E3A8A;
         }
         
         /* Header */
@@ -31,8 +31,18 @@ st.markdown("""
             box-shadow: 0 4px 20px rgba(11,61,145,0.15);
             color: white;
             text-align: center;
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 700;
+        }
+
+        /* Form Containers */
+        .form-container {
+            background: white;
+            padding: 1.8rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            border: 1px solid #E2E8F0;
+            margin-bottom: 1.5rem;
         }
 
         /* Input Fields */
@@ -41,10 +51,10 @@ st.markdown("""
         .stTextArea > div > textarea {
             background-color: #FFFFFF;
             border: 2px solid #007BFF;
-            border-radius: 12px;
+            border-radius: 10px;
             padding: 12px;
             font-size: 16px;
-            color: #0B3D91;
+            color: #1E3A8A;
             transition: all 0.2s ease;
         }
 
@@ -55,12 +65,12 @@ st.markdown("""
             box-shadow: 0 0 6px rgba(11,61,145,0.2);
         }
 
-        /* Button Styling */
+        /* Buttons */
         .stButton > button {
             background: linear-gradient(90deg, #00B4DB, #0083B0);
             color: white;
             padding: 14px;
-            border-radius: 8px;
+            border-radius: 10px;
             font-weight: 600;
             transition: all 0.3s ease;
             border: none;
@@ -75,21 +85,11 @@ st.markdown("""
             box-shadow: 0 8px 20px rgba(11,61,145,0.2);
         }
 
-        /* Form Section */
-        .form-container {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-            border: 1px solid #E2E8F0;
-            margin-bottom: 1.5rem;
-        }
-
         /* Results Table */
         .results-table {
             border-collapse: collapse;
             width: 100%;
-            border-radius: 8px;
+            border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
 
@@ -111,21 +111,6 @@ st.markdown("""
             background-color: #F8FAFC;
         }
 
-        /* Spinner Animation */
-        .stSpinner {
-            border: 4px solid rgba(11,61,145,0.1);
-            border-top: 4px solid #0B3D91;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
     </style>
 """, unsafe_allow_html=True)
 
@@ -136,6 +121,39 @@ if "api_response" not in st.session_state:
     st.session_state.api_response = None
 
 options = dict()
+
+# Utility Functions
+def get_pubchem_product_code(product_name):
+    """Fetches the PubChem Canonical SMILES code for a given product name."""
+    url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{product_name}/property/CanonicalSMILES/JSON"
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        try:
+            return response.json()["PropertyTable"]["Properties"][0]["CanonicalSMILES"]
+        except (KeyError, IndexError):
+            return None
+    return None
+
+def showStructure(product_name):
+    """Generates and returns a molecular structure image from PubChem data."""
+    product_code = get_pubchem_product_code(product_name)
+
+    if not product_code:
+        product_code_prompt = prompts.STRUCTURE_PROMPT.substitute(product_name=product_name)
+        product_code = chat_with_gpt.chatWithGpt(product_code_prompt)
+
+        if product_code == "NO DRUG FOUND":
+            return None  
+
+    try:
+        m = Chem.MolFromSmiles(product_code)
+        if m is not None:
+            return Draw.MolToImage(m, size=(250, 250))
+    except Exception as e:
+        st.error(f"Error generating structure: {str(e)}")
+    
+    return None  
 
 # 📌 FORM PAGE
 if st.session_state.page == "form":
@@ -149,6 +167,18 @@ if st.session_state.page == "form":
         with col1:
             st.markdown('<div class="form-container">', unsafe_allow_html=True)
             options["product_name"] = st.text_input("💊 Product Name", placeholder="e.g., Paracetamol")
+            
+            if st.button("🔬 Get Structure"):
+                if options["product_name"]:
+                    with st.spinner("Generating molecular structure..."):
+                        fig = showStructure(options["product_name"])
+                        if fig:
+                            st.image(fig, caption=f"{options['product_name']} Structure")
+                        else:
+                            st.error("⚠️ No valid structure found. Please check the product name.")
+                else:
+                    st.warning("⚠️ Please enter a product name first.")
+                    
             st.markdown('</div>', unsafe_allow_html=True)
 
         with col2:
@@ -160,16 +190,7 @@ if st.session_state.page == "form":
                  "MARTINDALE-EXTRA PHARMACOPIEA", "COMPARE WITH ALL"])
             st.markdown('</div>', unsafe_allow_html=True)
 
-    # Analysis Options
-    st.markdown('<div class="form-container">', unsafe_allow_html=True)
-    options["typeOfInfo"] = st.selectbox("📊 Analysis Type",
-        ["METHOD OF PREPARATION", "CHARACTARIZATION/EVALUATION", "Both of above", "CHECK RESULTS"])
-
-    if options["typeOfInfo"] == "CHECK RESULTS":
-        options["resultsToCheck"] = st.text_area("🔍 Laboratory Results", height=200, placeholder="Enter lab results here...")
-
-    options["ftir_required"] = st.checkbox("📡 Include FTIR Analysis")
-    
+    # Submit Button
     if st.button("🚀 Generate Report"):
         if all([options["product_name"], options["quanOfMed"], options["powerOfDrug"]]):
             with st.spinner("Analyzing data and generating report..."):
@@ -180,19 +201,4 @@ if st.session_state.page == "form":
                 st.experimental_rerun()
         else:
             st.error("⚠️ Please fill in all required fields.")
-    st.markdown('</div>', unsafe_allow_html=True)
 
-# 📌 RESULT PAGE
-elif st.session_state.page == "result":
-    if st.button("🔙 Back to Form"):
-        st.session_state.page = "form"
-        st.experimental_rerun()
-
-    st.markdown('<div class="header">📑 Analysis Report</div>', unsafe_allow_html=True)
-
-    if st.session_state.api_response:
-        st.markdown('<div class="form-container">', unsafe_allow_html=True)
-        st.markdown(st.session_state.api_response, unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-    else:
-        st.error("⚠️ No analysis results available.")
