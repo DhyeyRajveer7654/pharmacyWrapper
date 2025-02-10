@@ -40,6 +40,7 @@ TABLE_STYLE = """
 </style>
 """
 
+# 📌 **Highly Detailed Method of Preparation with Excipients Quantity**
 METHOD_OF_PREPARATION_PROMPT = Template("""
 Provide a **highly detailed, step-by-step** **method of preparation** for **$product_name** ($quanOfMed), each containing **$powerOfDrug** of the active ingredient, based on **$jurisdiction** standards.
 
@@ -67,6 +68,7 @@ Each step must include **scientific justification**, including:
 The response **must be in HTML table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
 """)
 
+# 📌 **Highly Detailed Combined Formulation & Testing with Excipients Quantity**
 COMBINED_PROMPT = Template("""
 Provide a **fully detailed** combined **formulation and testing** report for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
 
@@ -91,6 +93,7 @@ The response should include **two separate centered tables**:
 The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
 """)
 
+# 📌 **Highly Detailed Quality Control & Results Checking**
 CHECK_RESULTS_PROMPT = Template("""
 Compare the **quality control evaluation results** of **$product_name** ($powerOfDrug) for **$quanOfMed** with the **$jurisdiction** standards.
 
@@ -112,8 +115,9 @@ The response **must be in table format only**, with **white text inside a dark b
 $resultsToCheck
 """)
 
+# 📌 **Highly Detailed FTIR Spectrum Analysis**
 FTIR_PROMPT = Template("""
-Provide a table of **detailed FTIR spectrum analysis** for **$product_name**.
+Provide a **detailed FTIR spectrum analysis** for **$product_name**.
 
 Ensure the response is a **centered HTML table** covering:
 - **Wavenumber (cm⁻¹)**
@@ -131,10 +135,28 @@ Explain:
 The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
 """)
 
+# 📌 **Highly Detailed Dissolution & Stability Studies**
+DISSOLUTION_STABILITY_PROMPT = Template("""
+Provide a **comprehensive dissolution and stability study** for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
+
+Ensure the response is a **centered HTML table** covering:
+- **Study Type (Dissolution/Stability)**
+- **Test Conditions**
+- **Sampling Time Points**
+- **Equipment Used**
+- **Acceptance Limits**
+- **Stability Period**
+- **Corrective Actions for Failures**
+- **Regulatory Considerations**
+
+The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
+""")
+
 STRUCTURE_PROMPT = Template("""
 Provide the **canonical SMILES notation** for the drug $product_name based on PubChem's database. Ensure that the SMILES code is accurate and matches PubChem's standard molecular structure for the drug. Return only the canonical SMILES code as provided by PubChem, and no other extra text. If the drug name is not valid, return only "NO DRUG FOUND".
 """)
 
+# 📌 **GPT Prompt Selection**
 def getPromptForOptions(options):
     if options['typeOfInfo'] == "METHOD OF PREPARATION":
         return METHOD_OF_PREPARATION_PROMPT.substitute(options)
