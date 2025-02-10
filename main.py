@@ -16,29 +16,36 @@ st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
 # Apply Custom Styles
 st.markdown("""
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
         /* Global Styles */
         body {
-            background: linear-gradient(135deg, #0A192F 0%, #001F3F 100%);
-            color: #E3F2FD;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #F5F9FF 0%, #E3F2FD 100%);
+            color: #1E3A5F;
         }
 
-        /* Styled Containers */
+        /* Main Container */
         .container {
             max-width: 90%;
             margin: auto;
-            padding: 1.5rem;
+            padding: 2rem;
             border-radius: 15px;
-            background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 20px rgba(0, 123, 255, 0.1);
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease-in-out;
+            background: white;
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.1);
+            border: 1px solid #D1E3FF;
         }
 
-        .container:hover {
-            transform: scale(1.02);
+        /* Header */
+        .header {
+            background: linear-gradient(90deg, #0083B0 0%, #00B4DB 100%);
+            padding: 2rem;
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+            font-size: 28px;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.15);
         }
 
         /* Input Fields */
@@ -46,33 +53,32 @@ st.markdown("""
         div[data-testid="stTextArea"] textarea,
         div[data-testid="stSelectbox"] > div[data-baseweb="select"],
         div[data-testid="stNumberInput"] input {
-            background: #001F3F;
-            color: white;
-            border: 2px solid #007BFF;
+            background: #FFFFFF;
+            color: #1E3A5F;
+            border: 2px solid #0083B0;
             border-radius: 8px;
             padding: 12px;
             font-size: 16px;
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+            box-shadow: 0 2px 6px rgba(0, 123, 255, 0.15);
             transition: all 0.3s ease;
         }
 
-        /* Focus effect for inputs */
+        /* Focus Effect for Inputs */
         div[data-testid="stTextInput"] input:focus,
         div[data-testid="stTextArea"] textarea:focus,
         div[data-testid="stNumberInput"] input:focus {
-            border-color: #00D4FF;
-            box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+            border-color: #00B4DB;
+            box-shadow: 0 0 8px rgba(0, 180, 219, 0.3);
             outline: none;
         }
 
         /* Buttons */
         .stButton>button {
-            background: linear-gradient(90deg, #00D4FF, #007BFF);
+            background: linear-gradient(90deg, #00B4DB, #0083B0);
             color: white;
-            border-radius: 10px;
             padding: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
+            border-radius: 10px;
+            font-weight: 600;
             transition: all 0.3s ease-in-out;
             border: none;
             width: 100%;
@@ -80,43 +86,42 @@ st.markdown("""
         }
 
         .stButton>button:hover {
-            background: linear-gradient(90deg, #007BFF, #004085);
-            transform: scale(1.07);
-            box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
+            background: linear-gradient(90deg, #0083B0, #005F7F);
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
         }
 
-        /* Titles & Headers */
+        /* Section Titles */
         .title {
-            color: #00D4FF;
+            color: #0083B0;
             text-align: center;
-            font-size: 32px;
+            font-size: 24px;
             font-weight: bold;
-            text-transform: uppercase;
             margin-bottom: 20px;
         }
 
         .subtitle {
-            color: #E3F2FD;
+            color: #1E3A5F;
             text-align: center;
-            font-size: 20px;
-            font-weight: 600;
+            font-size: 18px;
+            font-weight: 500;
             margin-bottom: 30px;
         }
 
         /* Card-Style Sections */
         .card {
-            background: rgba(255, 255, 255, 0.08);
+            background: white;
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 2px 2px 15px rgba(0, 123, 255, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
             margin: 20px;
-            border-left: 5px solid #007BFF;
+            border-left: 5px solid #0083B0;
             transition: all 0.3s ease-in-out;
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 25px rgba(0, 123, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 123, 255, 0.25);
         }
 
         /* Tables */
@@ -128,13 +133,13 @@ st.markdown("""
         .results-table {
             border-collapse: collapse;
             width: 100%;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.15);
+            background: white;
         }
 
         .results-table th {
-            background: #007BFF;
+            background: #0083B0;
             color: white;
             padding: 14px;
             text-align: left;
@@ -144,18 +149,18 @@ st.markdown("""
 
         .results-table td {
             padding: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            color: white;
+            border-bottom: 1px solid #D1E3FF;
+            color: #1E3A5F;
         }
 
         .results-table tr:hover td {
-            background-color: rgba(0, 212, 255, 0.1);
+            background-color: #F5F9FF;
         }
 
         /* Loading Spinner */
         .stSpinner {
             border: 4px solid rgba(0, 123, 255, 0.1);
-            border-top: 4px solid #00D4FF;
+            border-top: 4px solid #00B4DB;
             border-radius: 50%;
             width: 40px;
             height: 40px;
@@ -169,46 +174,46 @@ st.markdown("""
 
         /* Alerts */
         .stAlert {
-            border-radius: 10px;
+            border-radius: 8px;
             padding: 1rem;
             margin: 1rem 0;
-            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.1);
         }
 
         /* Molecule Visualization */
         .molecule-card {
-            background: rgba(255, 255, 255, 0.08);
+            background: white;
             padding: 20px;
-            border-radius: 12px;
-            box-shadow: 2px 2px 15px rgba(0, 123, 255, 0.2);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.15);
             text-align: center;
             transition: all 0.3s ease-in-out;
         }
 
         .molecule-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 25px rgba(0, 123, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 123, 255, 0.25);
         }
 
         .molecule-title {
             font-weight: 600;
             margin-bottom: 1rem;
-            color: #00D4FF;
+            color: #0083B0;
             font-size: 18px;
         }
 
         /* Checkbox Styling */
         .stCheckbox > label > div {
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid #007BFF;
+            background: white;
+            border: 2px solid #0083B0;
             border-radius: 8px;
             padding: 0.75rem;
             transition: all 0.2s ease;
         }
 
         .stCheckbox > label > div:hover {
-            border-color: #00D4FF;
-            background-color: rgba(0, 212, 255, 0.1);
+            border-color: #00B4DB;
+            background-color: #F5F9FF;
         }
     </style>
 """, unsafe_allow_html=True)
