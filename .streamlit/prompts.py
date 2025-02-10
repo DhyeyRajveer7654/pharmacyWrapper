@@ -117,7 +117,7 @@ $resultsToCheck
 
 # 📌 **Highly Detailed FTIR Spectrum Analysis**
 FTIR_PROMPT = Template("""
-Provide a table of **detailed FTIR spectrum analysis** for **$product_name**.
+Provide a **detailed FTIR spectrum analysis** for **$product_name**.
 
 Ensure the response is a **centered HTML table** covering:
 - **Wavenumber (cm⁻¹)**
@@ -137,7 +137,7 @@ The response **must be in table format only**, with **white text inside a dark b
 
 # 📌 **Highly Detailed Dissolution & Stability Studies**
 DISSOLUTION_STABILITY_PROMPT = Template("""
-Provide a table of **comprehensive dissolution and stability study** for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
+Provide a **comprehensive dissolution and stability study** for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
 
 Ensure the response is a **centered HTML table** covering:
 - **Study Type (Dissolution/Stability)**

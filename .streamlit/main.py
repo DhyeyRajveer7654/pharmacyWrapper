@@ -7,121 +7,98 @@ from rdkit import Chem
 from rdkit.Chem import Draw
 import requests
 
+size = (250, 250)
+
 # Set Page Configuration
-st.set_page_config(
-    page_title="PharmQA™ - Quality Assurance Platform",
-    layout="wide",
-    page_icon="🧬"
-)
+st.set_page_config(page_title="QAI Model - AI-Powered Quality Assistance", layout="wide", page_icon="🧪")
 
 # Apply Custom Styles
 st.markdown("""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        
-        /* Global Styles */
-        body {
+
+        body { 
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            color: #1E293B;
+            background-color: #F4F6F9; /* Light professional pharma background */
+            color: #1E3A8A;
         }
         
-        /* Header Styles */
-        .main-header {
+        /* Header */
+        .header {
             background: linear-gradient(90deg, #0B3D91 0%, #1E4D9E 100%);
             padding: 2rem;
-            border-radius: 0 0 20px 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(11,61,145,0.15);
             color: white;
             text-align: center;
-        }
-        
-        .main-title {
-            font-size: 2.5rem;
+            font-size: 26px;
             font-weight: 700;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(90deg, #FFFFFF 0%, #E3F2FD 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .subtitle {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            font-weight: 500;
         }
 
-        /* Form Card Styles */
-        .form-card {
+        /* Form Containers */
+        .form-container {
             background: white;
-            padding: 2rem;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 1.8rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
             border: 1px solid #E2E8F0;
             margin-bottom: 1.5rem;
-            transition: transform 0.2s ease;
-        }
-        
-        .form-card:hover {
-            transform: translateY(-2px);
         }
 
-        /* Input Styling */
+        /* Input Fields */
         .stTextInput > div > div > input,
         .stSelectbox > div > div > select,
         .stTextArea > div > textarea {
-            background-color: #F8FAFC;
-            border: 2px solid #E2E8F0;
+            background-color: #FFFFFF;
+            border: 2px solid #007BFF;
             border-radius: 10px;
-            padding: 0.75rem 1rem;
-            font-size: 1rem;
+            padding: 12px;
+            font-size: 16px;
+            color: #1E3A8A;
             transition: all 0.2s ease;
-            color: #1E293B;
         }
 
         .stTextInput > div > div > input:focus,
         .stSelectbox > div > div > select:focus,
         .stTextArea > div > textarea:focus {
-            border-color: #0B3D91;
-            box-shadow: 0 0 0 2px rgba(11,61,145,0.1);
+            border-color: #004085;
+            box-shadow: 0 0 6px rgba(11,61,145,0.2);
         }
 
-        /* Button Styling */
+        /* Buttons */
         .stButton > button {
-            background: linear-gradient(90deg, #0B3D91 0%, #1E4D9E 100%);
+            background: linear-gradient(90deg, #00B4DB, #0083B0);
             color: white;
-            padding: 0.75rem 2rem;
+            padding: 14px;
             border-radius: 10px;
-            border: none;
             font-weight: 600;
             transition: all 0.3s ease;
+            border: none;
             width: 100%;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-size: 16px;
         }
 
         .stButton > button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(11,61,145,0.2);
+            background: linear-gradient(90deg, #007BFF, #004085);
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(11,61,145,0.2);
         }
 
-        /* Results Table Styling */
+        /* Results Table */
         .results-table {
-            border-collapse: separate;
-            border-spacing: 0;
+            border-collapse: collapse;
             width: 100%;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
 
         .results-table th {
             background: #0B3D91;
             color: white;
             padding: 1rem;
-            font-weight: 600;
             text-align: left;
+            font-weight: 600;
         }
 
         .results-table td {
@@ -130,51 +107,14 @@ st.markdown("""
             background: white;
         }
 
-        .results-table tr:last-child td {
-            border-bottom: none;
+        .results-table tr:hover td {
+            background-color: #F8FAFC;
         }
 
-        /* Loading Animation */
-        .stSpinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #0B3D91;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Alert Styling */
-        .stAlert {
-            border-radius: 10px;
-            border: none;
-            padding: 1rem;
-            margin: 1rem 0;
-        }
-
-        /* Molecule Visualization */
-        .molecule-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            text-align: center;
-        }
-
-        .molecule-title {
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: #0B3D91;
-        }
     </style>
 """, unsafe_allow_html=True)
 
-# Initialize session state
+# Store session state
 if "page" not in st.session_state:
     st.session_state.page = "form"
 if "api_response" not in st.session_state:
@@ -184,6 +124,7 @@ options = dict()
 
 # Utility Functions
 def get_pubchem_product_code(product_name):
+    """Fetches the PubChem Canonical SMILES code for a given product name."""
     url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{product_name}/property/CanonicalSMILES/JSON"
     response = requests.get(url)
     
@@ -195,118 +136,69 @@ def get_pubchem_product_code(product_name):
     return None
 
 def showStructure(product_name):
+    """Generates and returns a molecular structure image from PubChem data."""
     product_code = get_pubchem_product_code(product_name)
-    
+
     if not product_code:
         product_code_prompt = prompts.STRUCTURE_PROMPT.substitute(product_name=product_name)
         product_code = chat_with_gpt.chatWithGpt(product_code_prompt)
-        
+
         if product_code == "NO DRUG FOUND":
-            return None
+            return None  
 
     try:
         m = Chem.MolFromSmiles(product_code)
         if m is not None:
-            return Draw.MolToImage(m, size=(300, 300))
+            return Draw.MolToImage(m, size=(250, 250))
     except Exception as e:
         st.error(f"Error generating structure: {str(e)}")
-    return None
+    
+    return None  
 
-# Main UI
+# 📌 FORM PAGE
 if st.session_state.page == "form":
     # Header
-    st.markdown('''
-        <div class="main-header">
-            <h1 class="main-title">🧬 PharmQA™ Platform</h1>
-            <p class="subtitle">Advanced Pharmaceutical Quality Assurance Analysis</p>
-        </div>
-    ''', unsafe_allow_html=True)
+    st.markdown('<div class="header">🧪 QAI Model - AI-Powered Quality Assurance</div>', unsafe_allow_html=True)
 
     # Form Section
     with st.container():
         col1, col2 = st.columns(2)
-        
+
         with col1:
-            st.markdown('<div class="form-card">', unsafe_allow_html=True)
-            options["product_name"] = st.text_input("Product Name", placeholder="e.g., Paracetamol")
-            if st.button("Generate Structure"):
+            st.markdown('<div class="form-container">', unsafe_allow_html=True)
+            options["product_name"] = st.text_input("💊 Product Name", placeholder="e.g., Paracetamol")
+            
+            if st.button("🔬 Get Structure"):
                 if options["product_name"]:
                     with st.spinner("Generating molecular structure..."):
                         fig = showStructure(options["product_name"])
                         if fig:
-                            st.markdown('<div class="molecule-card">', unsafe_allow_html=True)
-                            st.markdown(f'<p class="molecule-title">{options["product_name"]} Structure</p>', unsafe_allow_html=True)
-                            st.image(fig)
-                            st.markdown('</div>', unsafe_allow_html=True)
+                            st.image(fig, caption=f"{options['product_name']} Structure")
                         else:
-                            st.error("Unable to generate structure. Please verify the product name.")
+                            st.error("⚠️ No valid structure found. Please check the product name.")
                 else:
-                    st.warning("Please enter a product name first.")
+                    st.warning("⚠️ Please enter a product name first.")
+                    
             st.markdown('</div>', unsafe_allow_html=True)
 
         with col2:
-            st.markdown('<div class="form-card">', unsafe_allow_html=True)
-            options["quanOfMed"] = st.text_input("Quantity", placeholder="e.g., 1000 tablets")
-            options["powerOfDrug"] = st.text_input("Strength", placeholder="e.g., 500 mg")
-            options["jurisdiction"] = st.selectbox("Pharmacopoeia Reference",
+            st.markdown('<div class="form-container">', unsafe_allow_html=True)
+            options["quanOfMed"] = st.text_input("📦 Quantity", placeholder="e.g., 1000 tablets")
+            options["powerOfDrug"] = st.text_input("⚡ Strength", placeholder="e.g., 500 mg")
+            options["jurisdiction"] = st.selectbox("🌎 Pharmacopoeia Reference",
                 ["INDIAN PHARMACOPIEA", "BRITISH PHARMACOPIEA", "UNITED STATES PHARMACOPOEIA",
                  "MARTINDALE-EXTRA PHARMACOPIEA", "COMPARE WITH ALL"])
             st.markdown('</div>', unsafe_allow_html=True)
 
-    # Analysis Options
-    st.markdown('<div class="form-card">', unsafe_allow_html=True)
-    options["typeOfInfo"] = st.selectbox("Analysis Type",
-        ["METHOD OF PREPARATION", "CHARACTARIZATION/EVALUATION", "Both of above", "CHECK RESULTS"])
-
-    if options["typeOfInfo"] == "CHECK RESULTS":
-        options["resultsToCheck"] = st.text_area("Laboratory Results", 
-            height=200, placeholder="Enter your laboratory results here...")
-
-    options["ftir_required"] = st.checkbox("Include FTIR Analysis")
-    
-    if st.button("Generate Analysis Report"):
+    # Submit Button
+    if st.button("🚀 Generate Report"):
         if all([options["product_name"], options["quanOfMed"], options["powerOfDrug"]]):
             with st.spinner("Analyzing data and generating report..."):
                 prompt = prompts.getPromptForOptions(options)
                 api_response = chat_with_gpt.chatWithGpt(prompt)
                 st.session_state.api_response = api_response
-                st.session_state.update(options)
                 st.session_state.page = "result"
                 st.experimental_rerun()
         else:
-            st.error("Please fill in all required fields.")
-    st.markdown('</div>', unsafe_allow_html=True)
+            st.error("⚠️ Please fill in all required fields.")
 
-# Results Page
-elif st.session_state.page == "result":
-    if st.button("← Back to Analysis"):
-        st.session_state.page = "form"
-        st.experimental_rerun()
-
-    st.markdown('''
-        <div class="main-header">
-            <h1 class="main-title">Analysis Report</h1>
-            <p class="subtitle">Comprehensive Quality Analysis Results</p>
-        </div>
-    ''', unsafe_allow_html=True)
-
-    # Display Results
-    if st.session_state.api_response:
-        st.markdown('<div class="form-card">', unsafe_allow_html=True)
-        st.markdown(f"""
-            <div class="results-table">
-                {st.session_state.api_response}
-            </div>
-        """, unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-
-        if st.session_state.ftir_required:
-            with st.spinner("Retrieving FTIR data..."):
-                ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
-                if ftir_data:
-                    st.markdown('<div class="form-card">', unsafe_allow_html=True)
-                    st.markdown("### FTIR Analysis")
-                    st.markdown(ftir_data, unsafe_allow_html=True)
-                    st.markdown('</div>', unsafe_allow_html=True)
-    else:
-        st.error("No analysis results available. Please try again.")

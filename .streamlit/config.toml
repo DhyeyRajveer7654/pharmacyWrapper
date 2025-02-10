@@ -1,5 +1,5 @@
 [theme]
-backgroundColor = "#f8f9fa"           # Main background color (white)
+backgroundColor = "#FFFFFF"           # Main background color (white)
 secondaryBackgroundColor = "#FFFFFF"  # Input field background (white)
-textColor = "#1E293B"                 # Text color (black)
-primaryColor = "#0B3D91"              # Accent color (blue, or change as needed)
+textColor = "#000000"                 # Text color (black)
+primaryColor = "#007BFF"              # Accent color (blue, or change as needed)
