@@ -16,204 +16,47 @@ st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
 # Apply Custom Styles
 st.markdown("""
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
-
-        /* Global Styles */
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #F5F9FF 0%, #E3F2FD 100%);
-            color: #1E3A5F;
+        body { background-color: #0e1117; color: white; font-family: 'Arial', sans-serif; }
+        .stTextInput>div>div>input, .stSelectbox>div>div>select, .stTextArea>div>textarea { 
+            border-radius: 5px !important; padding: 10px;
         }
-
-        /* Main Container */
-        .container {
-            max-width: 90%;
-            margin: auto;
-            padding: 2rem;
-            border-radius: 15px;
-            background: white;
-            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.1);
-            border: 1px solid #D1E3FF;
-        }
-
-        /* Header */
-        .header {
-            background: linear-gradient(90deg, #0083B0 0%, #00B4DB 100%);
-            padding: 2rem;
-            border-radius: 12px;
-            color: white;
-            text-align: center;
-            font-size: 28px;
-            font-weight: 600;
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.15);
-        }
-
-        /* Input Fields */
         div[data-testid="stTextInput"] input,
         div[data-testid="stTextArea"] textarea,
+        div[data-testid="stNumberInput"] input,
         div[data-testid="stSelectbox"] > div[data-baseweb="select"],
-        div[data-testid="stNumberInput"] input {
-            background: #FFFFFF;
-            color: #1E3A5F;
-            border: 2px solid #0083B0;
-            border-radius: 8px;
-            padding: 12px;
-            font-size: 16px;
-            box-shadow: 0 2px 6px rgba(0, 123, 255, 0.15);
-            transition: all 0.3s ease;
+        div[data-testid="stSlider"] > div[data-baseweb="slider"] {
+            background-color: white !important;
+            color: black !important;
+            border: 1px solid #ccc !important;
+            border-radius: 10px !important;
+            box-shadow: none !important; /* Remove focus glow */
         }
 
-        /* Focus Effect for Inputs */
+        /* Add hover effect for better UX */
+        div[data-testid="stTextInput"] input:hover,
+        div[data-testid="stTextArea"] textarea:hover,
+        div[data-testid="stNumberInput"] input:hover,
+        div[data-testid="stSelectbox"] > div[role="combobox"]:hover {
+            border: 1px solid #888 !important; /* Darker border on hover */
+        }
+
+        /* Ensure focus border stands out */
         div[data-testid="stTextInput"] input:focus,
         div[data-testid="stTextArea"] textarea:focus,
-        div[data-testid="stNumberInput"] input:focus {
-            border-color: #00B4DB;
-            box-shadow: 0 0 8px rgba(0, 180, 219, 0.3);
-            outline: none;
+        div[data-testid="stNumberInput"] input:focus,
+        div[data-testid="stSelectbox"] > div[role="combobox"]:focus {
+            border: 1px solid #007BFF !important; /* Blue border on focus */
+            outline: none !important;
         }
-
-        /* Buttons */
-        .stButton>button {
-            background: linear-gradient(90deg, #00B4DB, #0083B0);
-            color: white;
-            padding: 12px;
-            border-radius: 10px;
-            font-weight: 600;
-            transition: all 0.3s ease-in-out;
-            border: none;
-            width: 100%;
-            font-size: 16px;
-        }
-
-        .stButton>button:hover {
-            background: linear-gradient(90deg, #0083B0, #005F7F);
+        .stButton>button:hover { 
+            background: linear-gradient(90deg, #00D4FF, #007BFF);
             transform: scale(1.05);
-            box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
         }
-
-        /* Section Titles */
-        .title {
-            color: #0083B0;
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        .subtitle {
-            color: #1E3A5F;
-            text-align: center;
-            font-size: 18px;
-            font-weight: 500;
-            margin-bottom: 30px;
-        }
-
-        /* Card-Style Sections */
+        .title { color: #00D4FF; text-align: center; font-size: 30px; font-weight: bold; }
+        .subtitle { color: #cccccc; text-align: center; font-size: 18px; }
         .card {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
-            margin: 20px;
-            border-left: 5px solid #0083B0;
-            transition: all 0.3s ease-in-out;
-        }
-
-        .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 123, 255, 0.25);
-        }
-
-        /* Tables */
-        .table-container {
-            overflow-x: auto;
-            margin-top: 20px;
-        }
-
-        .results-table {
-            border-collapse: collapse;
-            width: 100%;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.15);
-            background: white;
-        }
-
-        .results-table th {
-            background: #0083B0;
-            color: white;
-            padding: 14px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 16px;
-        }
-
-        .results-table td {
-            padding: 12px;
-            border-bottom: 1px solid #D1E3FF;
-            color: #1E3A5F;
-        }
-
-        .results-table tr:hover td {
-            background-color: #F5F9FF;
-        }
-
-        /* Loading Spinner */
-        .stSpinner {
-            border: 4px solid rgba(0, 123, 255, 0.1);
-            border-top: 4px solid #00B4DB;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Alerts */
-        .stAlert {
-            border-radius: 8px;
-            padding: 1rem;
-            margin: 1rem 0;
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.1);
-        }
-
-        /* Molecule Visualization */
-        .molecule-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.15);
-            text-align: center;
-            transition: all 0.3s ease-in-out;
-        }
-
-        .molecule-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 123, 255, 0.25);
-        }
-
-        .molecule-title {
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: #0083B0;
-            font-size: 18px;
-        }
-
-        /* Checkbox Styling */
-        .stCheckbox > label > div {
-            background: white;
-            border: 2px solid #0083B0;
-            border-radius: 8px;
-            padding: 0.75rem;
-            transition: all 0.2s ease;
-        }
-
-        .stCheckbox > label > div:hover {
-            border-color: #00B4DB;
-            background-color: #F5F9FF;
+            background-color: #1e222a; padding: 20px; border-radius: 12px; 
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1); margin: 20px;
         }
     </style>
 """, unsafe_allow_html=True)
