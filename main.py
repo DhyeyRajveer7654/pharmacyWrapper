@@ -12,7 +12,6 @@ size = (250, 250)
 # Set Page Configuration
 st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
 
-# Apply Custom Styles
 st.markdown("""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
@@ -38,9 +37,8 @@ st.markdown("""
             }
         }
         
-        /* Input fields with blue border */
+        /* Input fields styling */
         div[data-testid="stTextInput"] input,
-        div[data-testid="stSelectbox"] select,
         div[data-testid="stTextArea"] textarea,
         div[data-testid="stNumberInput"] input {
             background-color: white !important;
@@ -52,12 +50,47 @@ st.markdown("""
         }
         
         div[data-testid="stTextInput"] input:focus,
-        div[data-testid="stSelectbox"] select:focus,
         div[data-testid="stTextArea"] textarea:focus,
         div[data-testid="stNumberInput"] input:focus {
             border-color: #00B4DB !important;
             box-shadow: 0 0 8px rgba(0, 180, 219, 0.3);
             outline: none;
+        }
+        
+        /* Selection fields styling for stSelectbox (BaseWeb component) */
+        /* Streamlit’s selectbox is rendered as a div with role="combobox" */
+        div[data-testid="stSelectbox"] div[role="combobox"] {
+            background-color: white !important;
+            color: black !important;
+            border: 2px solid #007BFF !important;
+            border-radius: 8px !important;
+            padding: 12px;
+            transition: 0.3s;
+        }
+        
+        div[data-testid="stSelectbox"] div[role="combobox"]:focus,
+        div[data-testid="stSelectbox"] div[role="combobox"]:hover {
+            border-color: #00B4DB !important;
+            box-shadow: 0 0 8px rgba(0, 180, 219, 0.3);
+            outline: none;
+        }
+        
+        /* File uploader styling (if using st.file_uploader) */
+        div[data-testid="stFileUploader"] label {
+            background-color: white !important;
+            color: black !important;
+            border: 2px solid #007BFF !important;
+            border-radius: 8px !important;
+            padding: 12px;
+            transition: 0.3s;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+        }
+        
+        div[data-testid="stFileUploader"] label:hover {
+            border-color: #00B4DB !important;
+            box-shadow: 0 0 8px rgba(0, 180, 219, 0.3);
         }
         
         /* Title and Subtitle Styling */
@@ -76,7 +109,7 @@ st.markdown("""
             margin-bottom: 20px;
         }
         
-        /* Button Styling remains unchanged */
+        /* Button Styling */
         .stButton>button { 
             background: linear-gradient(90deg, #2979FF, #144273);
             color: white;
