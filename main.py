@@ -14,32 +14,44 @@ st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
 
 import streamlit as st
 
+import streamlit as st
+
 # Apply Custom Styles
 st.markdown("""
     <style>
-        /* Background color and text */
+        /* Page Background */
         body { 
             background-color: #F4F7FC; 
             color: #333; 
             font-family: 'Arial', sans-serif; 
         }
 
-        /* Model heading */
+        /* Model Heading */
         .title { 
             color: #0D47A1 !important;  /* Dark Blue */
             text-align: center; 
             font-size: 34px; 
             font-weight: bold; 
         }
-        
-        /* Subtitles */
+
+        /* Subtitle */
         .subtitle { 
             color: #5D738E; 
             text-align: center; 
             font-size: 18px; 
         }
 
-        /* Input boxes - blue border */
+        /* Boxed Section Styling */
+        .section-box {
+            background-color: white;
+            border: 2px solid #0D47A1; /* Blue Border */
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Input Fields */
         input, textarea, select {
             background-color: white !important;
             color: black !important;
@@ -48,6 +60,13 @@ st.markdown("""
             padding: 12px;
             box-shadow: none !important;
             transition: 0.3s;
+            width: 100%;
+        }
+
+        /* Dropdown Fix */
+        .stSelectbox>div>div {
+            border: 2px solid #0D47A1 !important;
+            border-radius: 10px !important;
         }
 
         /* Hover effect for inputs */
@@ -73,15 +92,6 @@ st.markdown("""
         .stButton>button:hover { 
             background: linear-gradient(90deg, #144273, #2979FF);
             transform: scale(1.05);
-        }
-
-        /* Card UI */
-        .card {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            margin: 20px;
         }
     </style>
 """, unsafe_allow_html=True)
