@@ -12,95 +12,101 @@ size = (250, 250)
 # Set Page Configuration
 st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
 
-import streamlit as st
-
-import streamlit as st
-
-import streamlit as st
-import time
-
-# Custom CSS for UI Enhancements
-st.markdown(
-    """
+# Apply Custom Styles
+st.markdown("""
     <style>
-        /* Boxed layout with blue border */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+        
+        /* Overall container styling with blue border and animation */
         .boxed-container {
+            background-color: white;
             border: 3px solid #007BFF;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0px 0px 15px rgba(0, 123, 255, 0.2);
             animation: fadeIn 0.5s ease-in-out;
         }
-
-        /* Smooth Opening Animation */
+        
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: scale(0.9);
+                transform: scale(0.95);
             }
             to {
                 opacity: 1;
                 transform: scale(1);
             }
         }
-
+        
         /* Input fields with blue border */
-        .stTextInput, .stSelectbox {
+        div[data-testid="stTextInput"] input,
+        div[data-testid="stSelectbox"] select,
+        div[data-testid="stTextArea"] textarea,
+        div[data-testid="stNumberInput"] input {
+            background-color: white !important;
+            color: black !important;
             border: 2px solid #007BFF !important;
-            border-radius: 5px;
-        }
-
-        /* Search button beside input fields */
-        .search-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Style for the search button */
-        .search-btn {
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            padding: 5px 12px;
-            border-radius: 5px;
-            cursor: pointer;
+            border-radius: 8px !important;
+            padding: 12px;
             transition: 0.3s;
         }
-
-        .search-btn:hover {
-            background-color: #0056b3;
+        
+        div[data-testid="stTextInput"] input:focus,
+        div[data-testid="stSelectbox"] select:focus,
+        div[data-testid="stTextArea"] textarea:focus,
+        div[data-testid="stNumberInput"] input:focus {
+            border-color: #00B4DB !important;
+            box-shadow: 0 0 8px rgba(0, 180, 219, 0.3);
+            outline: none;
+        }
+        
+        /* Title and Subtitle Styling */
+        .title {
+            color: #007BFF;
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #333;
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        /* Button Styling remains unchanged */
+        .stButton>button { 
+            background: linear-gradient(90deg, #2979FF, #144273);
+            color: white;
+            font-weight: bold;
+            border-radius: 8px;
+            padding: 12px 16px;
+            transition: 0.3s;
+        }
+        .stButton>button:hover { 
+            background: linear-gradient(90deg, #144273, #2979FF);
+            transform: scale(1.05);
         }
     </style>
-    """,
-    unsafe_allow_html=True,
-)
+""", unsafe_allow_html=True)
 
-# Model UI inside the blue-bordered box
+# Model UI inside the blue-bordered container with animation
 with st.container():
     st.markdown('<div class="boxed-container">', unsafe_allow_html=True)
-
-    st.markdown("### 🔬 QAI Model - AI-Powered Quality Assurance")
-    st.write("Advanced pharmaceutical quality analysis powered by artificial intelligence")
-
-    # Product Name Input
-    product_name = st.text_input("📝 Product Name", placeholder="e.g., Paracetamol")
-
-    # Indian Pharmacopoeia with Search Button
-    col1, col2 = st.columns([3, 1])
+    st.markdown('<div class="title">AI-Powered Pharma QA Model</div>', unsafe_allow_html=True)
+    st.markdown('<div class="subtitle">Advanced pharmaceutical quality analysis powered by artificial intelligence</div>', unsafe_allow_html=True)
+    
+    # Input fields arranged in a clean layout
+    col1, col2 = st.columns(2)
     with col1:
-        jurisdiction = st.text_input("🌍 Select Jurisdiction", placeholder="Enter Jurisdiction")
+        product_name = st.text_input("Product Name", placeholder="e.g., Paracetamol")
     with col2:
-        st.markdown('<button class="search-btn">🔍</button>', unsafe_allow_html=True)
-
-    # Method of Preparation with Search Button
-    col3, col4 = st.columns([3, 1])
-    with col3:
-        method = st.text_input("📖 Method of Preparation", placeholder="Enter Method")
-    with col4:
-        st.markdown('<button class="search-btn">🔍</button>', unsafe_allow_html=True)
-
-    # Closing the container
+        jurisdiction = st.text_input("Jurisdiction", placeholder="e.g., INDIAN PHARMACOPIEA")
+        
+    method = st.text_input("Method of Preparation", placeholder="Enter method details")
+    
     st.markdown('</div>', unsafe_allow_html=True)
 
 # Page Navigation
