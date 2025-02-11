@@ -16,85 +16,92 @@ import streamlit as st
 
 import streamlit as st
 
-# Apply Custom Styles
-st.markdown("""
+import streamlit as st
+import time
+
+# Custom CSS for UI Enhancements
+st.markdown(
+    """
     <style>
-        /* Page Background */
-        body { 
-            background-color: #F4F7FC; 
-            color: #333; 
-            font-family: 'Arial', sans-serif; 
-        }
-
-        /* Model Heading */
-        .title { 
-            color: #0D47A1 !important;  /* Dark Blue */
-            text-align: center; 
-            font-size: 34px; 
-            font-weight: bold; 
-        }
-
-        /* Subtitle */
-        .subtitle { 
-            color: #5D738E; 
-            text-align: center; 
-            font-size: 18px; 
-        }
-
-        /* Boxed Section Styling */
-        .section-box {
-            background-color: white;
-            border: 2px solid #0D47A1; /* Blue Border */
-            border-radius: 12px;
+        /* Boxed layout with blue border */
+        .boxed-container {
+            border: 3px solid #007BFF;
             padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 123, 255, 0.2);
+            animation: fadeIn 0.5s ease-in-out;
         }
 
-        /* Input Fields */
-        input, textarea, select {
-            background-color: white !important;
-            color: black !important;
-            border: 2px solid #0D47A1 !important; /* Blue border */
-            border-radius: 10px !important;
-            padding: 12px;
-            box-shadow: none !important;
-            transition: 0.3s;
-            width: 100%;
+        /* Smooth Opening Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
-        /* Dropdown Fix */
-        .stSelectbox>div>div {
-            border: 2px solid #0D47A1 !important;
-            border-radius: 10px !important;
+        /* Input fields with blue border */
+        .stTextInput, .stSelectbox {
+            border: 2px solid #007BFF !important;
+            border-radius: 5px;
         }
 
-        /* Hover effect for inputs */
-        input:hover, textarea:hover, select:hover {
-            border: 2px solid #1565C0 !important; /* Slightly lighter blue */
+        /* Search button beside input fields */
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        /* Focus effect */
-        input:focus, textarea:focus, select:focus {
-            border: 2px solid #1976D2 !important; /* Brighter blue */
-            outline: none !important;
-        }
-
-        /* Buttons */
-        .stButton>button { 
-            background: linear-gradient(90deg, #2979FF, #144273);
+        /* Style for the search button */
+        .search-btn {
+            background-color: #007BFF;
             color: white;
-            font-weight: bold;
-            border-radius: 8px;
-            padding: 12px 16px;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 5px;
+            cursor: pointer;
             transition: 0.3s;
         }
-        .stButton>button:hover { 
-            background: linear-gradient(90deg, #144273, #2979FF);
-            transform: scale(1.05);
+
+        .search-btn:hover {
+            background-color: #0056b3;
         }
     </style>
-""", unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True,
+)
+
+# Model UI inside the blue-bordered box
+with st.container():
+    st.markdown('<div class="boxed-container">', unsafe_allow_html=True)
+
+    st.markdown("### 🔬 QAI Model - AI-Powered Quality Assurance")
+    st.write("Advanced pharmaceutical quality analysis powered by artificial intelligence")
+
+    # Product Name Input
+    product_name = st.text_input("📝 Product Name", placeholder="e.g., Paracetamol")
+
+    # Indian Pharmacopoeia with Search Button
+    col1, col2 = st.columns([3, 1])
+    with col1:
+        jurisdiction = st.text_input("🌍 Select Jurisdiction", placeholder="Enter Jurisdiction")
+    with col2:
+        st.markdown('<button class="search-btn">🔍</button>', unsafe_allow_html=True)
+
+    # Method of Preparation with Search Button
+    col3, col4 = st.columns([3, 1])
+    with col3:
+        method = st.text_input("📖 Method of Preparation", placeholder="Enter Method")
+    with col4:
+        st.markdown('<button class="search-btn">🔍</button>', unsafe_allow_html=True)
+
+    # Closing the container
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # Page Navigation
 if "page" not in st.session_state:
