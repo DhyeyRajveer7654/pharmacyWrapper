@@ -1,5 +1,8 @@
 from string import Template
 
+import streamlit as st
+from string import Template
+
 TABLE_STYLE = """
 <style>
     /* Container to center the table on the page */
@@ -9,40 +12,85 @@ TABLE_STYLE = """
         align-items: center;
         margin-top: 20px;
     }
-
     /* The table itself */
     table {
-        width: 85%;                  /* Adjust to your desired width */
-        border-collapse: collapse;   /* Merge adjacent borders */
-        background-color: #333;      /* Main table background */
-        color: #fff;                 /* Text color */
-        border: 1px solid #444;      /* Outer border color */
+        width: 85%;
+        border-collapse: collapse;
+        background-color: #333;
+        color: #fff;
+        border: 1px solid #444;
         font-size: 16px;
-        text-align: left;            /* Left-align content by default */
+        text-align: left;
     }
-
     /* Header row */
     thead tr {
-        background-color: #444;      /* Slightly darker header row */
+        background-color: #444;
     }
-
     /* Header cells */
     th {
         color: #fff;
         padding: 8px;
-        text-align: left;            /* Align header text to the left */
+        text-align: left;
         border: 1px solid #444;
     }
-
     /* Body cells */
     td {
         color: #fff;
         padding: 8px;
-        text-align: left;            /* Align body text to the left */
-        border: 1px solid #444;      /* Cell borders */
+        text-align: left;
+        border: 1px solid #444;
     }
 </style>
 """
+
+# Render the style
+st.markdown(TABLE_STYLE, unsafe_allow_html=True)
+
+# Define your table HTML without extra report wrappers
+table_html = """
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Study Type</th>
+                <th>Test Conditions</th>
+                <th>Sampling Time Points</th>
+                <th>Equipment Used</th>
+                <th>Acceptance Limits</th>
+                <th>Stability Period</th>
+                <th>Corrective Actions for Failures</th>
+                <th>Regulatory Considerations</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Dissolution</td>
+                <td>37°C ± 0.5°C, 900 mL of 0.1 N HCl</td>
+                <td>10, 20, 30 minutes</td>
+                <td>USP Dissolution Apparatus Type II</td>
+                <td>≥ 80% dissolved at 30 min</td>
+                <td>Not applicable</td>
+                <td>Investigate cause, adjust formulation</td>
+                <td>Ensure compliance with USP and FDA guidelines</td>
+            </tr>
+            <tr>
+                <td>Stability</td>
+                <td>25°C ± 2°C / 60% RH ± 5% RH</td>
+                <td>0, 3, 6, 9, 12 months</td>
+                <td>Stability Chamber</td>
+                <td>No significant change</td>
+                <td>24 months</td>
+                <td>Initiate stability trending, review storage conditions</td>
+                <td>ICH and FDA stability guidelines</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+"""
+
+# Render only the table—without extra HTML form elements or report wrappers
+st.markdown(table_html, unsafe_allow_html=True)
+
 # 📌 **Highly Detailed Method of Preparation with Excipients Quantity**
 METHOD_OF_PREPARATION_PROMPT = Template("""
 Provide a **highly detailed, step-by-step** **method of preparation** for **$product_name** ($quanOfMed), each containing **$powerOfDrug** of the active ingredient, based on **$jurisdiction** standards.
