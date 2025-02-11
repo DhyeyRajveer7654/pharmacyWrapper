@@ -92,23 +92,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Model UI inside the blue-bordered container with animation
-with st.container():
-    st.markdown('<div class="boxed-container">', unsafe_allow_html=True)
-    st.markdown('<div class="title">AI-Powered Pharma QA Model</div>', unsafe_allow_html=True)
-    st.markdown('<div class="subtitle">Advanced pharmaceutical quality analysis powered by artificial intelligence</div>', unsafe_allow_html=True)
-    
-    # Input fields arranged in a clean layout
-    col1, col2 = st.columns(2)
-    with col1:
-        product_name = st.text_input("Product Name", placeholder="e.g., Paracetamol")
-    with col2:
-        jurisdiction = st.text_input("Jurisdiction", placeholder="e.g., INDIAN PHARMACOPIEA")
-        
-    method = st.text_input("Method of Preparation", placeholder="Enter method details")
-    
-    st.markdown('</div>', unsafe_allow_html=True)
-
 # Page Navigation
 if "page" not in st.session_state:
     st.session_state.page = "form"
