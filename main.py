@@ -12,51 +12,56 @@ size = (250, 250)
 # Set Page Configuration
 st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
 
+import streamlit as st
+
 # Apply Custom Styles
 st.markdown("""
     <style>
-        /* Background and text colors */
+        /* Background color and text */
         body { 
             background-color: #F4F7FC; 
             color: #333; 
             font-family: 'Arial', sans-serif; 
         }
 
-        /* Title and subtitles */
+        /* Model heading */
         .title { 
-            color: #144273; 
+            color: #0D47A1 !important;  /* Dark Blue */
             text-align: center; 
-            font-size: 32px; 
+            font-size: 34px; 
             font-weight: bold; 
         }
+        
+        /* Subtitles */
         .subtitle { 
             color: #5D738E; 
             text-align: center; 
             font-size: 18px; 
         }
 
-        /* Input fields styling */
+        /* Input boxes - blue border */
         input, textarea, select {
             background-color: white !important;
             color: black !important;
-            border: 1px solid #D1D9E6 !important;
+            border: 2px solid #0D47A1 !important; /* Blue border */
             border-radius: 10px !important;
-            padding: 10px;
+            padding: 12px;
             box-shadow: none !important;
+            transition: 0.3s;
         }
 
-        /* Hover effect for better UX */
+        /* Hover effect for inputs */
         input:hover, textarea:hover, select:hover {
-            border: 1px solid #8BA1C3 !important;
+            border: 2px solid #1565C0 !important; /* Slightly lighter blue */
         }
 
         /* Focus effect */
         input:focus, textarea:focus, select:focus {
-            border: 1px solid #007BFF !important;
+            border: 2px solid #1976D2 !important; /* Brighter blue */
             outline: none !important;
         }
 
-        /* Button styles */
+        /* Buttons */
         .stButton>button { 
             background: linear-gradient(90deg, #2979FF, #144273);
             color: white;
