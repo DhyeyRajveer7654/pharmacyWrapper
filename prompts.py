@@ -1,45 +1,48 @@
 from string import Template
 
-# Styling for a centered, left-aligned table with white text
 TABLE_STYLE = """
 <style>
+    /* Container to center the table on the page */
     .table-container {
         display: flex;
         justify-content: center;
         align-items: center;
         margin-top: 20px;
     }
+
+    /* The table itself */
     table {
-        width: 85%;
-        border-collapse: collapse;
-        background-color: #1e1e1e;
-        color: white;
-        border-radius: 10px;
+        width: 85%;                  /* Adjust to your desired width */
+        border-collapse: collapse;   /* Merge adjacent borders */
+        background-color: #333;      /* Main table background */
+        color: #fff;                 /* Text color */
+        border: 1px solid #444;      /* Outer border color */
         font-size: 16px;
-        border: 1px solid #444;
-        text-align: left;
+        text-align: left;            /* Left-align content by default */
     }
+
+    /* Header row */
+    thead tr {
+        background-color: #444;      /* Slightly darker header row */
+    }
+
+    /* Header cells */
     th {
-        background-color: #007BFF;
-        color: white;
-        padding: 12px;
-        text-align: center;
-    }
-    td {
+        color: #fff;
+        padding: 8px;
+        text-align: left;            /* Align header text to the left */
         border: 1px solid #444;
-        padding: 10px;
-        text-align: left;
     }
-    tr:nth-child(even) {
-        background-color: #292b2c;
-    }
-    tr:hover {
-        background-color: #007BFF;
-        color: white;
+
+    /* Body cells */
+    td {
+        color: #fff;
+        padding: 8px;
+        text-align: left;            /* Align body text to the left */
+        border: 1px solid #444;      /* Cell borders */
     }
 </style>
 """
-
 # 📌 **Highly Detailed Method of Preparation with Excipients Quantity**
 METHOD_OF_PREPARATION_PROMPT = Template("""
 Provide a **highly detailed, step-by-step** **method of preparation** for **$product_name** ($quanOfMed), each containing **$powerOfDrug** of the active ingredient, based on **$jurisdiction** standards.
