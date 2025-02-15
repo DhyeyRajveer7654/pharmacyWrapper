@@ -177,7 +177,7 @@ if st.session_state.page == "form":
         
     options["ftir_required"] = st.checkbox("📡 Retrieve FTIR Data")
 
-    submit_button = st.button("🚀 Submit & Generate Report")
+    submit_button = st.button("🚀 Submit & Generate Report", key="submit_button")
     if submit_button:
         if not all([options["product_name"], options["quanOfMed"], options["powerOfDrug"]]):
             st.error("⚠️ Please fill in all required fields!")
