@@ -116,6 +116,8 @@ def showStructure(product_name):
     print("product code is: "+product_code)
     print("product code from pubchem: "+product_code_from_pubchem)
     m = Chem.MolFromSmiles(product_code)
+    if m:
+        return Draw.MolToImage(m, size=(400, 400))
     return None
 
 # Directory where FTIR images are stored (Make sure to update this if images are in a different folder)
