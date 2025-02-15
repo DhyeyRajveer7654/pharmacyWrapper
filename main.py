@@ -6,6 +6,7 @@ from string import Template
 from rdkit import Chem
 from rdkit.Chem import Draw
 import requests
+import os
 
 size = (250, 250)
 
