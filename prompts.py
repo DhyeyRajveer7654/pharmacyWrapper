@@ -69,6 +69,6 @@ def getPromptForOptions(options):
     if options['jurisdiction'] == "COMPARE WITH ALL OF THEM":
         jurisdiction = "Show different results according to all of these jurisdictions: INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA and UNITED STATES PHARMACOPOEIA"
     final_prompt = prompt_template.substitute(product_name=options['product_name'], quanOfMed=options['quanOfMed'], powerOfDrug=options['powerOfDrug'], jurisdiction=jurisdiction)
-    
+    print("Options Dictionary:", options.keys())  # Debugging output
     print(final_prompt)
     return final_prompt
