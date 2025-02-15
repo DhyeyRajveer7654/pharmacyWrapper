@@ -44,7 +44,7 @@ TABLE_STYLE = """
 METHOD_OF_PREPARATION_PROMPT = Template("""
 Provide a **highly detailed, step-by-step** **method of preparation** for **$product_name** ($quanOfMed), each containing **$powerOfDrug** of the active ingredient, based on **$jurisdiction** standards.
 
-Ensure the response is a **centered HTML table** covering:
+Ensure the response is a **centered colorful blue table** covering:
 - **Step Number**
 - **Step Description**
 - **Equipment Required**
@@ -65,7 +65,7 @@ Each step must include **scientific justification**, including:
 - Precautions to **avoid errors** during mixing, drying, compression, and packaging.
 - How to ensure **uniformity, stability, and compliance** with pharmacopeial standards.
 
-The response **must be in HTML table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
+The response **must be in colourful blue table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
 """)
 
 # 📌 **Highly Detailed Combined Formulation & Testing with Excipients Quantity**
@@ -90,14 +90,14 @@ The response should include **two separate centered tables**:
    - **Deviation Handling**
    - **Regulatory Considerations**
 
-The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
+The response **must be in colourful blue table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
 """)
 
 # 📌 **Highly Detailed Quality Control & Results Checking**
 CHECK_RESULTS_PROMPT = Template("""
 Compare the **quality control evaluation results** of **$product_name** ($powerOfDrug) for **$quanOfMed** with the **$jurisdiction** standards.
 
-Ensure the response is a **centered HTML table** covering:
+Ensure the response is a **centered colorful blue table** covering:
 - **Test Parameter**
 - **User Result**
 - **Pharmacopeial Standard Requirement**
@@ -110,7 +110,7 @@ Each parameter must be explained in **scientific depth**, including:
 - What **failures indicate** about formulation issues.
 - **How to correct issues** based on pharmacopeial standards.
 
-The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
+The response **must be in colorful blue table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
 
 $resultsToCheck
 """)
@@ -119,7 +119,7 @@ $resultsToCheck
 FTIR_PROMPT = Template("""
 Provide a **detailed FTIR spectrum analysis** for **$product_name**.
 
-Ensure the response is a **centered HTML table** covering:
+Ensure the response is a **centered colorful blue table** covering:
 - **Wavenumber (cm⁻¹)**
 - **Functional Group**
 - **Peak Description**
@@ -132,14 +132,14 @@ Explain:
 - What **peak deviations** indicate about formulation errors.
 - How to **ensure FTIR compliance** with pharmacopeial standards.
 
-The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
+The response **must be in colorful blue table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
 """)
 
 # 📌 **Highly Detailed Dissolution & Stability Studies**
 DISSOLUTION_STABILITY_PROMPT = Template("""
 Provide a **comprehensive dissolution and stability study** for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
 
-Ensure the response is a **centered HTML table** covering:
+Ensure the response is a **centered colorful blue table** covering:
 - **Study Type (Dissolution/Stability)**
 - **Test Conditions**
 - **Sampling Time Points**
@@ -149,7 +149,7 @@ Ensure the response is a **centered HTML table** covering:
 - **Corrective Actions for Failures**
 - **Regulatory Considerations**
 
-The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
+The response **must be in colorful blue table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
 """)
 
 STRUCTURE_PROMPT = Template("""

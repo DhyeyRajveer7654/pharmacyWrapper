@@ -12,7 +12,7 @@ import streamlit as st
 size = (250, 250)
 
 # Set Page Configuration
-st.set_page_config(page_title="Pharma QA Assistant", layout="wide", page_icon="🧪")
+st.set_page_config(page_title="QAI Model AI-Powered Quality Assistance", layout="wide", page_icon="🧪")
 
 # Enhanced Professional UI Styling
 st.markdown("""
