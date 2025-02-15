@@ -7,9 +7,20 @@ from rdkit import Chem
 from rdkit.Chem import Draw
 import requests
 import os
-import streamlit as st
+
+# Directory where FTIR images are stored
+FTIR_IMAGE_DIR = "./ftir_images"  # Change this if storing images elsewhere
+
+def get_ftir_image(product_name):
+    """Fetches the corresponding FTIR image for the given product name."""
+    image_filename = f"{product_name.lower()}.png"
+    image_path = os.path.join(FTIR_IMAGE_DIR, image_filename)
+    if os.path.exists(image_path):
+        return image_path
+    return None
 
 size = (250, 250)
+
 # Set Page Configuration
 st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
 
@@ -60,17 +71,6 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
-
-# Directory where FTIR images are stored (update this if needed)
-FTIR_IMAGE_DIR = "./"
-
-def get_ftir_image(product_name):
-    """Fetches the corresponding FTIR image for the given product name."""
-    image_filename = f"{product_name.lower()}.png"
-    image_path = os.path.join(FTIR_IMAGE_DIR, image_filename)
-    if os.path.exists(image_path):
-        return image_path
-    return None
 
 # Page Navigation
 if "page" not in st.session_state:
@@ -125,16 +125,8 @@ def showStructure(product_name):
     print("product code is: "+product_code)
     print("product code from pubchem: "+product_code_from_pubchem)
     m = Chem.MolFromSmiles(product_code)
-    return None
-
-# Page Navigation
-if "page" not in st.session_state:
-    st.session_state.page = "form"
-if "api_response" not in st.session_state:
-    st.session_state.api_response = None
-
-options = dict()
-
+    return fig
+    
 # 📌 FORM PAGE
 if st.session_state.page == "form":
 
@@ -172,20 +164,19 @@ if st.session_state.page == "form":
     if options["typeOfInfo"] == "CHECK RESULTS":
         options["resultsToCheck"] = st.text_area("🔍 Enter Your Results:", height=200, placeholder="Paste lab results here...",key="checkResults")
 
+    options["ftir_required"] = st.checkbox("📡 Include FTIR Analysis")
+
+    submit_button = st.button("🚀 Submit & Generate Report")
+    if submit_button:
+        if not all([options["product_name"], options["quanOfMed"], options["powerOfDrug"]]):
+            st.error("⚠️ Please fill in all required fields!")
+        else:
+            st.session_state.update(options)
+            st.session_state.page = "result"
+            st.experimental_rerun()
+        
     options["ftir_required"] = st.checkbox("📡 Retrieve FTIR Data")
 
-    show_ftir = st.button("📊 Show FTIR Graph")
-
-    if show_ftir:
-        product_name = st.session_state.get("product_name", "")
-        if product_name:
-            ftir_image = get_ftir_image(product_name)
-            if ftir_image:
-                st.image(ftir_image, caption=f"FTIR Graph for {product_name}", use_column_width=True)
-            else:
-                st.error("⚠️ No FTIR data available for this product.")
-        else:
-            st.error("⚠️ Please enter a product name on the form page.")
     submit_button = st.button("🚀 Submit & Generate Report")
     if submit_button:
         if not all([options["product_name"], options["quanOfMed"], options["powerOfDrug"]]):
@@ -231,3 +222,12 @@ elif st.session_state.page == "result":
             ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
             st.markdown("### 🔬 FTIR Data")
             st.write(ftir_data)
+
+if st.session_state.get("ftir_required", False):  # Check if FTIR was selected
+    product_name = st.session_state.get("product_name", "")
+    if product_name:
+        ftir_image = get_ftir_image(product_name)
+        if ftir_image:
+            st.image(ftir_image, caption=f"FTIR Graph for {product_name}", use_column_width=True)
+        else:
+            st.error("⚠️ No FTIR data available for this product.")
