@@ -10,8 +10,6 @@ import os
 import streamlit as st
 
 size = (250, 250)
-
-
 # Set Page Configuration
 st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
 
@@ -63,6 +61,17 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+# Directory where FTIR images are stored (update this if needed)
+FTIR_IMAGE_DIR = "./"
+
+def get_ftir_image(product_name):
+    """Fetches the corresponding FTIR image for the given product name."""
+    image_filename = f"{product_name.lower()}.png"
+    image_path = os.path.join(FTIR_IMAGE_DIR, image_filename)
+    if os.path.exists(image_path):
+        return image_path
+    return None
+
 # Page Navigation
 if "page" not in st.session_state:
     st.session_state.page = "form"
@@ -102,20 +111,29 @@ def get_pubchem_product_code(product_name):
         return product_code_from_pubchem
 
 def showStructure(product_name):
-    product_code = get_pubchem_product_code(product_name)
-    
-    if not product_code:
+    product_code = ""
+    product_code_from_pubchem = get_pubchem_product_code(product_name)
+    if product_code_from_pubchem=="":
         product_code_prompt = prompts.STRUCTURE_PROMPT.substitute(product_name=product_name)
+        print("Prompt is: "+product_code_prompt)
         product_code = chat_with_gpt.chatWithGpt(product_code_prompt)
-        
         if product_code == "NO DRUG FOUND":
-            return None
+            return ""
+    else:
+        product_code = product_code_from_pubchem
     
+    print("product code is: "+product_code)
+    print("product code from pubchem: "+product_code_from_pubchem)
     m = Chem.MolFromSmiles(product_code)
-    
-    if m:
-        return Draw.MolToImage(m, size=(400, 400))  # Correctly returns an image
-    return None  # Returns None if molecule creation fails
+    return None
+
+# Page Navigation
+if "page" not in st.session_state:
+    st.session_state.page = "form"
+if "api_response" not in st.session_state:
+    st.session_state.api_response = None
+
+options = dict()
 
 # 📌 FORM PAGE
 if st.session_state.page == "form":
@@ -156,6 +174,18 @@ if st.session_state.page == "form":
 
     options["ftir_required"] = st.checkbox("📡 Retrieve FTIR Data")
 
+    show_ftir = st.button("📊 Show FTIR Graph")
+
+    if show_ftir:
+        product_name = st.session_state.get("product_name", "")
+        if product_name:
+            ftir_image = get_ftir_image(product_name)
+            if ftir_image:
+                st.image(ftir_image, caption=f"FTIR Graph for {product_name}", use_column_width=True)
+            else:
+                st.error("⚠️ No FTIR data available for this product.")
+        else:
+            st.error("⚠️ Please enter a product name on the form page.")
     submit_button = st.button("🚀 Submit & Generate Report")
     if submit_button:
         if not all([options["product_name"], options["quanOfMed"], options["powerOfDrug"]]):
@@ -169,29 +199,7 @@ if st.session_state.page == "form":
             st.session_state.update(options)
             st.session_state.page = "result"
             st.experimental_rerun()
-# Directory where FTIR images are stored (update this if needed)
-FTIR_IMAGE_DIR = "./"
 
-def get_ftir_image(product_name):
-    """Fetches the corresponding FTIR image for the given product name."""
-    image_filename = f"{product_name.lower()}.png"
-    image_path = os.path.join(FTIR_IMAGE_DIR, image_filename)
-    if os.path.exists(image_path):
-        return image_path
-    return None
-
-# Show FTIR Graph button only on the result page
-if st.session_state.page == "result":
-    if st.button("📊 Show FTIR Graph"):
-        if "product_name" in st.session_state and st.session_state.product_name:
-            ftir_image = get_ftir_image(st.session_state.product_name)
-            if ftir_image:
-                st.image(ftir_image, caption=f"FTIR Graph for {st.session_state.product_name}", use_column_width=True)
-            else:
-                st.error("⚠️ No FTIR data available for this product.")
-        else:
-            st.error("⚠️ Please enter a product name on the form page.")
-            
 # 📌 RESULT PAGE
 elif st.session_state.page == "result":
 
@@ -223,4 +231,3 @@ elif st.session_state.page == "result":
             ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
             st.markdown("### 🔬 FTIR Data")
             st.write(ftir_data)
-
