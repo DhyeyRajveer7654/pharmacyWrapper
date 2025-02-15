@@ -1,15 +1,44 @@
 from string import Template
 
-# template = Template("My name is $name and I am $age years old.")
-# print(template.substitute(name="Alice", age=25))
-
-# product_name
-
-# quanOfMed
-
-# powerOfDrug
-
-# jurisdiction
+# Styling for a centered, left-aligned table with white text
+TABLE_STYLE = """
+<style>
+    .table-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+    }
+    table {
+        width: 85%;
+        border-collapse: collapse;
+        background-color: #1e1e1e;
+        color: white;
+        border-radius: 10px;
+        font-size: 16px;
+        border: 1px solid #444;
+        text-align: left;
+    }
+    th {
+        background-color: #007BFF;
+        color: white;
+        padding: 12px;
+        text-align: center;
+    }
+    td {
+        border: 1px solid #444;
+        padding: 10px;
+        text-align: left;
+    }
+    tr:nth-child(even) {
+        background-color: #292b2c;
+    }
+    tr:hover {
+        background-color: #007BFF;
+        color: white;
+    }
+</style>
+"""
 
 METHOD_OF_PREPARATION_PROMPT = Template("""
 Provide a detailed method for preparing $product_name $quanOfMed, each containing $powerOfDrug of the active ingredient, based on $jurisdiction standards. The information should include: A list of all materials required, including the active pharmaceutical ingredient (API) and excipients, with their specific quantities for $quanOfMed. The purpose of each material used in the formulation. Step-by-step instructions in all the details needed for the preparation process, including quantities and methods for mixing, granulation, drying, lubrication, and compression. Do not include any information related to evaluation, quality control, or testing procedures. The focus should solely be on the formulation and preparation steps.                                        
@@ -26,30 +55,20 @@ Compare the following evaluation results of my $powerOfDrug $product_name for qu
 $resultsToCheck
 Please compare these results with the $jurisdiction standards and assess whether they meet the required specifications.""")
 
+STRUCTURE_PROMPT = Template("""
+Provide the **canonical SMILES notation** for the drug $product_name based on PubChem's database. Ensure that the SMILES code is accurate and matches PubChem's standard molecular structure for the drug. Return only the canonical SMILES code as provided by PubChem, and no other extra text. If the drug name is not valid, return only "NO DRUG FOUND".
+""")
 
-def addTextToReturnOnlyHtmlTable(promptWithoutHtml):
-    promptToOnlyGetHtmlTable = "\nEnsure the response is only a valid HTML table with no additional text or explanation. The table should have a black background (background-color: black) and all text should be white text (color: white) and white borders and proper spacing. Format the response as clean, minimal HTML."
-    return promptWithoutHtml + promptToOnlyGetHtmlTable
-
+# 📌 **GPT Prompt Selection**
 def getPromptForOptions(options):
-    jurisdiction = ""
-    if options['jurisdiction'] == "COMPARE WITH ALL OF THEM":
-        jurisdiction = "INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA and UNITED STATES PHARMACOPOEIA"
-    prompt_template = Template("")
     if options['typeOfInfo'] == "METHOD OF PREPARATION":
-        prompt_template = METHOD_OF_PREPARATION_PROMPT
-    elif options['typeOfInfo'] == "CHARACTARIZATION/EVALUATION":
-        prompt_template = CHARACTARIZATION_EVALUATION_PROMPT
+        return METHOD_OF_PREPARATION_PROMPT.substitute(options)
     elif options['typeOfInfo'] == "Both of above":
-        prompt_template = COMBINED_PROMPT
+        return COMBINED_PROMPT.substitute(options)
     elif options['typeOfInfo'] == "CHECK RESULTS":
-        prompt_template = CHECK_RESULTS_PROMPT
-        final_prompt = prompt_template.substitute(product_name=options['product_name'], quanOfMed=options['quanOfMed'], powerOfDrug=options['powerOfDrug'], jurisdiction=jurisdiction, resultsToCheck=options['resultsToCheck'])
-        return addTextToReturnOnlyHtmlTable(final_prompt)
-    
-    if options['jurisdiction'] == "COMPARE WITH ALL OF THEM":
-        jurisdiction = "Show different results according to all of these jurisdictions: INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA and UNITED STATES PHARMACOPOEIA"
-    final_prompt = prompt_template.substitute(product_name=options['product_name'], quanOfMed=options['quanOfMed'], powerOfDrug=options['powerOfDrug'], jurisdiction=jurisdiction)
-    final_prompt = addTextToReturnOnlyHtmlTable(final_prompt)
-    print(final_prompt)
-    return final_prompt
+        return CHECK_RESULTS_PROMPT.substitute(options)
+    elif options['typeOfInfo'] == "DISSOLUTION & STABILITY" or options['typeOfInfo'] == "CHARACTARIZATION/EVALUATION":
+        return DISSOLUTION_STABILITY_PROMPT.substitute(options)
+    elif options['typeOfInfo'] == "FTIR ANALYSIS":
+        return FTIR_PROMPT.substitute(options)
+    return ""
