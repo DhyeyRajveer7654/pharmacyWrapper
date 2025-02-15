@@ -65,7 +65,7 @@ Each step must include **scientific justification**, including:
 - Precautions to **avoid errors** during mixing, drying, compression, and packaging.
 - How to ensure **uniformity, stability, and compliance** with pharmacopeial standards.
 
-Do not write or give any answer or line or anything except the table and The response **must be in colourful blue table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
+The response **must be in colourful blue table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
 """)
 
 # 📌 **Highly Detailed Combined Formulation & Testing with Excipients Quantity**
@@ -90,7 +90,7 @@ The response should include **two separate centered tables**:
    - **Deviation Handling**
    - **Regulatory Considerations**
 
-Do not write or give any answer or line or anything except the table and The response **must be in colourful blue table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
+The response **must be in colourful blue table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
 """)
 
 # 📌 **Highly Detailed Quality Control & Results Checking**
@@ -110,7 +110,7 @@ Each parameter must be explained in **scientific depth**, including:
 - What **failures indicate** about formulation issues.
 - **How to correct issues** based on pharmacopeial standards.
 
-Do not write or give any answer or line or anything except the table and The response **must be in colorful blue table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
+The response **must be in colorful blue table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
 
 $resultsToCheck
 """)
@@ -132,14 +132,14 @@ Explain:
 - What **peak deviations** indicate about formulation errors.
 - How to **ensure FTIR compliance** with pharmacopeial standards.
 
-Do not write or give any answer or line or anything except the table and The response **must be in colorful blue table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
+The response **must be in colorful blue table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
 """)
 
 # 📌 **Highly Detailed Dissolution & Stability Studies**
 DISSOLUTION_STABILITY_PROMPT = Template("""
 Provide a **comprehensive dissolution and stability study** for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
 
-Ensure the response is a **centered colorful table** covering:
+Ensure the response is a **centered HTML table** covering:
 - **Study Type (Dissolution/Stability)**
 - **Test Conditions**
 - **Sampling Time Points**
@@ -149,7 +149,7 @@ Ensure the response is a **centered colorful table** covering:
 - **Corrective Actions for Failures**
 - **Regulatory Considerations**
 
-Do not write or give any answer or line or anything except the table and The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
+The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
 """)
 
 STRUCTURE_PROMPT = Template("""
