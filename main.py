@@ -11,54 +11,129 @@ import streamlit as st
 
 size = (250, 250)
 
-
 # Set Page Configuration
-st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
+st.set_page_config(page_title="Pharma QA Assistant", layout="wide", page_icon="🧪")
 
-# Apply Custom Styles
+# Enhanced Professional UI Styling
 st.markdown("""
     <style>
-        body { background-color: #0e1117; color: white; font-family: 'Arial', sans-serif; }
-        .stTextInput>div>div>input, .stSelectbox>div>div>select, .stTextArea>div>textarea { 
-            border-radius: 5px !important; padding: 10px;
+        /* Global Styles */
+        body {
+            background-color: #f0f2f6;
+            color: #1e293b;
+            font-family: 'Inter', sans-serif;
         }
+
+        /* Header Styling */
+        .main-header {
+            background: linear-gradient(135deg, #0052cc, #00a3bf);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        /* Form Elements */
         div[data-testid="stTextInput"] input,
         div[data-testid="stTextArea"] textarea,
-        div[data-testid="stNumberInput"] input,
-        div[data-testid="stSelectbox"] > div[data-baseweb="select"],
-        div[data-testid="stSlider"] > div[data-baseweb="slider"] {
-            background-color: white !important;
-            color: black !important;
-            border: 1px solid #ccc !important;
-            border-radius: 10px !important;
-            box-shadow: none !important; /* Remove focus glow */
+        div[data-testid="stSelectbox"] > div[data-baseweb="select"] {
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        /* Add hover effect for better UX */
-        div[data-testid="stTextInput"] input:hover,
-        div[data-testid="stTextArea"] textarea:hover,
-        div[data-testid="stNumberInput"] input:hover,
-        div[data-testid="stSelectbox"] > div[role="combobox"]:hover {
-            border: 1px solid #888 !important; /* Darker border on hover */
-        }
-
-        /* Ensure focus border stands out */
         div[data-testid="stTextInput"] input:focus,
-        div[data-testid="stTextArea"] textarea:focus,
-        div[data-testid="stNumberInput"] input:focus,
-        div[data-testid="stSelectbox"] > div[role="combobox"]:focus {
-            border: 1px solid #007BFF !important; /* Blue border on focus */
-            outline: none !important;
+        div[data-testid="stTextArea"] textarea:focus {
+            border-color: #0052cc;
+            box-shadow: 0 0 0 2px rgba(0,82,204,0.2);
         }
-        .stButton>button:hover { 
-            background: linear-gradient(90deg, #00D4FF, #007BFF);
-            transform: scale(1.05);
+
+        /* Button Styling */
+        .stButton > button {
+            width: 100%;
+            background: linear-gradient(135deg, #0052cc, #00a3bf);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        .title { color: #00D4FF; text-align: center; font-size: 30px; font-weight: bold; }
-        .subtitle { color: #cccccc; text-align: center; font-size: 18px; }
+
+        .stButton > button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,82,204,0.2);
+        }
+
+        /* Card Styling */
         .card {
-            background-color: #1e222a; padding: 20px; border-radius: 12px; 
-            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1); margin: 20px;
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Results Table */
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 1rem 0;
+        }
+
+        th {
+            background: #0052cc;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Loading Spinner */
+        .stSpinner > div {
+            border-color: #0052cc !important;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: #dcfce7;
+            color: #166534;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        /* Error Message */
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -74,7 +149,7 @@ options = dict()
 def get_cid_from_name(drug_name):
     url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{drug_name}/cids/JSON"
     response = requests.get(url)
-    
+
     if response.status_code == 200:
         try:
             cids = response.json()["IdentifierList"]["CID"]
@@ -83,7 +158,7 @@ def get_cid_from_name(drug_name):
             return None
     else:
         return None
-    
+
 def get_pubchem_product_code(product_name):
     product_code_from_pubchem = ""
     url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{product_name}/property/CanonicalSMILES/JSON"
@@ -112,7 +187,7 @@ def showStructure(product_name):
             return ""
     else:
         product_code = product_code_from_pubchem
-    
+
     print("product code is: "+product_code)
     print("product code from pubchem: "+product_code_from_pubchem)
     m = Chem.MolFromSmiles(product_code)
@@ -120,7 +195,7 @@ def showStructure(product_name):
         return Draw.MolToImage(m, size=(400, 400))
     return None
 
-# Directory where FTIR images are stored (Make sure to update this if images are in a different folder)
+# Directory where FTIR images are stored
 FTIR_IMAGE_DIR = "./"
 
 def get_ftir_image(product_name):
@@ -130,34 +205,31 @@ def get_ftir_image(product_name):
     if os.path.exists(image_path):
         return image_path
     return None
- 
+
 # 📌 FORM PAGE
 if st.session_state.page == "form":
+    st.markdown('<div class="main-header"><h1>🧪 Pharmaceutical Quality Analysis</h1><p>Enter details below to generate a comprehensive quality report</p></div>', unsafe_allow_html=True)
 
-    st.markdown('<div class="title">🧪 QAI Model - AI-Powered Quality Assurance</div>', unsafe_allow_html=True)
-    st.markdown('<div class="subtitle">🔍 Enter details below to generate a pharmaceutical quality report.</div>', unsafe_allow_html=True)
-
-    # User Input Form
-    # with st.form("input_form"):
+    # User Input Form in a card layout
+    st.markdown('<div class="card">', unsafe_allow_html=True)
     col1, col2 = st.columns(2)
 
     with col1:
         options["product_name"] = st.text_input("💊 Product Name", placeholder="e.g., Paracetamol")
-        if st.button("Get structure"):
-            if ("product_name" not in options) or ("product_name" in options and options["product_name"]==""):
+        if st.button("🔬 Get Structure"):
+            if not options["product_name"]:
                 st.error("⚠️ Please write product name!")
             else:
                 with st.spinner("🛠️ Processing... Please wait"):
                     fig = showStructure(options["product_name"])
-                if fig=="":
+                if fig == "":
                     st.error("⚠️ Drug not found, please input a valid drug name")
                 else:
-                    st.image(fig, caption=f"{options["product_name"]} Molecule")
-        
-        if st.button("📊 Show FTIR Graph"):
-            if "product_name" in options and options["product_name"]:  # Ensure product name exists
-                ftir_image = get_ftir_image(options["product_name"])  # Fetch correct image
+                    st.image(fig, caption=f"{options['product_name']} Molecule")
 
+        if st.button("📊 Show FTIR Graph"):
+            if options.get("product_name"):  # Ensure product name exists
+                ftir_image = get_ftir_image(options["product_name"])
                 if ftir_image:
                     st.image(ftir_image, caption=f"FTIR Graph for {options['product_name']}", use_column_width=True)
                 else:
@@ -171,22 +243,27 @@ if st.session_state.page == "form":
             ["INDIAN PHARMACOPIEA", "BRITISH PHARMACOPIEA", "UNITED STATES PHARMACOPOEIA", "MARTINDALE-EXTRA PHARMACOPIEA", "COMPARE WITH ALL"])
         options["powerOfDrug"] = st.text_input("⚡ Power of Drug", placeholder="e.g., 500 mg")
 
-    # st.markdown('<div class="card">', unsafe_allow_html=True)
-    options["typeOfInfo"] = st.selectbox("📊 Select Information Required:", 
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # Analysis Options in a separate card
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    options["typeOfInfo"] = st.selectbox("📊 Select Analysis Type:", 
             ["METHOD OF PREPARATION", "CHARACTARIZATION/EVALUATION", "Both of above", "CHECK RESULTS"])
 
     if options["typeOfInfo"] == "CHECK RESULTS":
-        options["resultsToCheck"] = st.text_area("🔍 Enter Your Results:", height=200, placeholder="Paste lab results here...",key="checkResults")
+        options["resultsToCheck"] = st.text_area("🔍 Enter Your Results:", height=200, placeholder="Paste lab results here...", key="checkResults")
 
-    options["ftir_required"] = st.checkbox("📡 Retrieve FTIR Data")
+    options["ftir_required"] = st.checkbox("📡 Include FTIR Analysis")
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    submit_button = st.button("🚀 Submit & Generate Report")
+    # Submit button with enhanced styling
+    submit_button = st.button("🚀 Generate Report")
     if submit_button:
-        if not all([options["product_name"], options["quanOfMed"], options["powerOfDrug"]]):
+        if not all([options.get("product_name"), options.get("quanOfMed"), options.get("powerOfDrug")]):
             st.error("⚠️ Please fill in all required fields!")
         else:
             prompt = prompts.getPromptForOptions(options)
-            with st.spinner("🛠️ Processing... Please wait"):
+            with st.spinner("🛠️ Generating comprehensive report... Please wait"):
                 api_response = chat_with_gpt.chatWithGpt(prompt)
                 st.session_state.api_response = api_response
 
@@ -196,33 +273,32 @@ if st.session_state.page == "form":
 
 # 📌 RESULT PAGE
 elif st.session_state.page == "result":
+    st.markdown('<div class="main-header">', unsafe_allow_html=True)
+    st.markdown('<h1>📑 Quality Analysis Report</h1>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    if st.button("🔙 Go Back to Form"):
+    if st.button("🔙 Return to Form", key="back_button"):
         st.session_state.page = "form"
         st.experimental_rerun()
-    # Apply White Background for Result Page
-    st.markdown("""
-        <style>
-            body { background-color: black !important; color: white !important; }
-        </style>
-    """, unsafe_allow_html=True)
 
-    st.markdown('<div style="text-align:center; color:#007BFF; font-size:30px; font-weight:bold;">📑 Submission Summary</div>', unsafe_allow_html=True)
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.markdown("### 📋 Analysis Details")
+    st.markdown(f"**💊 Product:** {st.session_state.product_name}")
+    st.markdown(f"**📦 Quantity:** {st.session_state.quanOfMed}")
+    st.markdown(f"**⚡ Strength:** {st.session_state.powerOfDrug}")
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    st.markdown(f"**💊 Product Name:** {st.session_state.product_name}")
-    st.markdown(f"**📦 Quantity of Medicine:** {st.session_state.quanOfMed}")
-    st.markdown(f"**⚡ Power of Drug:** {st.session_state.powerOfDrug}")
-
-    st.markdown("### 📋 Generated Report")
     if st.session_state.api_response:
-        st.markdown(st.session_state.api_response)
-        # components.html(st.session_state.api_response, height=1000, width=1000, scrolling=True)
+        st.markdown('<div class="table-container">', unsafe_allow_html=True)
+        st.markdown(st.session_state.api_response, unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
     else:
-        st.warning("⚠️ No response received from API.")
+        st.warning("⚠️ No response received. Please try again.")
 
-    if st.session_state.ftir_required:
-        with st.spinner("📡 Fetching FTIR Data..."):
+    if st.session_state.get("ftir_required"):
+        with st.spinner("📡 Analyzing FTIR Data..."):
             ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
-            st.markdown("### 🔬 FTIR Data")
-            st.write(ftir_data)
-
+            st.markdown('<div class="table-container">', unsafe_allow_html=True)
+            st.markdown("### 🔬 FTIR Analysis")
+            st.markdown(ftir_data, unsafe_allow_html=True)
+            st.markdown('</div>', unsafe_allow_html=True)
