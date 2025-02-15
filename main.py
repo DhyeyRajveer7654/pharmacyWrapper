@@ -194,28 +194,35 @@ if st.session_state.page == "form":
             st.session_state.page = "result"
             st.experimental_rerun()
 
-## Result Page
+# 📌 RESULT PAGE
 elif st.session_state.page == "result":
-    if st.button("🔙 Back to Form"):
+
+    if st.button("🔙 Go Back to Form"):
         st.session_state.page = "form"
         st.experimental_rerun()
+    # Apply White Background for Result Page
+    st.markdown("""
+        <style>
+            body { background-color: black !important; color: white !important; }
+        </style>
+    """, unsafe_allow_html=True)
 
+    st.markdown('<div style="text-align:center; color:#007BFF; font-size:30px; font-weight:bold;">📑 Submission Summary</div>', unsafe_allow_html=True)
+
+    st.markdown(f"**💊 Product Name:** {st.session_state.product_name}")
+    st.markdown(f"**📦 Quantity of Medicine:** {st.session_state.quanOfMed}")
+    st.markdown(f"**⚡ Power of Drug:** {st.session_state.powerOfDrug}")
+
+    st.markdown("### 📋 Generated Report")
     if st.session_state.api_response:
-        st.markdown("### 📊 Report Summary")
-        st.markdown(f"**💊 Product:** {st.session_state.product_name}")
-        st.markdown(f"**📦 Quantity:** {st.session_state.quanOfMed}")
-        st.markdown(f"**⚡ Strength:** {st.session_state.powerOfDrug}")
+        st.markdown(st.session_state.api_response)
+        # components.html(st.session_state.api_response, height=1000, width=1000, scrolling=True)
+    else:
+        st.warning("⚠️ No response received from API.")
 
-        st.markdown("### 📑 Generated Report")
-        st.markdown(prompts.TABLE_STYLE + st.session_state.api_response, unsafe_allow_html=True)
+    if st.session_state.ftir_required:
+        with st.spinner("📡 Fetching FTIR Data..."):
+            ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
+            st.markdown("### 🔬 FTIR Data")
+            st.write(ftir_data)
 
-        if st.session_state.get('ftir_required', False):
-            with st.spinner("📡 Fetching FTIR Data..."):
-                ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
-                if ftir_data:
-                    st.markdown("### 🔬 FTIR Analysis")
-                    st.markdown(prompts.TABLE_STYLE + ftir_data, unsafe_allow_html=True)
-
-        if st.session_state.structure is not None:
-            st.markdown("### 🧪 Molecular Structure")
-            st.image(st.session_state.structure, caption="Molecular Structure", width=400)
