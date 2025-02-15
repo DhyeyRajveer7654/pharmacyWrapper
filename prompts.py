@@ -42,20 +42,26 @@ TABLE_STYLE = """
 
 # 📌 **Highly Detailed Method of Preparation with Excipients Quantity**
 METHOD_OF_PREPARATION_PROMPT = Template("""
+Provide a **highly detailed, step-by-step** **method of preparation** for **$product_name** ($quanOfMed), each containing **$powerOfDrug** of the active ingredient, based on **$jurisdiction** standards.
+
+Ensure the response is strictly formatted as a **Markdown table** with a **blue color scheme** for better readability. The table must include:
+
+### **Preparation Steps Table:**
 | **Step Number** | **Step Description** | **Equipment Required** | **Time Duration** | **Critical Observations** | **Regulatory Considerations** |
-|---------------|------------------|-------------------|--------------|------------------|--------------------|
-|  |  |  |  |  |  |
+|---------------|------------------|------------------|------------------|------------------|------------------|
 
-| **Ingredient Name (API & Excipients)** | **Required Quantity per Dosage Unit** | **Total Quantity Required for $quanOfMed** | **Function in Formulation** | **Solubility & Stability Considerations** |
-|----------------------------------|------------------------------|-------------------------------|----------------------|---------------------------------|
-|  |  |  |  |  |
+Additionally, provide a **reference table** detailing the **exact quantity** of excipients required for **$quanOfMed**:
 
-Each step includes scientific justification such as:
-- Selection and handling of ingredients.
-- Precautions to avoid errors during mixing, drying, compression, and packaging.
-- Ensuring uniformity, stability, and compliance with pharmacopeial standards.
+### **Excipients & Ingredients Table:**
+| **Ingredient Name (API & Excipients)** | **Required Quantity per Dosage Unit** | **Total Quantity for $quanOfMed** | **Function in Formulation** | **Solubility & Stability Considerations** |
+|------------------|------------------|------------------|------------------|------------------|
 
-The response **must be in colorful blue table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
+Each step must include **scientific justification**, covering:
+- How **ingredients are selected and handled**.
+- Precautions to **avoid errors** during mixing, drying, compression, and packaging.
+- How to ensure **uniformity, stability, and compliance** with pharmacopeial standards.
+
+The response **must be formatted strictly in table format** using **Markdown tables** with a **blue color scheme** and **white text**. No extra text should appear outside the table.
 """)
 
 # 📌 **Highly Detailed Combined Formulation & Testing with Excipients Quantity**
