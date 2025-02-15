@@ -44,7 +44,7 @@ TABLE_STYLE = """
 METHOD_OF_PREPARATION_PROMPT = Template("""
 Provide a **highly detailed, step-by-step** **method of preparation** for **$product_name** ($quanOfMed), each containing **$powerOfDrug** of the active ingredient, based on **$jurisdiction** standards.
 
-Ensure the response is a **centered professional table** covering:
+Ensure the response is a **centered professional whole table** covering:
 - **Step Number**
 - **Step Description**
 - **Equipment Required**
