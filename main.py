@@ -116,7 +116,9 @@ def showStructure(product_name):
     print("product code is: "+product_code)
     print("product code from pubchem: "+product_code_from_pubchem)
     m = Chem.MolFromSmiles(product_code)
-    return fig
+    if m:
+        return Draw.MolToImage(m, size=(400, 400))
+    return None
 
 # Directory where FTIR images are stored (Make sure to update this if images are in a different folder)
 FTIR_IMAGE_DIR = "./"
@@ -151,6 +153,7 @@ if st.session_state.page == "form":
                     st.error("⚠️ Drug not found, please input a valid drug name")
                 else:
                     st.image(fig, caption=f"{options["product_name"]} Molecule")
+        
         if st.button("📊 Show FTIR Graph"):
             if "product_name" in options and options["product_name"]:  # Ensure product name exists
                 ftir_image = get_ftir_image(options["product_name"])  # Fetch correct image
@@ -160,10 +163,7 @@ if st.session_state.page == "form":
                 else:
                     st.error(f"⚠️ No FTIR data available for {options['product_name']}.")
             else:
-                st.error("⚠️ Please enter a product name.")
-
-        
-                
+                st.error("⚠️ Please enter a product name.")            
 
     with col2:
         options["quanOfMed"] = st.text_input("📦 Quantity of Medicine", placeholder="e.g., 1000 tablets")
