@@ -1,44 +1,15 @@
 from string import Template
 
-# Styling for a centered, left-aligned table with white text
-TABLE_STYLE = """
-<style>
-    .table-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 20px;
-    }
-    table {
-        width: 85%;
-        border-collapse: collapse;
-        background-color: #1e1e1e;
-        color: white;
-        border-radius: 10px;
-        font-size: 16px;
-        border: 1px solid #444;
-        text-align: left;
-    }
-    th {
-        background-color: #007BFF;
-        color: white;
-        padding: 12px;
-        text-align: center;
-    }
-    td {
-        border: 1px solid #444;
-        padding: 10px;
-        text-align: left;
-    }
-    tr:nth-child(even) {
-        background-color: #292b2c;
-    }
-    tr:hover {
-        background-color: #007BFF;
-        color: white;
-    }
-</style>
-"""
+# template = Template("My name is $name and I am $age years old.")
+# print(template.substitute(name="Alice", age=25))
+
+# product_name
+
+# quanOfMed
+
+# powerOfDrug
+
+# jurisdiction
 
 METHOD_OF_PREPARATION_PROMPT = Template("""
 Provide a detailed table of method for preparing $product_name $quanOfMed, each containing $powerOfDrug of the active ingredient, based on $jurisdiction standards. The information should include: A list of all materials required, including the active pharmaceutical ingredient (API) and excipients, with their specific quantities for $quanOfMed. The purpose of each material used in the formulation. Step-by-step tabular instructions in all the details needed for the preparation process, including quantities and methods for mixing, granulation, drying, lubrication, and compression. Do not include any information related to evaluation, quality control, or testing procedures. The focus should solely be on the formulation and preparation steps.                                        
