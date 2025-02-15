@@ -58,7 +58,7 @@ Please compare these results with the $jurisdiction standards and assess whether
 FTIR_PROMPT = Template("""
 Provide a **detailed FTIR spectrum analysis** for **$product_name**.
 
-Ensure the response is a **centered HTML table** covering:
+Ensure the response is a **centered table** covering:
 - **Wavenumber (cm⁻¹)**
 - **Functional Group**
 - **Peak Description**
@@ -71,14 +71,14 @@ Explain:
 - What **peak deviations** indicate about formulation errors.
 - How to **ensure FTIR compliance** with pharmacopeial standards.
 
-The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
+The response **must be in table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
 """)
 
 # 📌 **Highly Detailed Dissolution & Stability Studies**
 DISSOLUTION_STABILITY_PROMPT = Template("""
 Provide a **comprehensive dissolution and stability study** for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
 
-Ensure the response is a **centered HTML table** covering:
+Ensure the response is a **centered table** covering:
 - **Study Type (Dissolution/Stability)**
 - **Test Conditions**
 - **Sampling Time Points**
@@ -88,7 +88,7 @@ Ensure the response is a **centered HTML table** covering:
 - **Corrective Actions for Failures**
 - **Regulatory Considerations**
 
-The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
+The response **must be in table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
 """)
 
 STRUCTURE_PROMPT = Template("""
