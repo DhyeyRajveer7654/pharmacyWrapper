@@ -12,7 +12,7 @@ from string import Template
 # jurisdiction
 
 METHOD_OF_PREPARATION_PROMPT = Template("""
-Provide a detailed comprehensive well structured table of  method for preparing $product_name $quanOfMed, each containing $powerOfDrug of the active ingredient, based on $jurisdiction standards. The information should include: A list of all materials required, including the active pharmaceutical ingredient (API) and excipients, with their specific quantities for $quanOfMed which means if there are for example $quanOfMed tablets then caluclate qualities of api and excipients for this $quanOfMed also in same table. The purpose of each material used in the formulation. Step-by-step comprehensive well structured table of instructions in all the details needed for the preparation process, including quantities and methods for mixing, granulation, drying, lubrication, and compression. Do not include any information related to evaluation, quality control, or testing procedures. The focus should solely be on the formulation and preparation steps in comprehensive well structured table form and only give output of prompt no other things.                                        
+Provide a detailed comprehensive well structured table of  method for preparing $product_name $quanOfMed, each containing $powerOfDrug of the active ingredient, based on $jurisdiction standards. The information should include: A list of all materials required, including the active pharmaceutical ingredient (API) and excipients, with their specific quantities as well as for $quanOfMed which means if there are for example $quanOfMed tablets then caluclate qualities of api and excipients for this $quanOfMed also in same table. The purpose of each material used in the formulation. Step-by-step comprehensive well structured table of instructions in all the details needed for the preparation process, including quantities and methods for mixing, granulation, drying, lubrication, and compression. Do not include any information related to evaluation, quality control, or testing procedures. The focus should solely be on the formulation and preparation steps in comprehensive well structured table form and only give output of prompt no other things.                                        
                                         """)
 CHARACTARIZATION_EVALUATION_PROMPT = Template("""
 Provide a detailed comprehensive well structured table of characterization of $quanOfMed of  $product_name, each containing $powerOfDrug of the active ingredient, based on $jurisdiction standards. The response should include: List of characterization parameters for the tablets required as per $jurisdiction to test the standards of the prepared formulation, including: Physical characteristics (e.g., size, shape, color, appearance) Identification tests for $product_name (e.g., IR, UV, HPLC) Weight variation Hardness test Friability test Disintegration test Dissolution test Assay of $product_name content (for content uniformity) Related substances (if applicable) Step-by-step comprehensive well structured table of instructions for performing each of the characterization tests, including: Specific methods or apparatus required for each test Standard operating procedures (SOPs) for each test as per $jurisdiction standards Acceptable limits and expected outcomes for each test. The response should focus solely on characterization parameters and testing procedures, excluding any information related to preparation, formulation, or quality control processes in comprehensive well structured table form and only give output of prompt no other things.           
@@ -52,7 +52,7 @@ Provide the **canonical SMILES notation** for the drug $product_name based on Pu
 def getPromptForOptions(options):
     jurisdiction = ""
     if options['jurisdiction'] == "COMPARE WITH ALL OF THEM":
-        jurisdiction = "INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA and UNITED STATES PHARMACOPOEIA"
+        jurisdiction = "INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA, UNITED STATES PHARMACOPOEIA AND MARTINDALE-EXTRA PHARMACOPIEA"
     prompt_template = Template("")
     if options['typeOfInfo'] == "METHOD OF PREPARATION":
         prompt_template = METHOD_OF_PREPARATION_PROMPT
@@ -68,7 +68,7 @@ def getPromptForOptions(options):
         return FTIR_PROMPT.substitute(options)
     
     if options['jurisdiction'] == "COMPARE WITH ALL OF THEM":
-        jurisdiction = "Generate four separate tables corresponding to the following jurisdictions: Indian Pharmacopoeia (IP), British Pharmacopoeia (BP), United States Pharmacopoeia (USP), and Martindale: The Extra Pharmacopoeia. Each table should include all required details as per the prompts. If the output is identical across all four pharmacopoeias, replicate the same table under each respective heading while clearly specifying the jurisdiction."
+        jurisdiction = "COMAPRE IN TABLE ALL 4 INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA, UNITED STATES PHARMACOPOEIA AND MARTINDALE-EXTRA PHARMACOPIEA"
     final_prompt = prompt_template.substitute(
     product_name=options['product_name'], 
     quanOfMed=options['quanOfMed'], 
