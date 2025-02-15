@@ -40,11 +40,24 @@ TABLE_STYLE = """
 </style>
 """
 
-# 📌 **Highly Detailed Method of Preparation with Excipients Quantity**
+# Characterization/Evaluation Prompt
+CHARACTERIZATION_PROMPT = Template("""
+Provide a **comprehensive characterization and evaluation** report for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
+
+Ensure the response is in **table format only** covering:
+- **Characterization Parameter**
+- **Testing Methodology**
+- **Equipment Used**
+- **Standard Requirements**
+- **Observed Results**
+- **Deviation & Correction Measures**
+""")
+
+# Keep all the prompts as they are
 METHOD_OF_PREPARATION_PROMPT = Template("""
 Provide a **highly detailed, step-by-step** **method of preparation** for **$product_name** ($quanOfMed), each containing **$powerOfDrug** of the active ingredient, based on **$jurisdiction** standards.
 
-Ensure the response is a **centered HTML table** covering:
+Ensure the response is a **table format only** covering:
 - **Step Number**
 - **Step Description**
 - **Equipment Required**
@@ -52,27 +65,18 @@ Ensure the response is a **centered HTML table** covering:
 - **Critical Observations**
 - **Regulatory Considerations**
 
-Additionally, provide a **reference table** showing the **exact quantity** of excipients required based on **$quanOfMed**.  
-This table should include:
-- **Ingredient Name (API & Excipients)**
+Additionally, include a **reference table** for excipients:
+- **Ingredient Name**
 - **Required Quantity per Dosage Unit**
 - **Total Quantity Required for $quanOfMed**
 - **Function in Formulation**
 - **Solubility & Stability Considerations**
-
-Each step must include **scientific justification**, including:
-- How **ingredients are selected and handled**.
-- Precautions to **avoid errors** during mixing, drying, compression, and packaging.
-- How to ensure **uniformity, stability, and compliance** with pharmacopeial standards.
-
-The response **must be in HTML table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
 """)
 
-# 📌 **Highly Detailed Combined Formulation & Testing with Excipients Quantity**
 COMBINED_PROMPT = Template("""
-Provide a **fully detailed** combined **formulation and testing** report for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
+Provide a **detailed** combined **formulation and testing** report for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
 
-The response should include **two separate centered tables**:
+Include **two separate tables**:
 1️⃣ **Formulation Process**:
    - **Ingredient**
    - **Quantity per Unit**
@@ -89,15 +93,12 @@ The response should include **two separate centered tables**:
    - **Acceptance Criteria**
    - **Deviation Handling**
    - **Regulatory Considerations**
-
-The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
 """)
 
-# 📌 **Highly Detailed Quality Control & Results Checking**
 CHECK_RESULTS_PROMPT = Template("""
 Compare the **quality control evaluation results** of **$product_name** ($powerOfDrug) for **$quanOfMed** with the **$jurisdiction** standards.
 
-Ensure the response is a **centered HTML table** covering:
+Ensure the response is in **table format only** covering:
 - **Test Parameter**
 - **User Result**
 - **Pharmacopeial Standard Requirement**
@@ -105,41 +106,25 @@ Ensure the response is a **centered HTML table** covering:
 - **Corrective Action Plan**
 - **Pass/Fail Status**
 
-Each parameter must be explained in **scientific depth**, including:
-- Why the parameter is **critical for drug quality**.
-- What **failures indicate** about formulation issues.
-- **How to correct issues** based on pharmacopeial standards.
-
-The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
-
 $resultsToCheck
 """)
 
-# 📌 **Highly Detailed FTIR Spectrum Analysis**
 FTIR_PROMPT = Template("""
 Provide a **detailed FTIR spectrum analysis** for **$product_name**.
 
-Ensure the response is a **centered HTML table** covering:
+Ensure the response is in **table format only** covering:
 - **Wavenumber (cm⁻¹)**
 - **Functional Group**
 - **Peak Description**
 - **Significance in Drug Identification**
 - **Potential Interferences**
 - **Regulatory Considerations**
-
-Explain:
-- How FTIR confirms **drug identity**.
-- What **peak deviations** indicate about formulation errors.
-- How to **ensure FTIR compliance** with pharmacopeial standards.
-
-The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
 """)
 
-# 📌 **Highly Detailed Dissolution & Stability Studies**
 DISSOLUTION_STABILITY_PROMPT = Template("""
 Provide a **comprehensive dissolution and stability study** for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
 
-Ensure the response is a **centered HTML table** covering:
+Ensure the response is in **table format only** covering:
 - **Study Type (Dissolution/Stability)**
 - **Test Conditions**
 - **Sampling Time Points**
@@ -148,15 +133,15 @@ Ensure the response is a **centered HTML table** covering:
 - **Stability Period**
 - **Corrective Actions for Failures**
 - **Regulatory Considerations**
-
-The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
 """)
 
 STRUCTURE_PROMPT = Template("""
-Provide the **canonical SMILES notation** for the drug $product_name based on PubChem's database. Ensure that the SMILES code is accurate and matches PubChem's standard molecular structure for the drug. Return only the canonical SMILES code as provided by PubChem, and no other extra text. If the drug name is not valid, return only "NO DRUG FOUND".
+Provide the **canonical SMILES notation** for **$product_name** based on PubChem's database.
+
+Return **only** the canonical SMILES code. If the drug name is not valid, return **"NO DRUG FOUND"**.
 """)
 
-# 📌 **GPT Prompt Selection**
+# GPT Prompt Selection
 def getPromptForOptions(options):
     if options['typeOfInfo'] == "METHOD OF PREPARATION":
         return METHOD_OF_PREPARATION_PROMPT.substitute(options)
@@ -164,8 +149,10 @@ def getPromptForOptions(options):
         return COMBINED_PROMPT.substitute(options)
     elif options['typeOfInfo'] == "CHECK RESULTS":
         return CHECK_RESULTS_PROMPT.substitute(options)
-    elif options['typeOfInfo'] == "DISSOLUTION & STABILITY" or options['typeOfInfo'] == "CHARACTARIZATION/EVALUATION":
+    elif options['typeOfInfo'] == "DISSOLUTION & STABILITY":
         return DISSOLUTION_STABILITY_PROMPT.substitute(options)
+    elif options['typeOfInfo'] == "CHARACTERIZATION/EVALUATION":
+        return CHARACTERIZATION_PROMPT.substitute(options)
     elif options['typeOfInfo'] == "FTIR ANALYSIS":
         return FTIR_PROMPT.substitute(options)
     return ""
