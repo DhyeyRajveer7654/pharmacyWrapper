@@ -117,17 +117,6 @@ def showStructure(product_name):
         return Draw.MolToImage(m, size=(400, 400))  # Correctly returns an image
     return None  # Returns None if molecule creation fails
 
-# Directory where FTIR images are stored (update if needed)
-FTIR_IMAGE_DIR = "./"
-
-def get_ftir_image(product_name):
-    """Fetches the corresponding FTIR image for the given product name."""
-    image_filename = f"{product_name.lower()}.png"
-    image_path = os.path.join(FTIR_IMAGE_DIR, image_filename)
-    if os.path.exists(image_path):
-        return image_path
-    return None
-
 # 📌 FORM PAGE
 if st.session_state.page == "form":
 
@@ -180,7 +169,18 @@ if st.session_state.page == "form":
             st.session_state.update(options)
             st.session_state.page = "result"
             st.experimental_rerun()
+# Directory where FTIR images are stored (update this if needed)
+FTIR_IMAGE_DIR = "./"
 
+def get_ftir_image(product_name):
+    """Fetches the corresponding FTIR image for the given product name."""
+    image_filename = f"{product_name.lower()}.png"
+    image_path = os.path.join(FTIR_IMAGE_DIR, image_filename)
+    if os.path.exists(image_path):
+        return image_path
+    return None
+
+# Show FTIR Graph button only on the result page
 if st.session_state.page == "result":
     if st.button("📊 Show FTIR Graph"):
         if "product_name" in st.session_state and st.session_state.product_name:
