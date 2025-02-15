@@ -8,7 +8,6 @@ from rdkit.Chem import Draw
 import requests
 import os
 import streamlit as st
-import pandas as pd
 
 size = (250, 250)
 
@@ -117,8 +116,6 @@ def showStructure(product_name):
     print("product code is: "+product_code)
     print("product code from pubchem: "+product_code_from_pubchem)
     m = Chem.MolFromSmiles(product_code)
-    if m:
-        return Draw.MolToImage(m, size=(400, 400))
     return None
 
 # Directory where FTIR images are stored (Make sure to update this if images are in a different folder)
@@ -201,7 +198,6 @@ elif st.session_state.page == "result":
     if st.button("🔙 Go Back to Form"):
         st.session_state.page = "form"
         st.experimental_rerun()
-
     # Apply White Background for Result Page
     st.markdown("""
         <style>
@@ -211,36 +207,20 @@ elif st.session_state.page == "result":
 
     st.markdown('<div style="text-align:center; color:#007BFF; font-size:30px; font-weight:bold;">📑 Submission Summary</div>', unsafe_allow_html=True)
 
-    # Create a DataFrame for tabular representation of results
-    summary_data = {
-        "Field": ["💊 Product Name", "📦 Quantity of Medicine", "⚡ Power of Drug"],
-        "Value": [
-            st.session_state.get("product_name", "Not Provided"),
-            st.session_state.get("quanOfMed", "Not Provided"),
-            st.session_state.get("powerOfDrug", "Not Provided"),
-        ]
-    }
-    df_summary = pd.DataFrame(summary_data)
-    
-    # Display the summary as a table
-    st.table(df_summary)
+    st.markdown(f"**💊 Product Name:** {st.session_state.product_name}")
+    st.markdown(f"**📦 Quantity of Medicine:** {st.session_state.quanOfMed}")
+    st.markdown(f"**⚡ Power of Drug:** {st.session_state.powerOfDrug}")
 
-    # 📋 Generated Report
     st.markdown("### 📋 Generated Report")
     if st.session_state.api_response:
-        st.write(st.session_state.api_response)  # Display API response as plain text
+        st.markdown(st.session_state.api_response)
+        # components.html(st.session_state.api_response, height=1000, width=1000, scrolling=True)
     else:
         st.warning("⚠️ No response received from API.")
 
-    # 🔬 FTIR Data (If Required)
-    if st.session_state.get("ftir_required", False):
+    if st.session_state.ftir_required:
         with st.spinner("📡 Fetching FTIR Data..."):
             ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
-            
-            # Convert FTIR data into a structured format if it's not already a table
-            if isinstance(ftir_data, str):  # If response is plain text, format as table
-                ftir_table = {"FTIR Data": [ftir_data]}
-                df_ftir = pd.DataFrame(ftir_table)
-                st.table(df_ftir)
-            else:
-                st.write(ftir_data)  # If already structured, display as is
+            st.markdown("### 🔬 FTIR Data")
+            st.write(ftir_data)
+
