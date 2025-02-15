@@ -49,10 +49,6 @@ STRUCTURE_PROMPT = Template("""
 Provide the **canonical SMILES notation** for the drug $product_name based on PubChem's database. Ensure that the SMILES code is accurate and matches PubChem's standard molecular structure for the drug. Return only the canonical SMILES code as provided by PubChem, and no other extra text. If the drug name is not valid, return only "NO DRUG FOUND".
 """)
 
-def addTextToReturnOnlyHtmlTable(promptWithoutHtml):
-    promptToOnlyGetHtmlTable = "\nEnsure the response is only a valid HTML table with no additional text or explanation. The table should have a black background (background-color: black) and all text should be white text (color: white) and white borders and proper spacing. Format the response as clean, minimal HTML."
-    return promptWithoutHtml + promptToOnlyGetHtmlTable
-
 def getPromptForOptions(options):
     jurisdiction = ""
     if options['jurisdiction'] == "COMPARE WITH ALL OF THEM":
@@ -73,6 +69,6 @@ def getPromptForOptions(options):
     if options['jurisdiction'] == "COMPARE WITH ALL OF THEM":
         jurisdiction = "Show different results according to all of these jurisdictions: INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA and UNITED STATES PHARMACOPOEIA"
     final_prompt = prompt_template.substitute(product_name=options['product_name'], quanOfMed=options['quanOfMed'], powerOfDrug=options['powerOfDrug'], jurisdiction=jurisdiction)
-    final_prompt = addTextToReturnOnlyHtmlTable(final_prompt)
+    
     print(final_prompt)
     return final_prompt
