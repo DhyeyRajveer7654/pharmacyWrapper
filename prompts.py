@@ -68,7 +68,7 @@ def getPromptForOptions(options):
         return FTIR_PROMPT.substitute(options)
     
     if options['jurisdiction'] == "COMPARE WITH ALL OF THEM":
-        jurisdiction = "Show different 4 table results according to all of these jurisdictions: INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA, UNITED STATES PHARMACOPOEIA AND MARTINDALE-EXTRA PHARMACOPIEA and each should have each detail of all prompts as per requirement and if the output is same for all 4 pharmacopieas and reapt same tables for all but meantion heading of each pharmacopiea and table of its own information "
+        jurisdiction = "Generate four separate tables corresponding to the following jurisdictions: Indian Pharmacopoeia (IP), British Pharmacopoeia (BP), United States Pharmacopoeia (USP), and Martindale: The Extra Pharmacopoeia. Each table should include all required details as per the prompts. If the output is identical across all four pharmacopoeias, replicate the same table under each respective heading while clearly specifying the jurisdiction."
     final_prompt = prompt_template.substitute(
     product_name=options['product_name'], 
     quanOfMed=options['quanOfMed'], 
