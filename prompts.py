@@ -44,7 +44,7 @@ TABLE_STYLE = """
 METHOD_OF_PREPARATION_PROMPT = Template("""
 Provide a **highly detailed, step-by-step** **method of preparation** for **$product_name** ($quanOfMed), each containing **$powerOfDrug** of the active ingredient, based on **$jurisdiction** standards.
 
-Ensure the response is a **centered colorful blue table** covering:
+Ensure the response is a **centered professional table** covering:
 - **Step Number**
 - **Step Description**
 - **Equipment Required**
@@ -65,14 +65,14 @@ Each step must include **scientific justification**, including:
 - Precautions to **avoid errors** during mixing, drying, compression, and packaging.
 - How to ensure **uniformity, stability, and compliance** with pharmacopeial standards.
 
-The response **must be in colourful blue table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
+The response **must be in professional table format only**, text **left-aligned**, and no extra text outside the table.
 """)
 
 # 📌 **Highly Detailed Combined Formulation & Testing with Excipients Quantity**
 COMBINED_PROMPT = Template("""
 Provide a **fully detailed** combined **formulation and testing** report for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
 
-The response should include **two separate centered tables**:
+The response should include **two separate centered professional tables**:
 1️⃣ **Formulation Process**:
    - **Ingredient**
    - **Quantity per Unit**
@@ -90,7 +90,7 @@ The response should include **two separate centered tables**:
    - **Deviation Handling**
    - **Regulatory Considerations**
 
-The response **must be in colourful blue table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
+The response **must be in professional table format only**, text **left-aligned**, and no extra text outside the table.
 """)
 
 # 📌 **Highly Detailed Quality Control & Results Checking**
@@ -110,7 +110,7 @@ Each parameter must be explained in **scientific depth**, including:
 - What **failures indicate** about formulation issues.
 - **How to correct issues** based on pharmacopeial standards.
 
-The response **must be in colorful blue table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
+The response **must be in professional table format only**, text **left-aligned**, and no extra text outside the table.
 
 $resultsToCheck
 """)
@@ -119,7 +119,7 @@ $resultsToCheck
 FTIR_PROMPT = Template("""
 Provide a **detailed FTIR spectrum analysis** for **$product_name**.
 
-Ensure the response is a **centered colorful blue table** covering:
+Ensure the response is a **centered professional table** covering:
 - **Wavenumber (cm⁻¹)**
 - **Functional Group**
 - **Peak Description**
@@ -132,14 +132,14 @@ Explain:
 - What **peak deviations** indicate about formulation errors.
 - How to **ensure FTIR compliance** with pharmacopeial standards.
 
-The response **must be in colorful blue table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
+The response **must be in professional table format only**, text **left-aligned**, and no extra text outside the table.
 """)
 
 # 📌 **Highly Detailed Dissolution & Stability Studies**
 DISSOLUTION_STABILITY_PROMPT = Template("""
 Provide a **comprehensive dissolution and stability study** for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
 
-Ensure the response is a **centered HTML table** covering:
+Ensure the response is a **centered professional table** covering:
 - **Study Type (Dissolution/Stability)**
 - **Test Conditions**
 - **Sampling Time Points**
@@ -149,7 +149,7 @@ Ensure the response is a **centered HTML table** covering:
 - **Corrective Actions for Failures**
 - **Regulatory Considerations**
 
-The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
+The response **must be in professional table format only**, text **left-aligned**, and no extra text outside the table.
 """)
 
 STRUCTURE_PROMPT = Template("""
