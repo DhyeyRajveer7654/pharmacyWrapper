@@ -100,22 +100,21 @@ def get_pubchem_product_code(product_name):
         return product_code_from_pubchem
 
 def showStructure(product_name):
-    product_code = ""
-    product_code_from_pubchem = get_pubchem_product_code(product_name)
-    if product_code_from_pubchem=="":
+    product_code = get_pubchem_product_code(product_name)
+    
+    if not product_code:
         product_code_prompt = prompts.STRUCTURE_PROMPT.substitute(product_name=product_name)
-        print("Prompt is: "+product_code_prompt)
         product_code = chat_with_gpt.chatWithGpt(product_code_prompt)
+        
         if product_code == "NO DRUG FOUND":
-            return ""
-    else:
-        product_code = product_code_from_pubchem
+            return None
     
-    print("product code is: "+product_code)
-    print("product code from pubchem: "+product_code_from_pubchem)
     m = Chem.MolFromSmiles(product_code)
-    return fig
     
+    if m:
+        return Draw.MolToImage(m, size=(400, 400))  # Correctly returns an image
+    return None  # Returns None if molecule creation fails
+  
 # 📌 FORM PAGE
 if st.session_state.page == "form":
 
