@@ -44,7 +44,7 @@ TABLE_STYLE = """
 METHOD_OF_PREPARATION_PROMPT = Template("""
 Provide a **highly detailed, step-by-step** **method of preparation** for **$product_name** ($quanOfMed), each containing **$powerOfDrug** of the active ingredient, based on **$jurisdiction** standards.
 
-Ensure the response is a **centered colorful blue table** covering:
+Ensure the response is a **centered well structured table** covering:
 - **Step Number**
 - **Step Description**
 - **Equipment Required**
@@ -65,7 +65,7 @@ Each step must include **scientific justification**, including:
 - Precautions to **avoid errors** during mixing, drying, compression, and packaging.
 - How to ensure **uniformity, stability, and compliance** with pharmacopeial standards.
 
-The response **must be in colourful blue table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
+The response **must be well structured table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
 """)
 
 # 📌 **Highly Detailed Combined Formulation & Testing with Excipients Quantity**
