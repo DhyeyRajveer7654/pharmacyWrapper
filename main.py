@@ -154,7 +154,8 @@ if st.session_state.page == "form":
         if st.button("📊 Show FTIR Graph"):
             if ("product_name" not in options) or ("product_name" in options and options["product_name"]==""):
                 ftir_image = get_ftir_image(options["product_name"])
-            if ftir_image:
+                ftir_image = get_ftir_image("product_name")
+            if ftir_image:  # ERROR HERE
                 st.image(ftir_image, caption=f"FTIR Graph for {"product_name"}", use_column_width=True)
             else:
                 st.error("⚠️ No FTIR data available for this product.")
