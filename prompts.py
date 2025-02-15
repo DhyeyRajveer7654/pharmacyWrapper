@@ -95,16 +95,29 @@ STRUCTURE_PROMPT = Template("""
 Provide the **canonical SMILES notation** for the drug $product_name based on PubChem's database. Ensure that the SMILES code is accurate and matches PubChem's standard molecular structure for the drug. Return only the canonical SMILES code as provided by PubChem, and no other extra text. If the drug name is not valid, return only "NO DRUG FOUND".
 """)
 
-# 📌 **GPT Prompt Selection**
 def getPromptForOptions(options):
+    jurisdiction = ""
+    if options['jurisdiction'] == "COMPARE WITH ALL OF THEM":
+        jurisdiction = "INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA and UNITED STATES PHARMACOPOEIA"
+    prompt_template = Template("")
     if options['typeOfInfo'] == "METHOD OF PREPARATION":
-        return METHOD_OF_PREPARATION_PROMPT.substitute(options)
+        prompt_template = METHOD_OF_PREPARATION_PROMPT
+    elif options['typeOfInfo'] == "CHARACTARIZATION/EVALUATION":
+        prompt_template = CHARACTARIZATION_EVALUATION_PROMPT
     elif options['typeOfInfo'] == "Both of above":
-        return COMBINED_PROMPT.substitute(options)
+        prompt_template = COMBINED_PROMPT
     elif options['typeOfInfo'] == "CHECK RESULTS":
-        return CHECK_RESULTS_PROMPT.substitute(options)
-    elif options['typeOfInfo'] == "DISSOLUTION & STABILITY" or options['typeOfInfo'] == "CHARACTARIZATION/EVALUATION":
+        prompt_template = CHECK_RESULTS_PROMPT
+        final_prompt = prompt_template.substitute(product_name=options['product_name'], quanOfMed=options['quanOfMed'], powerOfDrug=options['powerOfDrug'], jurisdiction=jurisdiction, resultsToCheck=options['resultsToCheck'])
+        return (final_prompt)
         return DISSOLUTION_STABILITY_PROMPT.substitute(options)
     elif options['typeOfInfo'] == "FTIR ANALYSIS":
         return FTIR_PROMPT.substitute(options)
     return ""
+    
+    if options['jurisdiction'] == "COMPARE WITH ALL OF THEM":
+        jurisdiction = "Show different results according to all of these jurisdictions: INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA and UNITED STATES PHARMACOPOEIA"
+    final_prompt = prompt_template.substitute(product_name=options['product_name'], quanOfMed=options['quanOfMed'], powerOfDrug=options['powerOfDrug'], jurisdiction=jurisdiction)
+    final_prompt = (final_prompt)
+    print(final_prompt)
+    return final_prompt
