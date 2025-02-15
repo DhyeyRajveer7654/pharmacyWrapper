@@ -26,23 +26,7 @@ if not hasattr(st, "_is_configured"):
     st._is_configured = True
 
 # Load custom CSS
-st.markdown("""
-    <style>
-    div[data-testid="stCheckbox"] {
-        background-color: rgba(255, 255, 255, 0.1);
-        padding: 15px;
-        border-radius: 10px;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        margin: 10px 0;
-    }
-    .table-container {
-        background: #1e1e1e;
-        padding: 20px;
-        border-radius: 10px;
-        margin: 20px 0;
-    }
-    </style>
-""", unsafe_allow_html=True)
+st.markdown(prompts.TABLE_STYLE, unsafe_allow_html=True)
 
 # Function to get molecular structure
 def show_structure(product_name):
@@ -122,6 +106,32 @@ if st.session_state.page == "form":
                     st.session_state.api_response = api_response
                     st.session_state.update(options)
                     st.session_state.page = "result"
-                    st.rerun()
+                    st.experimental_rerun()
                 else:
                     st.error("⚠️ Failed to generate report. Please check API settings.")
+
+# Result Page
+elif st.session_state.page == "result":
+    if st.button("🔙 Back to Form"):
+        st.session_state.page = "form"
+        st.experimental_rerun()
+
+    if st.session_state.api_response:
+        st.markdown("### 📊 Report Summary")
+        st.markdown(f"**💊 Product:** {st.session_state.product_name}")
+        st.markdown(f"**📦 Quantity:** {st.session_state.quanOfMed}")
+        st.markdown(f"**⚡ Strength:** {st.session_state.powerOfDrug}")
+
+        st.markdown("### 📑 Generated Report")
+        st.markdown(prompts.TABLE_STYLE + st.session_state.api_response, unsafe_allow_html=True)
+
+        if st.session_state.get('ftir_required', False):
+            with st.spinner("📡 Fetching FTIR Data..."):
+                ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
+                if ftir_data:
+                    st.markdown("### 🔬 FTIR Analysis")
+                    st.markdown(prompts.TABLE_STYLE + ftir_data, unsafe_allow_html=True)
+
+        if st.session_state.structure is not None:
+            st.markdown("### 🧪 Molecular Structure")
+            st.image(st.session_state.structure, caption="Molecular Structure", width=400)
