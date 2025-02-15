@@ -63,12 +63,19 @@ def getPromptForOptions(options):
     elif options['typeOfInfo'] == "CHECK RESULTS":
         prompt_template = CHECK_RESULTS_PROMPT
         final_prompt = prompt_template.substitute(product_name=options['product_name'], quanOfMed=options['quanOfMed'], powerOfDrug=options['powerOfDrug'], jurisdiction=jurisdiction, resultsToCheck=options['resultsToCheck'])
+        return CHECK_RESULTS_PROMPT.substitute(options)
     elif options['typeOfInfo'] == "FTIR ANALYSIS":
         return FTIR_PROMPT.substitute(options)
     
     if options['jurisdiction'] == "COMPARE WITH ALL OF THEM":
-        jurisdiction = "Show different results according to all of these jurisdictions: INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA and UNITED STATES PHARMACOPOEIA"
-    final_prompt = prompt_template.substitute(product_name=options['product_name'], quanOfMed=options['quanOfMed'], powerOfDrug=options['powerOfDrug'], jurisdiction=jurisdiction)
+        jurisdiction = "Show different 4 tabular results according to all of these jurisdictions: INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA, UNITED STATES PHARMACOPOEIA AND MARTINDALE-EXTRA PHARMACOPIEA"
+    final_prompt = prompt_template.substitute(
+    product_name=options['product_name'], 
+    quanOfMed=options['quanOfMed'], 
+    powerOfDrug=options['powerOfDrug'], 
+    jurisdiction=jurisdiction
+)
+
     print("Options Dictionary:", options.keys())  # Debugging output
     print(final_prompt)
     return final_prompt
