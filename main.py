@@ -6,6 +6,8 @@ from string import Template
 from rdkit import Chem
 from rdkit.Chem import Draw
 import requests
+import os
+import streamlit as st
 
 size = (250, 250)
 
@@ -114,7 +116,18 @@ def showStructure(product_name):
     if m:
         return Draw.MolToImage(m, size=(400, 400))  # Correctly returns an image
     return None  # Returns None if molecule creation fails
-  
+
+# Directory where FTIR images are stored (update if needed)
+FTIR_IMAGE_DIR = "./"
+
+def get_ftir_image(product_name):
+    """Fetches the corresponding FTIR image for the given product name."""
+    image_filename = f"{product_name.lower()}.png"
+    image_path = os.path.join(FTIR_IMAGE_DIR, image_filename)
+    if os.path.exists(image_path):
+        return image_path
+    return None
+
 # 📌 FORM PAGE
 if st.session_state.page == "form":
 
@@ -168,6 +181,17 @@ if st.session_state.page == "form":
             st.session_state.page = "result"
             st.experimental_rerun()
 
+if st.session_state.page == "result":
+    if st.button("📊 Show FTIR Graph"):
+        if "product_name" in st.session_state and st.session_state.product_name:
+            ftir_image = get_ftir_image(st.session_state.product_name)
+            if ftir_image:
+                st.image(ftir_image, caption=f"FTIR Graph for {st.session_state.product_name}", use_column_width=True)
+            else:
+                st.error("⚠️ No FTIR data available for this product.")
+        else:
+            st.error("⚠️ Please enter a product name on the form page.")
+            
 # 📌 RESULT PAGE
 elif st.session_state.page == "result":
 
