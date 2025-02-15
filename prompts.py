@@ -55,6 +55,42 @@ Compare the following evaluation results in table form of my $powerOfDrug $produ
 $resultsToCheck
 Please compare these results with the $jurisdiction standards and assess whether they meet the required specifications.""")
 
+FTIR_PROMPT = Template("""
+Provide a **detailed FTIR spectrum analysis** for **$product_name**.
+
+Ensure the response is a **centered HTML table** covering:
+- **Wavenumber (cm⁻¹)**
+- **Functional Group**
+- **Peak Description**
+- **Significance in Drug Identification**
+- **Potential Interferences**
+- **Regulatory Considerations**
+
+Explain:
+- How FTIR confirms **drug identity**.
+- What **peak deviations** indicate about formulation errors.
+- How to **ensure FTIR compliance** with pharmacopeial standards.
+
+The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
+""")
+
+# 📌 **Highly Detailed Dissolution & Stability Studies**
+DISSOLUTION_STABILITY_PROMPT = Template("""
+Provide a **comprehensive dissolution and stability study** for **$product_name** ($quanOfMed), each containing **$powerOfDrug**, based on **$jurisdiction** standards.
+
+Ensure the response is a **centered HTML table** covering:
+- **Study Type (Dissolution/Stability)**
+- **Test Conditions**
+- **Sampling Time Points**
+- **Equipment Used**
+- **Acceptance Limits**
+- **Stability Period**
+- **Corrective Actions for Failures**
+- **Regulatory Considerations**
+
+The response **must be in table format only**, with **white text inside a dark background**, text **left-aligned**, and no extra text outside the table.
+""")
+
 STRUCTURE_PROMPT = Template("""
 Provide the **canonical SMILES notation** for the drug $product_name based on PubChem's database. Ensure that the SMILES code is accurate and matches PubChem's standard molecular structure for the drug. Return only the canonical SMILES code as provided by PubChem, and no other extra text. If the drug name is not valid, return only "NO DRUG FOUND".
 """)
