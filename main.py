@@ -6,10 +6,9 @@ from string import Template
 from rdkit import Chem
 from rdkit.Chem import Draw
 import requests
-import os
-import streamlit as st
 
 size = (250, 250)
+
 
 # Set Page Configuration
 st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
@@ -61,31 +60,6 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
-
-# Directory where FTIR images are stored (Make sure to update this if images are in a different folder)
-FTIR_IMAGE_DIR = "./"
-
-def get_ftir_image(product_name):
-    """Fetches the corresponding FTIR image for the given product name."""
-    image_filename = f"{product_name.lower()}.png"
-    image_path = os.path.join(FTIR_IMAGE_DIR, image_filename)
-    if os.path.exists(image_path):
-        return image_path
-    return None
-
-# Streamlit UI
-st.title("FTIR Graph Viewer")
-product_name = st.text_input("💊 Enter Product Name", placeholder="e.g., Lomustine")
-
-if st.button("📊 Show FTIR Graph"):
-    if product_name:
-        ftir_image = get_ftir_image(product_name)
-        if ftir_image:
-            st.image(ftir_image, caption=f"FTIR Graph for {product_name}", use_column_width=True)
-        else:
-            st.error("⚠️ No FTIR data available for this product.")
-    else:
-        st.error("⚠️ Please enter a product name.")
 
 # Page Navigation
 if "page" not in st.session_state:
