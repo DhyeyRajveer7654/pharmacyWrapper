@@ -87,11 +87,12 @@ st.markdown("""
             border-radius: 10px;
             padding: 1rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-collapse: collapse;
         }
 
         table {
             width: 100%;
-            border-collapse: separate;
+            border-collapse: collapse;
             border-spacing: 0;
             margin: 1rem 0;
         }
