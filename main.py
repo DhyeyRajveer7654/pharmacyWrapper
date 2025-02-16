@@ -21,7 +21,7 @@ st.markdown("""
         body {
             background-color: #f0f2f6;
             color: #1e293b;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', 'sans serif';
         }
 
         /* Header Styling */
