@@ -73,7 +73,7 @@ st.markdown("""
         }
 
         /* Card Styling */
-        .card {
+        .card div[data-testid="stSelectbox"]{
             background: white;
             border-radius: 10px;
             padding: 1.5rem;
@@ -135,6 +135,7 @@ st.markdown("""
             border-radius: 8px;
             margin: 1rem 0;
         }
+        
     </style>
 """, unsafe_allow_html=True)
 
@@ -211,7 +212,7 @@ if st.session_state.page == "form":
     st.markdown('<div class="main-header"><h1>🧪 QAI Model AI-Powered Quality Assistance</h1><p> CREATED BY :- MEERA ACHARYA & RAJ PATEL</P><p>Enter details below to generate a comprehensive quality report</p></div>', unsafe_allow_html=True)
 
     # User Input Form in a card layout
-    st.markdown('<div class="card">', unsafe_allow_html=True)
+    # st.markdown('<div class="card">', unsafe_allow_html=True)
     col1, col2 = st.columns(2)
 
     with col1:
@@ -243,10 +244,10 @@ if st.session_state.page == "form":
             ["INDIAN PHARMACOPIEA", "BRITISH PHARMACOPIEA", "UNITED STATES PHARMACOPOEIA", "MARTINDALE-EXTRA PHARMACOPIEA", "COMPARE WITH ALL"])
         options["powerOfDrug"] = st.text_input("⚡ Power of Drug", placeholder="e.g., 500 mg")
 
-    st.markdown('</div>', unsafe_allow_html=True)
+    # st.markdown('</div>', unsafe_allow_html=True)
 
     # Analysis Options in a separate card
-    st.markdown('<div class="card">', unsafe_allow_html=True)
+    # st.markdown('<div class="card">', unsafe_allow_html=True)
     options["typeOfInfo"] = st.selectbox("📊 Select Analysis Type:", 
             ["METHOD OF PREPARATION", "CHARACTARIZATION/EVALUATION", "Both of above", "CHECK RESULTS"])
 
@@ -254,7 +255,7 @@ if st.session_state.page == "form":
         options["resultsToCheck"] = st.text_area("🔍 Enter Your Results:", height=200, placeholder="Paste lab results here...", key="checkResults")
 
     options["ftir_required"] = st.checkbox("📡 Include FTIR Analysis")
-    st.markdown('</div>', unsafe_allow_html=True)
+    # st.markdown('</div>', unsafe_allow_html=True)
 
     # Submit button with enhanced styling
     submit_button = st.button("🚀 Generate Report")
@@ -273,32 +274,26 @@ if st.session_state.page == "form":
 
 # 📌 RESULT PAGE
 elif st.session_state.page == "result":
-    st.markdown('<div class="main-header">', unsafe_allow_html=True)
-    st.markdown('<h1>📑 Quality Analysis Report</h1>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
+    st.markdown('<div class="main-header"><h1>📑 Quality Analysis Report</h1></div>', unsafe_allow_html=True)
+    
     if st.button("🔙 Return to Form", key="back_button"):
         st.session_state.page = "form"
         st.experimental_rerun()
 
-    st.markdown('<div class="card">', unsafe_allow_html=True)
+    # st.markdown('<div class="card">', unsafe_allow_html=True)
     st.markdown("### 📋 Analysis Details")
-    st.markdown(f"**💊 Product:** {st.session_state.product_name}")
+    st.markdown(f"**💊 Product:** {st.session_state.product_name}",)
     st.markdown(f"**📦 Quantity:** {st.session_state.quanOfMed}")
     st.markdown(f"**⚡ Strength:** {st.session_state.powerOfDrug}")
-    st.markdown('</div>', unsafe_allow_html=True)
+    # st.markdown('</div>', unsafe_allow_ht ml=True)
 
     if st.session_state.api_response:
-        st.markdown('<div class="table-container">', unsafe_allow_html=True)
-        st.markdown(st.session_state.api_response, unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        components.html(st.session_state.api_response,height=1000,width=1000,scrolling=True)
     else:
         st.warning("⚠️ No response received. Please try again.")
 
     if st.session_state.get("ftir_required"):
         with st.spinner("📡 Analyzing FTIR Data..."):
             ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
-            st.markdown('<div class="table-container">', unsafe_allow_html=True)
-            st.markdown("### 🔬 FTIR Analysis")
-            st.markdown(ftir_data, unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
+            components.html("### 🔬 FTIR Analysis")
+            components.html(ftir_data)
