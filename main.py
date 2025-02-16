@@ -288,7 +288,7 @@ elif st.session_state.page == "result":
     # st.markdown('</div>', unsafe_allow_ht ml=True)
 
     if st.session_state.api_response:
-        components.html(st.session_state.api_response,height=1000,width=1000,scrolling=True)
+        components.html("<div class='table-container'>"+st.session_state.api_response+"</div>",height=1000,width=1000,scrolling=True)
     else:
         st.warning("⚠️ No response received. Please try again.")
 

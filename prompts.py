@@ -11,7 +11,7 @@ from string import Template
 
 # jurisdiction
 
-TABLE_STYLE = "RETURN ONLY HTML TABLE contained in a div with class name 'table-container' FORMAT STRICTLY AND ONLY GIVE RESULT IN STRUTURED **TABLE** FORM."
+TABLE_STYLE = "RETURN ONLY HTML TABLE FORMAT STRICTLY AND ONLY GIVE RESULT IN STRUTURED **TABLE** FORM."
 
 METHOD_OF_PREPARATION_PROMPT = Template("""
 Provide a detailed comprehensive well structured table of  method for preparing $product_name $quanOfMed, each containing $powerOfDrug of the active ingredient, based on $jurisdiction standards. The information should include: A list of all materials required, including the active pharmaceutical ingredient (API) and excipients, with their specific quantities as well as for $quanOfMed which means if there are for example $quanOfMed tablets then caluclate qualities of api and excipients for this $quanOfMed also in same table. The purpose of each material used in the formulation. Step-by-step comprehensive well structured table of instructions in all the details needed for the preparation process, including quantities and methods for mixing, granulation, drying, lubrication, and compression. Do not include any information related to evaluation, quality control, or testing procedures. The focus should solely be on the formulation and preparation steps in comprehensive well structured table form and only give output of prompt no other things and """ + TABLE_STYLE)
