@@ -28,7 +28,7 @@ Please compare these results with the $jurisdiction standards and assess whether
 FTIR_PROMPT = Template("""
 Provide a **detailed FTIR spectrum analysis** for **$product_name**.
 
-Ensure the response is a **centered colorful blue table** covering:
+Ensure the response is a **points** covering:
 - **Wavenumber (cm⁻¹)**
 - **Functional Group**
 - **Peak Description**
@@ -41,7 +41,8 @@ Explain:
 - What **peak deviations** indicate about formulation errors.
 - How to **ensure FTIR compliance** with pharmacopeial standards.
 
-The response **must be in colorful blue table format only**, with **white text**, text **left-aligned**, and no extra text outside the table."""+TABLE_STYLE)
+The response **must be in points format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
+""")
 
 STRUCTURE_PROMPT = Template("""
 Provide the **canonical SMILES notation** for the drug $product_name based on PubChem's database. Ensure that the SMILES code is accurate and matches PubChem's standard molecular structure for the drug. Return only the canonical SMILES code as provided by PubChem, and no other extra text. If the drug name is not valid, return only "NO DRUG FOUND".
