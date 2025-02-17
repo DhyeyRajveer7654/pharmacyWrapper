@@ -26,18 +26,35 @@ $resultsToCheck
 Please compare these results with the $jurisdiction standards and assess whether they meet the required specifications in """+TABLE_STYLE)
 
 FTIR_PROMPT = Template("""
-Provide a **detailed FTIR spectrum analysis** for **$product_name**.
+Provide a detailed FTIR spectrum analysis for $product_name.
 
-Ensure the response is a **centered table** covering:
-- Wavenumber (cm⁻¹)
-- Functional Group
-- Peak Description
-- Significance in Drug Identification
-- Potential Interferences
-- Regulatory Considerations
+Ensure the response follows a strictly point-wise format, with each sentence starting on a new line and text in white, left-aligned.
 
-The response should be in well arranged points and each sentence should start from new line , with **white text**, text **left-aligned**, and no extra text outside the table.
-""")
+Include a Centered Table Covering:
+Wavenumber cm⁻¹
+Functional Group
+Peak Description
+Significance in Drug Identification
+Potential Interferences
+Regulatory Considerations
+Explain in a Well-Structured Point-Wise Format:
+How FTIR Confirms Drug Identity:
+
+Identify unique vibrational modes of functional groups.
+Compare peaks with standard reference spectra.
+Ensure alignment with pharmacopeial specifications.
+Peak Deviations and Formulation Errors:
+
+Shifted peaks suggest impurities or formulation inconsistencies.
+Disappearing peaks indicate degradation or missing functional groups.
+Extra peaks point to contamination or unwanted excipient interactions.
+Ensuring FTIR Compliance with Pharmacopeial Standards:
+
+Use official FTIR reference spectra for validation.
+Calibrate instruments regularly to prevent wavenumber shifts.
+Perform analysis under controlled environmental conditions.
+Standardize sample preparation for accurate spectral interpretation.
+Output should be strictly formatted in points with no extra text outside the structured format""")
 
 STRUCTURE_PROMPT = Template("""
 Provide the **canonical SMILES notation** for the drug $product_name based on PubChem's database. Ensure that the SMILES code is accurate and matches PubChem's standard molecular structure for the drug. Return only the canonical SMILES code as provided by PubChem, and no other extra text. If the drug name is not valid, return only "NO DRUG FOUND".
