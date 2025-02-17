@@ -41,7 +41,7 @@ Explain:
 - What **peak deviations** indicate about formulation errors.
 - How to **ensure FTIR compliance** with pharmacopeial standards.
 
-The response **must be in table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
+The response should be in well arranged points and each sentence should start from new line , with **white text**, text **left-aligned**, and no extra text outside the table.
 """)
 
 STRUCTURE_PROMPT = Template("""
