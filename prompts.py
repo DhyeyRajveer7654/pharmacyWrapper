@@ -28,33 +28,39 @@ Please compare these results with the $jurisdiction standards and assess whether
 FTIR_PROMPT = Template("""
 Provide a detailed FTIR spectrum analysis for $product_name.
 
-Ensure the response follows a strictly point-wise format, with each sentence starting on a new line and text in white, left-aligned.
+Ensure the response is formatted strictly in HTML table format as shown below:
+<table border="1" style="border-collapse: collapse; text-align: center; width: 100%;">
+  <tr>
+    <th>Wavenumber (cm⁻¹)</th>
+    <th>Functional Group</th>
+    <th>Peak Description</th>
+    <th>Significance in Drug Identification</th>
+    <th>Potential Interferences</th>
+    <th>Regulatory Considerations</th>
+  </tr>
+  <tr>
+    <td>3300-3500</td>
+    <td>N-H Stretching</td>
+    <td>Strong, broad peak</td>
+    <td>Confirms presence of amide group</td>
+    <td>Water, amines</td>
+    <td>Should match reference spectrum</td>
+  </tr>
+  <tr>
+    <td>3150-3450</td>
+    <td>O-H Stretching</td>
+    <td>Broad peak</td>
+    <td>Indicates phenol presence</td>
+    <td>Alcohols, moisture</td>
+    <td>Must align with pharmacopeial data</td>
+  </tr>
+</table>
+After the table, provide the following explanations in a structured, point-wise format:
 
-Include a Centered Table Covering:
-Wavenumber cm⁻¹
-Functional Group
-Peak Description
-Significance in Drug Identification
-Potential Interferences
-Regulatory Considerations
-Explain in a Well-Structured Point-Wise Format:
-How FTIR Confirms Drug Identity:
-
-Identify unique vibrational modes of functional groups.
-Compare peaks with standard reference spectra.
-Ensure alignment with pharmacopeial specifications.
-Peak Deviations and Formulation Errors:
-
-Shifted peaks suggest impurities or formulation inconsistencies.
-Disappearing peaks indicate degradation or missing functional groups.
-Extra peaks point to contamination or unwanted excipient interactions.
-Ensuring FTIR Compliance with Pharmacopeial Standards:
-
-Use official FTIR reference spectra for validation.
-Calibrate instruments regularly to prevent wavenumber shifts.
-Perform analysis under controlled environmental conditions.
-Standardize sample preparation for accurate spectral interpretation.
-Output should be strictly formatted in points with no extra text outside the structured format""")
+How FTIR Confirms Drug Identity
+What Peak Deviations Indicate About Formulation Errors
+How to Ensure FTIR Compliance with Pharmacopeial Standards
+""")
 
 STRUCTURE_PROMPT = Template("""
 Provide the **canonical SMILES notation** for the drug $product_name based on PubChem's database. Ensure that the SMILES code is accurate and matches PubChem's standard molecular structure for the drug. Return only the canonical SMILES code as provided by PubChem, and no other extra text. If the drug name is not valid, return only "NO DRUG FOUND".
