@@ -28,7 +28,7 @@ Please compare these results with the $jurisdiction standards and assess whether
 FTIR_PROMPT = Template("""
 Provide a **detailed FTIR spectrum analysis** for **$product_name**.
 
-Ensure the response is a **points** covering:
+Ensure the response is a **centered table** covering:
 - **Wavenumber (cm⁻¹)**
 - **Functional Group**
 - **Peak Description**
@@ -41,7 +41,7 @@ Explain:
 - What **peak deviations** indicate about formulation errors.
 - How to **ensure FTIR compliance** with pharmacopeial standards.
 
-The response **must be in points format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
+The response **must be in table format only**, with **white text**, text **left-aligned**, and no extra text outside the table.
 """)
 
 STRUCTURE_PROMPT = Template("""
