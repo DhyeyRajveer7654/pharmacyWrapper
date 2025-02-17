@@ -288,13 +288,14 @@ elif st.session_state.page == "result":
     st.markdown(f"**⚡ Strength:** {st.session_state.powerOfDrug}")
     # st.markdown('</div>', unsafe_allow_ht ml=True)
 
-    if st.session_state.api_response:
-        components.html("<div class='table-container'>"+st.session_state.api_response+"</div>",height=1000,width=1000,scrolling=True)
-    else:
-        st.warning("⚠️ No response received. Please try again.")
-
     if st.session_state.get("ftir_required"):
         with st.spinner("📡 Analyzing FTIR Data..."):
             ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
             components.html("### 🔬 FTIR Analysis")
-            components.html(ftir_data)
+            st.markdown(ftir_data, unsafe_allow_html=True)
+            # components.html(ftir_data)
+
+    if st.session_state.api_response:
+        components.html("<div class='table-container'>"+st.session_state.api_response+"</div>",height=800,width=1000,scrolling=True)
+    else:
+        st.warning("⚠️ No response received. Please try again.")
