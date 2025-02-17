@@ -29,17 +29,12 @@ FTIR_PROMPT = Template("""
 Provide a **detailed FTIR spectrum analysis** for **$product_name**.
 
 Ensure the response is a **centered table** covering:
-- **Wavenumber (cm⁻¹)**
-- **Functional Group**
-- **Peak Description**
-- **Significance in Drug Identification**
-- **Potential Interferences**
-- **Regulatory Considerations**
-
-Explain:
-- How FTIR confirms **drug identity**.
-- What **peak deviations** indicate about formulation errors.
-- How to **ensure FTIR compliance** with pharmacopeial standards.
+- Wavenumber (cm⁻¹)
+- Functional Group
+- Peak Description
+- Significance in Drug Identification
+- Potential Interferences
+- Regulatory Considerations
 
 The response should be in well arranged points and each sentence should start from new line , with **white text**, text **left-aligned**, and no extra text outside the table.
 """)
