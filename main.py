@@ -55,37 +55,19 @@ def quality_assurance_model():
     """Display the Quality Assurance model functionality"""
     st.title("Quality Assurance Intelligence (QAI)")
     
-    # Main QAI application content
-    st.markdown("## Pharmaceutical Quality Assurance Tool")
-    
-    # Create tabs for different QA functions
-    qa_tab1, qa_tab2, qa_tab3 = st.tabs(["Product Verification", "Process Analysis", "Quality Reports"])
-    
-    with qa_tab1:
-        st.subheader("Product Verification")
-        st.text_input("Enter product name or code")
-        st.selectbox("Select verification standard", ["USP", "BP", "EP", "JP", "Other"])
-        if st.button("Verify Product"):
-            st.success("Product verification process would be executed here.")
-    
-    with qa_tab2:
-        st.subheader("Process Analysis")
-        st.text_area("Describe the process to analyze")
-        st.slider("Process complexity level", 1, 10, 5)
-        if st.button("Analyze Process"):
-            st.info("Process analysis would be performed here.")
-    
-    with qa_tab3:
-        st.subheader("Quality Reports")
-        report_type = st.selectbox("Report Type", ["Daily QA Summary", "Non-Compliance Incidents", "Corrective Actions"])
-        st.date_input("Select date range start")
-        st.date_input("Select date range end")
-        if st.button("Generate Report"):
-            st.info("Report generation would be performed here.")
-
-def regulatory_compliance_model():
-    """Display the Regulatory Compliance model functionality (placeholder)"""
-    st.title("Regulatory Compliance Assistant")
+    import streamlit as st
+    import streamlit.components.v1 as components
+    import prompts # type: ignore
+    import chat_with_gpt
+    from string import Template
+    from rdkit import Chem
+    from rdkit.Chem import Draw
+    import requests
+    import os
+    import streamlit as st
+    def regulatory_compliance_model():
+        """Display the Regulatory Compliance model functionality (placeholder)"""
+        st.title("Regulatory Compliance Assistant")
     
     st.markdown("## Pharmaceutical Regulatory Compliance Tools")
     
