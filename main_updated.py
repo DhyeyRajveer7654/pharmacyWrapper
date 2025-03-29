@@ -1,20 +1,4 @@
 import streamlit as st
-
-# Add a button with dropdown options in the upper right corner
-import streamlit as st
-
-# Create a button in the top right corner using Streamlit columns
-col1, col2 = st.columns([8, 1])  # Adjust column widths to position the button
-
-with col2:
-    selected_option = st.selectbox("Options", ["Select", "Pharmacopoeial Compliance", "Regulatory Compliance"])
-
-# Handle the selected option
-if selected_option == "Pharmacopoeial Compliance":
-    st.write("You selected Pharmacopoeial Compliance.")
-elif selected_option == "Regulatory Compliance":
-    st.write("You selected Regulatory Compliance.")
-import streamlit.components.v1 as components
 import prompts
 import chat_with_gpt
 from string import Template
@@ -23,6 +7,31 @@ from rdkit.Chem import Draw
 import requests
 import os
 import streamlit as st
+
+
+# Main Page
+st.set_page_config(page_title="QRX AI - AI-Powered Licensing", layout="wide")
+
+# Introduction Section
+st.markdown("<h1 style='text-align: center; color: #0047AB;'>Welcome to QRX AI</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; font-size: 18px;'>AI-powered solution for Quality Assurance and Regulatory Compliance.</p>", unsafe_allow_html=True)
+
+# Button to open the model selection popup
+if st.button("Select Model", key="open_popup"):
+    st.session_state.show_popup = True
+
+# Popup Logic
+if "show_popup" not in st.session_state:
+    st.session_state.show_popup = False
+
+if st.session_state.show_popup:
+    with st.expander("Select a Model", expanded=True):
+        option = st.radio("Choose a Model:", ["Quality Assurance (QAI)", "Regulatory Compliance"], index=0)
+
+        if option == "Quality Assurance (QAI)":
+            st.markdown("<h2 style='text-align: center; color: #0047AB;'>Quality Assurance Model</h2>", unsafe_allow_html=True)
+
+            import streamlit.components.v1 as components
 
 size = (250, 250)
 
@@ -314,3 +323,28 @@ elif st.session_state.page == "result":
         components.html("<div class='table-container'>"+st.session_state.api_response+"</div>",height=800,width=1000,scrolling=True)
     else:
         st.warning("⚠️ No response received. Please try again.")
+
+elif option == "Regulatory Compliance":
+            st.markdown("<h2 style='text-align: center; color: #0047AB;'>Regulatory Compliance Model</h2>", unsafe_allow_html=True)
+
+            # Placeholder for future development
+            st.write("🚧 Regulatory Compliance Model is under development.")
+            
+# Button to close popup
+if st.session_state.show_popup and st.button("Close", key="close_popup"):
+ st.session_state.show_popup = Falseimport streamlit;as st
+
+# Add a button with dropdown options in the upper right corner
+import streamlit as st
+
+# Create a button in the top right corner using Streamlit columns
+col1, col2 = st.columns([8, 1])  # Adjust column widths to position the button
+
+with col2:
+    selected_option = st.selectbox("Options", ["Select", "Pharmacopoeial Compliance", "Regulatory Compliance"])
+
+# Handle the selected option
+if selected_option == "Pharmacopoeial Compliance":
+    st.write("You selected Pharmacopoeial Compliance.")
+elif selected_option == "Regulatory Compliance":
+    st.write("You selected Regulatory Compliance.")
