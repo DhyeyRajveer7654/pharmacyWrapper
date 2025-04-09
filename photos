@@ -1,0 +1,22 @@
+import os
+import shutil
+
+# Set folder name where you want to store all PNGs
+target_folder = "assets"
+
+# Create target folder if it doesn't exist
+os.makedirs(target_folder, exist_ok=True)
+
+# Walk through all files and folders
+for root, dirs, files in os.walk("."):
+    for file in files:
+        if file.endswith(".png"):
+            full_path = os.path.join(root, file)
+
+            # Avoid moving already organized files
+            if not full_path.startswith(f"./{target_folder}"):
+                try:
+                    shutil.move(full_path, os.path.join(target_folder, file))
+                    print(f"Moved: {file}")
+                except Exception as e:
+                    print(f"Failed to move {file}: {e}")
