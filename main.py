@@ -874,102 +874,11 @@ elif st.session_state.current_page == 'regulatory':
     """, unsafe_allow_html=True)
     
     # Main content with tabs
-    tab1, tab2, tab3, tab4 = st.tabs([
-        "Regulatory Strategy", 
-        "Submission Support", 
-        "Compliance Management",
+    tab1 = st.tabs([
         "AI-Powered Gap Analysis"
     ])
     
     with tab1:
-        st.markdown("""
-        <div class="card">
-            <h3>Comprehensive Regulatory Strategy Development</h3>
-            <p>Our regulatory strategists work with you to develop tailored regulatory roadmaps that align with your business objectives while ensuring compliance with all applicable requirements.</p>
-            <p><strong>Our approach includes:</strong></p>
-            <ul>
-                <li>Assessment of product classification and regulatory pathways</li>
-                <li>Development of global registration strategies</li>
-                <li>Regulatory agency meeting preparation and representation</li>
-                <li>Life cycle management planning</li>
-                <li>Strategic planning for complex or innovative products</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="card">
-            <h3>Regulatory Intelligence</h3>
-            <p>Stay informed about the evolving regulatory landscape with our regulatory intelligence services:</p>
-            <ul>
-                <li>Monitoring of regulatory changes and updates</li>
-                <li>Impact assessment of new regulations</li>
-                <li>Competitive landscape analysis</li>
-                <li>Region-specific regulatory requirements</li>
-                <li>Custom regulatory intelligence reports</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with tab2:
-        st.markdown("""
-        <div class="card">
-            <h3>Regulatory Submission Management</h3>
-            <p>Our team provides end-to-end support for regulatory submissions across multiple regions:</p>
-            <ul>
-                <li>Common Technical Document (CTD) preparation</li>
-                <li>Electronic submission preparation (eCTD)</li>
-                <li>Chemistry, Manufacturing, and Controls (CMC) documentation</li>
-                <li>Clinical and nonclinical data review and summary preparation</li>
-                <li>Document lifecycle management</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="card">
-            <h3>Regulatory Agency Interaction</h3>
-            <p>Navigate interactions with regulatory authorities effectively:</p>
-            <ul>
-                <li>Preparation for agency meetings and inspections</li>
-                <li>Development of response strategies for agency queries</li>
-                <li>Representation in agency discussions</li>
-                <li>Scientific advice meeting preparation</li>
-                <li>Post-approval regulatory communications</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with tab3:
-        st.markdown("""
-        <div class="card">
-            <h3>Compliance Monitoring & Management</h3>
-            <p>Maintain ongoing compliance with regulatory requirements:</p>
-            <ul>
-                <li>Compliance gap assessment and remediation planning</li>
-                <li>Implementation of regulatory compliance systems</li>
-                <li>Preparation for regulatory inspections</li>
-                <li>Post-approval compliance monitoring</li>
-                <li>Management of regulatory commitment tracking</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="card">
-            <h3>Training & Knowledge Transfer</h3>
-            <p>Build internal regulatory capabilities with our specialized training programs:</p>
-            <ul>
-                <li>Customized regulatory training for cross-functional teams</li>
-                <li>Regulatory requirements workshops</li>
-                <li>GMP/GCP/GLP compliance training</li>
-                <li>Regulatory strategy development training</li>
-                <li>Documentation practices and standards</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with tab4:
         st.markdown("""
         <div class="card">
             <h3>AI-Powered Regulatory Gap Analysis</h3>
@@ -989,7 +898,7 @@ elif st.session_state.current_page == 'regulatory':
         """, unsafe_allow_html=True)
         
         # AI Regulatory Analysis Form
-        st.markdown("<h3 style='color: #1e40af;'>Request a Regulatory Gap Analysis</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 style='color: #1e40af;'>QRx- An AI powered Regulatory Compliance</h3>", unsafe_allow_html=True)
         
         col1, col2 = st.columns(2)
         
