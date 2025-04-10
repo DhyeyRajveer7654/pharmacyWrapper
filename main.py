@@ -994,45 +994,31 @@ elif st.session_state.current_page == 'regulatory':
         col1, col2 = st.columns(2)
         
         with col1:
-            product_name = st.text_input("Product Name")
+            product_name = st.text_input("Product Type")
             product_type = st.selectbox(
                 "Product Type",
-                ["Small Molecule Drug", "Biologic", "Combination Product", "Medical Device", "Other"]
+                ["API", "Tablets(com)", "Syrups", "Infusion", "Capsules", "Injectables","Other"]
             )
             if product_type == "Other":
                 other_type = st.text_input("Please specify product type")
         
         with col2:
-            target_markets = st.multiselect(
-                "Target Markets",
-                ["United States (FDA)", "European Union (EMA)", "United Kingdom (MHRA)", "Japan (PMDA)", 
-                 "Canada (Health Canada)", "China (NMPA)", "Brazil (ANVISA)", "Australia (TGA)", "Other"]
+            Regulatory_Authorities = st.selectbox(
+                "Regulatory Authorities",
+                ["CDSCO", "United States (FDA)", "European Union (EMA)","Brazil (ANVISA)", "Australia (TGA)"]
             )
             
-            if "Other" in target_markets:
-                other_markets = st.text_input("Please specify other markets")
-                
-            application_type = st.selectbox(
-                "Application Type",
-                ["New Drug Application", "Abbreviated New Drug Application", "Biologics License Application", 
-                 "Marketing Authorization Application", "Investigational New Drug", "Other"]
-            )
-            
-            if application_type == "Other":
-                other_application = st.text_input("Please specify application type")
+            Detailed_information = st.text_area("detailed information", height=100, placeholder="Please provide any specific regulatory license reuirement or concerns...")
         
-        analysis_needed = st.multiselect(
-            "Areas Requiring Analysis",
-            ["CMC Documentation", "Clinical Documentation", "Nonclinical Documentation", 
-             "Administrative Documents", "Labeling", "Post-approval Requirements", "All Areas"]
+        Report_type = st.selectbox(
+            "Report Type",
+            ["Pathway", "List of license"]
         )
-        
-        additional_info = st.text_area("Additional Information", height=100, placeholder="Please provide any specific regulatory concerns or requirements...")
-        
+                
         submit_col1, submit_col2, submit_col3 = st.columns([1, 2, 1])
         with submit_col2:
             if st.button("Request Analysis", use_container_width=True):
-                if not product_name or not target_markets or not application_type:
+                if not product_type or Regulatory_Authorities or not Report_type :
                     st.error("Please fill in all required fields")
                 else:
                     st.success("Thank you for your request! Our regulatory team will contact you within 24 hours to discuss your regulatory gap analysis.")
