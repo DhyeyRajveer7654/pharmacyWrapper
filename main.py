@@ -994,7 +994,6 @@ elif st.session_state.current_page == 'regulatory':
         col1, col2 = st.columns(2)
         
         with col1:
-            product_name = st.text_input("Product Type")
             product_type = st.selectbox(
                 "Product Type",
                 ["API", "Tablets(com)", "Syrups", "Infusion", "Capsules", "Injectables","Other"]
@@ -1007,17 +1006,15 @@ elif st.session_state.current_page == 'regulatory':
                 "Regulatory Authorities",
                 ["CDSCO", "United States (FDA)", "European Union (EMA)","Brazil (ANVISA)", "Australia (TGA)"]
             )
-            
-            Detailed_information = st.text_area("detailed information", height=100, placeholder="Please provide any specific regulatory license reuirement or concerns...")
-        
-        Report_type = st.selectbox(
+            Report_type = st.selectbox(
             "Report Type",
             ["Pathway", "List of license"]
         )
-                
+            Detailed_information = st.text_area("detailed information", height=100, placeholder="Please provide any specific regulatory license reuirement or concerns...")
+               
         submit_col1, submit_col2, submit_col3 = st.columns([1, 2, 1])
         with submit_col2:
-            if st.button("Request Analysis", use_container_width=True):
+            if st.button("Check Results", use_container_width=True):
                 if not product_type or Regulatory_Authorities or not Report_type :
                     st.error("Please fill in all required fields")
                 else:
