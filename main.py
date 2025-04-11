@@ -1269,7 +1269,7 @@ if 'api_response' not in st.session_state:
             st.session_state.api_response = None
            
 # 📌 FORM PAGE
-if st.session_state.page == "quality":
+if st.session_state.page == "form":
     st.markdown('<div class="main-header"><h1>🧪 QAI Model AI-Powered Quality Assistance</h1><p> CREATED BY :- MEERA ACHARYA & RAJ PATEL</P><p>Enter details below to generate a comprehensive quality report</p></div>', unsafe_allow_html=True)
 
     # User Input Form in a card layout
