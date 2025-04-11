@@ -898,7 +898,7 @@ elif st.session_state.current_page == 'about':
                     st.error("Please fill in all required fields")
                 else:
                     st.success("Thank you for your request! Our regulatory team will contact you within 24 hours to discuss your regulatory gap analysis.")
-        st.stop()
+        
 # Quality Page
     elif st.session_state.current_page == 'quality':
         st.markdown('<h2 class="section-title">Quality Assurance Services</h2>', unsafe_allow_html=True)
