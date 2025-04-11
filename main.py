@@ -213,7 +213,7 @@ st.markdown("""
 
 # Define a simple navigation bar directly at the top
 st.markdown('<div style="background-color: white; padding: 1rem 0; border-bottom: 1px solid #e0e0e0; margin-bottom: 1rem;">', unsafe_allow_html=True)
-col1, col2, col3, col4, col5 = st.columns([1.5, 1, 1, 1, 1])
+col1, col2, col3, col4, col5, col6, col7 = st.columns([7])
 with col1:
     st.markdown('<h1 style="color:#1e40af; margin:0; padding:0; font-size:2.5rem; font-weight:700;">QRx</h1>', unsafe_allow_html=True)
 with col2:
@@ -221,16 +221,24 @@ with col2:
         st.session_state.current_page = 'home'
         st.rerun()
 with col3:
-    if st.button("REGULATORY", key="nav_regulatory", use_container_width=True, type="secondary", help="View regulatory guidance"):
-        st.session_state.current_page == 'regulatory'
+    if st.button("SERVICES", key="nav_services", use_container_width=True, type="secondary", help="View our services"):
+        st.session_state.current_page = 'services'
         st.rerun()
 with col4:
     if st.button("CONTACT", key="nav_contact", use_container_width=True, type="secondary", help="Contact us"):
         st.session_state.current_page = 'contact'
         st.rerun()
 with col5:
-    if st.button("QUALITY", key="nav_quality", use_container_width=True, type="secondary", help="View quality compliance info"):
-        st.session_state.current_page == 'quality'
+    if st.button("ABOUT", key="nav_about", use_container_width=True, type="secondary", help="About QRx"):
+        st.session_state.current_page = 'about'
+        st.rerun()
+with col6:
+    if st.button("REGULATORY", key="nav_regulatory", use_container_width=True, type="secondary", help="Regulatory Info"):
+        st.session_session_state.current_page = 'regulatory'
+        st.rerun()
+with col7:
+    if st.button("QUALITY", key="nav_quality", use_container_width=True, type="secondary", help="Quality Info"):
+        st.session_session_state.current_page = 'quality'
         st.rerun()
 st.markdown('</div>', unsafe_allow_html=True)
 
@@ -871,7 +879,7 @@ elif st.session_state.current_page == 'about':
         change_page('contact')
 
 # Regulatory Page
-if st.session_state.page == "regulatory":
+elif st.session_state.page == "regulatory":
    
     st.markdown('<h2 class="section-title">Regulatory Compliance Services</h2>', unsafe_allow_html=True)
      # Introduction
@@ -999,6 +1007,9 @@ if st.session_state.page == "regulatory":
         
     </style>
 """, unsafe_allow_html=True)
+
+if "page" not in st.session_state:
+    st.session_state.page = "form"
 
 # 📌 FORM PAGE
     st.markdown('<div class="main-header"><h1>🧪 QRx Model AI-Powered Regulatory Complaince</h1><p> CREATED BY :- MEERA ACHARYA & RAJ PATEL</P><p>Enter details below to generate a comprehensive quality report</p></div>', unsafe_allow_html=True)
@@ -1251,6 +1262,9 @@ def get_ftir_image(product_name):
     if os.path.exists(image_path):
         return image_path
     return None
+
+if "page" not in st.session_state:
+    st.session_state.page = "form"
 
 # 📌 FORM PAGE
 if st.session_state.page == "quality":
