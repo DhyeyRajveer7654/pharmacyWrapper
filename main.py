@@ -1060,7 +1060,7 @@ elif st.session_state.current_page == 'regulatory':
 
 # Quality Page
 elif st.session_state.current_page == 'quality':
-    st.markdown('<h2 class="section-title">Quality Assurance Services</h2>', unsafe_allow_html=True)
+    st.markdown('<h1 class="section-title">Quality Assurance Services</h1>', unsafe_allow_html=True)
     
     # Introduction
     st.markdown("""
