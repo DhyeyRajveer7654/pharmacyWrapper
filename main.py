@@ -1062,236 +1062,289 @@ elif st.session_state.current_page == 'quality':
     
     # Introduction
     st.markdown("""
-    <div class="card">
-        <p>QRx provides comprehensive pharmaceutical quality assurance services to help you maintain the highest standards throughout your product lifecycle. Our approach combines scientific expertise, regulatory knowledge, and advanced analytical capabilities to ensure product quality, safety, and efficacy.</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Main content with tabs
-    tab1, tab2 = st.tabs([
-        "Quality Analysis Tools", 
-        "Pharmaceutical Analysis Services"
-    ])
-    
-    with tab1:
-        # Quality Analysis Tools Section
-        st.markdown('<h3 class="section-title">QAI Model AI-Powered Quality Assistance</h3>', unsafe_allow_html=True)
+    <style>
+        /* Global Styles */
+        body {
+            background-color: #f0f2f6;
+            color: #1e293b;
+            font-family: 'Inter', 'sans serif';
+        }
+
+        /* Header Styling */
+        .main-header {
+            background: linear-gradient(135deg, #0052cc, #00a3bf);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        /* Form Elements */
+        div[data-testid="stTextInput"] input,
+        div[data-testid="stTextArea"] textarea,
+        div[data-testid="stSelectbox"] > div[data-baseweb="select"] {
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        div[data-testid="stTextInput"] input:focus,
+        div[data-testid="stTextArea"] textarea:focus {
+            border-color: #0052cc;
+            box-shadow: 0 0 0 2px rgba(0,82,204,0.2);
+        }
+
+        /* Button Styling */
+        .stButton > button {
+            width: 100%;
+            background: linear-gradient(135deg, #0052cc, #00a3bf);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stButton > button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,82,204,0.2);
+        }
+
+        /* Card Styling */
+        .card div[data-testid="stSelectbox"]{
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Results Table */
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-collapse: collapse;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin: 1rem 0;
+        }
+
+        th {
+            background: #0052cc;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Loading Spinner */
+        .stSpinner > div {
+            border-color: #0052cc !important;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: #dcfce7;
+            color: #166534;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        /* Error Message */
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
         
-        # Initialize options dictionary for the quality analysis form
-        if 'quality_options' not in st.session_state:
-            st.session_state.quality_options = {}
-        
-        options = st.session_state.quality_options
-        
-        # Initialize session state for page navigation within the quality tab
-        if 'quality_page' not in st.session_state:
-            st.session_state.quality_page = "form"
-        if 'api_response' not in st.session_state:
-            st.session_state.api_response = None
-            
-        # FORM PAGE within Quality Tab
-        if st.session_state.quality_page == "form":
-            st.markdown('<div class="card">', unsafe_allow_html=True)
-            st.markdown('<h4 style="color: #1e40af;">Enter details below to generate a comprehensive quality report</h4>', unsafe_allow_html=True)
-            
-            col1, col2 = st.columns(2)
-            
-            with col1:
-                options["product_name"] = st.text_input(label="💊 Product Name", key="product_name_input", placeholder="e.g., Paracetamol")
-                
-                if st.button("🔬 Get Structure", key="get_structure_btn"):
-                    if not options.get("product_name"):
-                        st.error("⚠️ Please write product name!")
-                    else:
-                        with st.spinner("🛠️ Processing... Please wait"):
-                            try:
-                                structure_image = showStructure(options["product_name"])
-                                if structure_image:
-                                    st.image(structure_image, caption=f"{options['product_name']} Molecule")
-                                else:
-                                    st.error("⚠️ Drug not found, please input a valid drug name")
-                            except Exception as e:
-                                st.error(f"⚠️ Error: {str(e)}")
-                
-                # FTIR Graph button
-                if st.button("📊 Show FTIR Graph", key="show_ftir_btn"):
-                    if options.get("product_name"):
-                        with st.spinner("Loading FTIR data..."):
-                            ftir_image = get_ftir_image(options["product_name"])
-                            if ftir_image:
-                                st.image(ftir_image, caption=f"FTIR Graph for {options['product_name']}", use_column_width=True)
-                            else:
-                                ftir_data = get_ftir_from_gpt(options["product_name"])
-                                st.markdown(ftir_data, unsafe_allow_html=True)
-                                st.info(f"Generated FTIR analysis for {options['product_name']} (no image available)")
-                    else:
-                        st.error("⚠️ Please enter a product name.")
-            
-            with col2:
-                options["quanOfMed"] = st.text_input(label="📦 Quantity of Medicine", key="quantity_input", placeholder="e.g., 1000 tablets")
-                options["jurisdiction"] = st.selectbox(
-                    label="🌎 Select Jurisdiction", 
-                    options=["INDIAN PHARMACOPIEA", "BRITISH PHARMACOPIEA", "UNITED STATES PHARMACOPOEIA", 
-                             "MARTINDALE-EXTRA PHARMACOPIEA", "COMPARE WITH ALL"],
-                    key="jurisdiction_input"
-                )
-                options["powerOfDrug"] = st.text_input(label="⚡ Power of Drug", key="power_input", placeholder="e.g., 500 mg")
-            
-            # Analysis Options
-            options["typeOfInfo"] = st.selectbox(
-                label="📊 Select Analysis Type:", 
-                options=["METHOD OF PREPARATION", "CHARACTARIZATION/EVALUATION", "Both of above", "CHECK RESULTS"],
-                key="analysis_type_input"
-            )
-            
-            if options["typeOfInfo"] == "CHECK RESULTS":
-                options["resultsToCheck"] = st.text_area(
-                    label="🔍 Enter Your Results:", 
-                    key="results_input",
-                    height=200, 
-                    placeholder="Paste lab results here..."
-                )
-            
-            options["ftir_required"] = st.checkbox("📡 Include FTIR Analysis", key="ftir_checkbox")
-            
-            # Submit button with enhanced styling
-            submit_button = st.button("🚀 Generate Comprehensive Report", key="generate_report_btn")
-            if submit_button:
-                if not all([options.get("product_name"), options.get("quanOfMed"), options.get("powerOfDrug")]):
-                    st.error("⚠️ Please fill in all required fields!")
-                else:
-                    with st.spinner("🛠️ Generating comprehensive report... Please wait"):
-                        prompt = getPromptForOptions(options)
-                        api_response = chatWithGpt(prompt)
-                        st.session_state.api_response = api_response
-                        
-                        # Update session state with options for result page
-                        for key, value in options.items():
-                            st.session_state[key] = value
-                            
-                        st.session_state.quality_page = "result"
-                        st.rerun()
-            
-            st.markdown('</div>', unsafe_allow_html=True)
-            
-            # Additional explanatory information
-            st.markdown("""
-            <div class="card">
-                <h4 style="color: #1e40af;">About Our Quality Analysis Tools</h4>
-                <p>Our comprehensive quality analysis tools utilize advanced AI and pharmaceutical databases to provide:</p>
-                <ul>
-                    <li><strong>Molecular Structure Visualization:</strong> Accurate 2D and 3D models of chemical structures</li>
-                    <li><strong>FTIR Analysis:</strong> Detailed spectroscopic data for compound verification</li>
-                    <li><strong>Method of Preparation:</strong> Standardized synthesis and manufacturing protocols</li>
-                    <li><strong>Characterization & Evaluation:</strong> Physical, chemical, and pharmacological property assessment</li>
-                    <li><strong>Results Verification:</strong> Validation of laboratory findings against reference standards</li>
-                </ul>
-            </div>
-            """, unsafe_allow_html=True)
-            
-        # RESULT PAGE within Quality Tab
-        elif st.session_state.quality_page == "result":
-            st.markdown('<div class="card">', unsafe_allow_html=True)
-            st.markdown('<h4 style="color: #1e40af;">📑 Quality Analysis Report</h4>', unsafe_allow_html=True)
-            
-            if st.button("🔙 Return to Form", key="back_to_form_btn"):
-                st.session_state.quality_page = "form"
-                st.rerun()
-            
-            st.markdown("### 📋 Analysis Details")
-            st.markdown(f"**💊 Product:** {st.session_state.product_name}")
-            st.markdown(f"**📦 Quantity:** {st.session_state.quanOfMed}")
-            st.markdown(f"**⚡ Strength:** {st.session_state.powerOfDrug}")
-            
-            if st.session_state.get("ftir_required"):
-                with st.spinner("📡 Analyzing FTIR Data..."):
-                    ftir_data = get_ftir_from_gpt(st.session_state.product_name)
-                    st.markdown("### 🔬 FTIR Analysis")
-                    st.markdown(ftir_data, unsafe_allow_html=True)
-            
-            if st.session_state.api_response:
-                st.markdown('<div class="table-container">', unsafe_allow_html=True)
-                st.markdown(st.session_state.api_response, unsafe_allow_html=True)
-                st.markdown('</div>', unsafe_allow_html=True)
+    </style>
+""", unsafe_allow_html=True)
+
+# Page Navigation
+if "page" not in st.session_state:
+    st.session_state.page = "form"
+if "api_response" not in st.session_state:
+    st.session_state.api_response = None
+
+options = dict()
+
+def get_cid_from_name(drug_name):
+    url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{drug_name}/cids/JSON"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        try:
+            cids = response.json()["IdentifierList"]["CID"]
+            return cids[0]  # Return the first matching CID
+        except (KeyError, IndexError):
+            return None
+    else:
+        return None
+
+def get_pubchem_product_code(product_name):
+    product_code_from_pubchem = ""
+    url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{product_name}/property/CanonicalSMILES/JSON"
+    response = requests.get(url)
+    if response.status_code == 200:
+        try:
+            smiles = response.json()["PropertyTable"]["Properties"][0]["CanonicalSMILES"]
+            product_code_from_pubchem=smiles
+        except (KeyError, IndexError):
+            product_code_from_pubchem = "NO DRUG FOUND"
+    else:
+        product_code_from_pubchem="NO DRUG FOUND"
+    if product_code_from_pubchem=="NO DRUG FOUND":
+        return ""
+    else:
+        return product_code_from_pubchem
+
+def showStructure(product_name):
+    product_code = ""
+    product_code_from_pubchem = get_pubchem_product_code(product_name)
+    if product_code_from_pubchem=="":
+        product_code_prompt = prompts.STRUCTURE_PROMPT.substitute(product_name=product_name)
+        print("Prompt is: "+product_code_prompt)
+        product_code = chat_with_gpt.chatWithGpt(product_code_prompt)
+        if product_code == "NO DRUG FOUND":
+            return ""
+    else:
+        product_code = product_code_from_pubchem
+
+    print("product code is: "+product_code)
+    print("product code from pubchem: "+product_code_from_pubchem)
+    m = Chem.MolFromSmiles(product_code)
+    if m:
+        return Draw.MolToImage(m, size=(400, 400))
+    return None
+
+# Directory where FTIR images are stored
+FTIR_IMAGE_DIR = "./"
+
+def get_ftir_image(product_name):
+    """Fetches the corresponding FTIR image for the given product name."""
+    image_filename = f"{product_name.lower()}.png"
+    image_path = os.path.join(FTIR_IMAGE_DIR, image_filename)
+    if os.path.exists(image_path):
+        return image_path
+    return None
+
+# 📌 FORM PAGE
+if st.session_state.page == "form":
+    st.markdown('<div class="main-header"><h1>🧪 QAI Model AI-Powered Quality Assistance</h1><p> CREATED BY :- MEERA ACHARYA & RAJ PATEL</P><p>Enter details below to generate a comprehensive quality report</p></div>', unsafe_allow_html=True)
+
+    # User Input Form in a card layout
+    # st.markdown('<div class="card">', unsafe_allow_html=True)
+    col1, col2 = st.columns(2)
+
+    with col1:
+        options["product_name"] = st.text_input("💊 Product Name", placeholder="e.g., Paracetamol")
+        if st.button("🔬 Get Structure"):
+            if not options["product_name"]:
+                st.error("⚠️ Please write product name!")
             else:
-                st.warning("⚠️ No response received. Please try again.")
-            
-            st.markdown('</div>', unsafe_allow_html=True)
-        
-        # Structure Analysis section as a separate card
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h4 style="color: #1e40af;">Chemical Structure Visualization</h4>', unsafe_allow_html=True)
-        st.markdown('<p>Verify and visualize chemical structures of pharmaceutical compounds using our advanced molecular visualization tools.</p>', unsafe_allow_html=True)
-        
-        struct_col1, struct_col2 = st.columns(2)
-        
-        with struct_col1:
-            structure_name = st.text_input(label="Enter Drug or Compound Name", key="standalone_structure_name")
-            
-            if st.button("Generate Structure", key="standalone_structure_btn"):
-                if not structure_name:
-                    st.error("⚠️ Please enter a drug or compound name")
+                with st.spinner("🛠️ Processing... Please wait"):
+                    fig = showStructure(options["product_name"])
+                if fig == "":
+                    st.error("⚠️ Drug not found, please input a valid drug name")
                 else:
-                    with st.spinner("Retrieving molecular structure..."):
-                        try:
-                            structure_image = showStructure(structure_name)
-                            if structure_image:
-                                struct_col2.image(structure_image, caption=f"{structure_name} Molecular Structure", use_column_width=True)
-                            else:
-                                st.error(f"⚠️ Could not generate structure for {structure_name}. Please verify the compound name.")
-                        except Exception as e:
-                            st.error(f"⚠️ Error: {str(e)}")
-        
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-        # Standalone FTIR Analysis Tool
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h4 style="color: #1e40af;">FTIR Spectroscopy Analysis</h4>', unsafe_allow_html=True)
-        st.markdown('<p>Fourier-transform infrared spectroscopy (FTIR) is a powerful analytical technique for identifying chemical compounds and determining sample purity.</p>', unsafe_allow_html=True)
-        
-        ftir_col1, ftir_col2 = st.columns(2)
-        
-        with ftir_col1:
-            ftir_compound = st.text_input(label="Enter Compound Name for FTIR Analysis", key="standalone_ftir_name")
-            
-            if st.button("Generate FTIR Data", key="standalone_ftir_btn"):
-                if not ftir_compound:
-                    st.error("⚠️ Please enter a compound name")
+                    st.image(fig, caption=f"{options['product_name']} Molecule")
+
+        if st.button("📊 Show FTIR Graph"):
+            if options.get("product_name"):  # Ensure product name exists
+                ftir_image = get_ftir_image(options["product_name"])
+                if ftir_image:
+                    st.image(ftir_image, caption=f"FTIR Graph for {options['product_name']}", use_column_width=True)
                 else:
-                    with st.spinner("Generating FTIR analysis..."):
-                        ftir_data = get_ftir_from_gpt(ftir_compound)
-                        ftir_col2.markdown(ftir_data, unsafe_allow_html=True)
-        
-        st.markdown('</div>', unsafe_allow_html=True)
+                    st.error(f"⚠️ No FTIR data available for {options['product_name']}.")
+            else:
+                st.error("⚠️ Please enter a product name.")            
+
+    with col2:
+        options["quanOfMed"] = st.text_input("📦 Quantity of Medicine", placeholder="e.g., 1000 tablets")
+        options["jurisdiction"] = st.selectbox("🌎 Select Jurisdiction", 
+            ["INDIAN PHARMACOPIEA", "BRITISH PHARMACOPIEA", "UNITED STATES PHARMACOPOEIA", "MARTINDALE-EXTRA PHARMACOPIEA", "COMPARE WITH ALL"])
+        options["powerOfDrug"] = st.text_input("⚡ Power of Drug", placeholder="e.g., 500 mg")
+
+    # st.markdown('</div>', unsafe_allow_html=True)
+
+    # Analysis Options in a separate card
+    # st.markdown('<div class="card">', unsafe_allow_html=True)
+    options["typeOfInfo"] = st.selectbox("📊 Select Analysis Type:", 
+            ["METHOD OF PREPARATION", "CHARACTARIZATION/EVALUATION", "Both of above", "CHECK RESULTS"])
+
+    if options["typeOfInfo"] == "CHECK RESULTS":
+        options["resultsToCheck"] = st.text_area("🔍 Enter Your Results:", height=200, placeholder="Paste lab results here...", key="checkResults")
+
+    options["ftir_required"] = st.checkbox("📡 Include FTIR Analysis")
+    # st.markdown('</div>', unsafe_allow_html=True)
+
+    # Submit button with enhanced styling
+    submit_button = st.button("🚀 Generate Report")
+    if submit_button:
+        if not all([options.get("product_name"), options.get("quanOfMed"), options.get("powerOfDrug")]):
+            st.error("⚠️ Please fill in all required fields!")
+        else:
+            prompt = prompts.getPromptForOptions(options)
+            with st.spinner("🛠️ Generating comprehensive report... Please wait"):
+                api_response = chat_with_gpt.chatWithGpt(prompt)
+                st.session_state.api_response = api_response
+
+            st.session_state.update(options)
+            st.session_state.page = "result"
+            st.experimental_rerun()
+
+# 📌 RESULT PAGE
+elif st.session_state.page == "result":
+    st.markdown('<div class="main-header"><h1>📑 Quality Analysis Report</h1></div>', unsafe_allow_html=True)
     
-    with tab2:
-        st.markdown("""
-        <div class="card">
-            <h3>Analytical Testing Services</h3>
-            <p>Our comprehensive analytical testing services include:</p>
-            <ul>
-                <li><strong>Raw Material Testing:</strong> Identity, purity, and quality testing of APIs and excipients</li>
-                <li><strong>Method Development & Validation:</strong> Custom analytical method development and validation according to ICH guidelines</li>
-                <li><strong>Stability Testing:</strong> Long-term, accelerated, and stress testing to establish product shelf life</li>
-                <li><strong>Impurity Profiling:</strong> Identification and quantification of impurities and degradation products</li>
-                <li><strong>Release Testing:</strong> Comprehensive batch release testing according to specifications</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="card">
-            <h3>Quality System Implementation</h3>
-            <p>Build robust quality systems with our expert guidance:</p>
-            <ul>
-                <li><strong>Quality Management System (QMS) Design:</strong> Development of tailored quality systems that meet regulatory requirements</li>
-                <li><strong>Standard Operating Procedures:</strong> Creation of comprehensive SOPs for all quality-related operations</li>
-                <li><strong>Quality Risk Management:</strong> Implementation of ICH Q9-compliant risk management processes</li>
-                <li><strong>Quality Metrics Program:</strong> Development of KPIs and monitoring systems for quality performance</li>
-                <li><strong>Remediation Support:</strong> Resolution of quality issues and implementation of corrective actions</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
+    if st.button("🔙 Return to Form", key="back_button"):
+        st.session_state.page = "form"
+        st.experimental_rerun()
+
+    # st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.markdown("### 📋 Analysis Details")
+    st.markdown(f"**💊 Product:** {st.session_state.product_name}",)
+    st.markdown(f"**📦 Quantity:** {st.session_state.quanOfMed}")
+    st.markdown(f"**⚡ Strength:** {st.session_state.powerOfDrug}")
+    # st.markdown('</div>', unsafe_allow_ht ml=True)
+
+    if st.session_state.get("ftir_required"):
+        with st.spinner("📡 Analyzing FTIR Data..."):
+            ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
+            components.html("### 🔬 FTIR Analysis")
+            st.markdown(ftir_data, unsafe_allow_html=True)
+            # components.html(ftir_data)
+
+    if st.session_state.api_response:
+        components.html("<div class='table-container'>"+st.session_state.api_response+"</div>",height=800,width=1000,scrolling=True)
+    else:
+        st.warning("⚠️ No response received. Please try again.")
     
     # Contact Us section
     st.markdown("""
