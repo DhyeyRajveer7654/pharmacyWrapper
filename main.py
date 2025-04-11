@@ -899,42 +899,6 @@ elif st.session_state.current_page == 'regulatory':
                 else:
                     st.success("Thank you for your request! Our regulatory team will contact you within 24 hours to discuss your regulatory gap analysis.")
     
-    # Case studies
-    st.markdown('<h3 class="section-title">Success Stories</h3>', unsafe_allow_html=True)
-    
-    case_study_col1, case_study_col2 = st.columns(2)
-    
-    with case_study_col1:
-        st.markdown("""
-        <div class="card">
-            <h3>Accelerated Approval for Novel Therapy</h3>
-            <p><strong>Challenge:</strong> A mid-sized pharmaceutical company sought to obtain accelerated approval for a novel therapy targeting a rare disease with significant unmet need.</p>
-            <p><strong>Solution:</strong> Our regulatory team developed a comprehensive strategy leveraging expedited programs, conducted thorough gap analysis of submission documents, and prepared for key agency interactions.</p>
-            <p><strong>Result:</strong> Successful accelerated approval with a 30% reduction in standard review timeline and favorable labeling.</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with case_study_col2:
-        st.markdown("""
-        <div class="card">
-            <h3>Global Regulatory Harmonization</h3>
-            <p><strong>Challenge:</strong> A global pharmaceutical company needed to harmonize regulatory submissions across 15 markets while addressing region-specific requirements.</p>
-            <p><strong>Solution:</strong> We implemented a centralized regulatory strategy with market-specific adaptations, developed a unified documentation approach, and created a global regulatory intelligence monitoring system.</p>
-            <p><strong>Result:</strong> Streamlined global submissions with 40% reduction in document preparation time and successful approvals in all target markets.</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Contact section
-    st.markdown("""
-    <div class="card" style="background: linear-gradient(135deg, #f0f9ff, #e0f2fe); text-align: center; padding: 2rem; margin-top: 2rem;">
-        <h3>Need Regulatory Support?</h3>
-        <p style="margin-bottom: 1.5rem;">Contact our regulatory experts to discuss your specific challenges and requirements.</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    if st.button("Contact Our Regulatory Team", key="contact_reg_btn"):
-        change_page('contact')
-
 # Quality Page
 elif st.session_state.current_page == 'quality':
     st.markdown('<h1 class="section-title">Quality Assurance Services</h1>', unsafe_allow_html=True)
