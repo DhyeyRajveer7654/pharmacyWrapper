@@ -1075,8 +1075,8 @@ elif st.session_state.current_page == 'regulatory':
 elif st.session_state.current_page == 'quality':
     st.markdown('<h2 class="section-title">Quality Assurance Services</h2>', unsafe_allow_html=True)
     
-    # Introduction
-    st.markdown("""
+    # Enhanced Professional UI Styling
+st.markdown("""
     <style>
         /* Global Styles */
         body {
