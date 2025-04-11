@@ -867,6 +867,7 @@ elif st.session_state.current_page == 'about':
 # Regulatory Page
 
 elif st.session_state.current_page == 'regulatory':
+    st.write("You are on: ", st.session_state.current_page)
     st.markdown('<h1 class="section-title">Regulatory Compliance Services</h1>', unsafe_allow_html=True)
     st.markdown("<h2 style='color: #1e40af;'>QRx- An AI powered Reuglatory Compliance</h2>", unsafe_allow_html=True)   
     col1, col2 = st.columns(2)
@@ -901,7 +902,6 @@ elif st.session_state.current_page == 'regulatory':
        
 # Quality Page
 elif st.session_state.current_page == 'quality':
-    st.write("You are on: ", st.session_state.current_page)
     st.markdown('<h1 class="section-title">Quality Assurance Services</h1>', unsafe_allow_html=True)
     
     # Introduction
