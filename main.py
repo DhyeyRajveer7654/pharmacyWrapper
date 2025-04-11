@@ -10,6 +10,10 @@ import requests # type: ignore
 import os
 import streamlit as st # type: ignore
 
+
+if "page" not in st.session_state:
+    st.session_state.page = "home"  # or your default page
+
 ###############################################################################
 # UTILITY FUNCTIONS
 ###############################################################################
@@ -867,7 +871,8 @@ elif st.session_state.current_page == 'about':
         change_page('contact')
 
 # Regulatory Page
-elif st.session_state.current_page == 'regulatory':
+if st.session_state.page == "regulatory":
+   
     st.markdown('<h2 class="section-title">Regulatory Compliance Services</h2>', unsafe_allow_html=True)
      # Introduction
     st.markdown("""
@@ -996,7 +1001,6 @@ elif st.session_state.current_page == 'regulatory':
 """, unsafe_allow_html=True)
 
 # 📌 FORM PAGE
-if st.session_state.page == "regulatory":
     st.markdown('<div class="main-header"><h1>🧪 QRx Model AI-Powered Regulatory Complaince</h1><p> CREATED BY :- MEERA ACHARYA & RAJ PATEL</P><p>Enter details below to generate a comprehensive quality report</p></div>', unsafe_allow_html=True)
 
     # User Input Form in a card layout
@@ -1186,12 +1190,6 @@ elif st.session_state.current_page == 'quality':
     </style>
 """, unsafe_allow_html=True)
 
-# Page Navigation
-if "page" not in st.session_state:
-    st.session_state.page = "form"
-if "api_response" not in st.session_state:
-    st.session_state.api_response = None
-
 options = dict()
 
 def get_cid_from_name(drug_name):
@@ -1255,7 +1253,7 @@ def get_ftir_image(product_name):
     return None
 
 # 📌 FORM PAGE
-if st.session_state.page == "form":
+if st.session_state.page == "quality":
     st.markdown('<div class="main-header"><h1>🧪 QAI Model AI-Powered Quality Assistance</h1><p> CREATED BY :- MEERA ACHARYA & RAJ PATEL</P><p>Enter details below to generate a comprehensive quality report</p></div>', unsafe_allow_html=True)
 
     # User Input Form in a card layout
