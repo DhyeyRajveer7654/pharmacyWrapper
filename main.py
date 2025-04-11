@@ -1,7 +1,8 @@
 import streamlit as st
 import streamlit.components.v1 as components
 from string import Template
-import prompts  # if it's a module
+import prompts
+import chat_with_gpt
 from rdkit import Chem
 from rdkit.Chem import Draw
 import requests
