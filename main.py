@@ -865,13 +865,13 @@ elif st.session_state.current_page == 'about':
         change_page('contact')
 
 # Regulatory Page
-    elif st.session_state.current_page == 'regulatory':
-        st.markdown('<h2 class="section-title">Regulatory Compliance Services</h2>', unsafe_allow_html=True)
-        st.markdown("<h3 style='color: #1e40af;'>QRx- An AI powered Reuglatory Compliance</h3>", unsafe_allow_html=True)
+elif st.session_state.current_page == 'regulatory':
+    st.markdown('<h1 class="section-title">Regulatory Compliance Services</h1>', unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #1e40af;'>QRx- An AI powered Reuglatory Compliance</h3>", unsafe_allow_html=True)
         
-        col1, col2 = st.columns(2)
+    col1, col2 = st.columns(2)
         
-        with col1:
+    with col1:
             product_type = st.selectbox(
                 "Product Type",
                 ["API", "Tablets(com)", "Syrups", "Infusion", "Capsules", "Injectables","Other"]
@@ -881,7 +881,7 @@ elif st.session_state.current_page == 'about':
             Detailed_information = st.text_area("detailed information", height=100, placeholder="Please provide any specific regulatory license reuirement or concerns...")
 
         
-        with col2:
+    with col2:
             Regulatory_Authorities = st.selectbox(
                 "Regulatory Authorities",
                 ["CDSCO", "United States (FDA)", "European Union (EMA)","Brazil (ANVISA)", "Australia (TGA)"]
@@ -891,20 +891,21 @@ elif st.session_state.current_page == 'about':
             ["Pathway", "List of license"]
         )
               
-        submit_col1, submit_col2, submit_col3 = st.columns([1, 2, 1])
-        with submit_col2:
+    submit_col1, submit_col2, submit_col3 = st.columns([1, 2, 1])
+    with submit_col2:
             if st.button("Check Results", use_container_width=True):
                 if not product_type or Regulatory_Authorities or not Report_type :
                     st.error("Please fill in all required fields")
                 else:
                     st.success("Thank you for your request! Our regulatory team will contact you within 24 hours to discuss your regulatory gap analysis.")
-        
+    
+    
 # Quality Page
-    if st.session_state.current_page == 'quality':
-        st.markdown('<h2 class="section-title">Quality Assurance Services</h2>', unsafe_allow_html=True)
+elif st.session_state.current_page == 'quality':
+    st.markdown('<h1 class="section-title">Quality Assurance Services</h1>', unsafe_allow_html=True)
     
     # Introduction
-        st.markdown("""
+    st.markdown("""
     <style>
         /* Global Styles */
         body {
