@@ -1186,6 +1186,12 @@ elif st.session_state.current_page == 'quality':
     </style>
 """, unsafe_allow_html=True)
 
+# Page Navigation
+if "page" not in st.session_state:
+    st.session_state.page = "form"
+if "api_response" not in st.session_state:
+    st.session_state.api_response = None
+
 options = dict()
 
 def get_cid_from_name(drug_name):
@@ -1339,14 +1345,3 @@ elif st.session_state.page == "result":
         components.html("<div class='table-container'>"+st.session_state.api_response+"</div>",height=800,width=1000,scrolling=True)
     else:
         st.warning("⚠️ No response received. Please try again.")
-    
-    # Contact Us section
-    st.markdown("""
-    <div class="card" style="background: linear-gradient(135deg, #f0f9ff, #e0f2fe); text-align: center; padding: 2rem; margin-top: 2rem;">
-        <h3>Need Advanced Quality Analysis?</h3>
-        <p style="margin-bottom: 1.5rem;">Contact our quality experts to discuss comprehensive testing and certification for your pharmaceutical products.</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    if st.button("Contact Our Quality Team", key="quality_contact_btn"):
-        change_page('contact')
