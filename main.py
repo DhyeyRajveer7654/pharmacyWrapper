@@ -216,16 +216,16 @@ with col2:
         st.session_state.current_page = 'home'
         st.rerun()
 with col3:
-    if st.button("SERVICES", key="nav_services", use_container_width=True, type="secondary", help="View our services"):
-        st.session_state.current_page = 'services'
+    if st.button("REGULATORY", key="nav_regulatory", use_container_width=True, type="secondary", help="View regulatory guidance"):
+        st.session_state.current_page = 'regulatory'
         st.rerun()
 with col4:
     if st.button("CONTACT", key="nav_contact", use_container_width=True, type="secondary", help="Contact us"):
         st.session_state.current_page = 'contact'
         st.rerun()
 with col5:
-    if st.button("ABOUT", key="nav_about", use_container_width=True, type="secondary", help="About QRx"):
-        st.session_state.current_page = 'about'
+    if st.button("QUALITY", key="nav_quality", use_container_width=True, type="secondary", help="View quality compliance info"):
+        st.session_state.current_page = 'quality'
         st.rerun()
 st.markdown('</div>', unsafe_allow_html=True)
 
