@@ -234,11 +234,11 @@ with col5:
         st.rerun()
 with col6:
     if st.button("REGULATORY", key="nav_regulatory", use_container_width=True, type="secondary", help="Regulatory Info"):
-        st.session_session_state.current_page = 'regulatory'
+        st.session_state.current_page = 'regulatory'
         st.rerun()
 with col7:
     if st.button("QUALITY", key="nav_quality", use_container_width=True, type="secondary", help="Quality Info"):
-        st.session_session_state.current_page = 'quality'
+        st.session_state.current_page = 'quality'
         st.rerun()
 st.markdown('</div>', unsafe_allow_html=True)
 
