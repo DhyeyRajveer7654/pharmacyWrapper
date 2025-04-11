@@ -10,14 +10,6 @@ import requests # type: ignore
 import os
 import streamlit as st # type: ignore
 
-
-if "page" not in st.session_state:
-    st.session_state.page = "home"  # or your default page
-
-###############################################################################
-# UTILITY FUNCTIONS
-###############################################################################
-
 def chatWithGpt(prompt):
     """Simulate a GPT API call with a deterministic response"""
     # In a real implementation, this would call an API
@@ -213,7 +205,7 @@ st.markdown("""
 
 # Define a simple navigation bar directly at the top
 st.markdown('<div style="background-color: white; padding: 1rem 0; border-bottom: 1px solid #e0e0e0; margin-bottom: 1rem;">', unsafe_allow_html=True)
-col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
+col1, col2, col3, col4, col5 = st.columns([1.5, 1, 1, 1, 1])
 with col1:
     st.markdown('<h1 style="color:#1e40af; margin:0; padding:0; font-size:2.5rem; font-weight:700;">QRx</h1>', unsafe_allow_html=True)
 with col2:
@@ -231,14 +223,6 @@ with col4:
 with col5:
     if st.button("ABOUT", key="nav_about", use_container_width=True, type="secondary", help="About QRx"):
         st.session_state.current_page = 'about'
-        st.rerun()
-with col6:
-    if st.button("REGULATORY", key="nav_regulatory", use_container_width=True, type="secondary", help="Regulatory Info"):
-        st.session_state.current_page = 'regulatory'
-        st.rerun()
-with col7:
-    if st.button("QUALITY", key="nav_quality", use_container_width=True, type="secondary", help="Quality Info"):
-        st.session_state.current_page = 'quality'
         st.rerun()
 st.markdown('</div>', unsafe_allow_html=True)
 
