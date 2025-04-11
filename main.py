@@ -884,33 +884,63 @@ elif st.session_state.current_page == 'regulatory':
     st.markdown("<h3 style='color: #1e40af;'>QRx- An AI powered Reuglatory Compliance</h3>", unsafe_allow_html=True)
         
     col1, col2 = st.columns(2)
-        
+
     with col1:
-            product_type = st.selectbox(
-                "Product Type",
-                ["API", "Tablets(com)", "Syrups", "Infusion", "Capsules", "Injectables","Other"]
-            )
-            if product_type == "Other":
-                other_type = st.text_input("Please specify product type")
-        
-    with col2:
-            Regulatory_Authorities = st.selectbox(
-                "Regulatory Authorities",
-                ["CDSCO", "United States (FDA)", "European Union (EMA)","Brazil (ANVISA)", "Australia (TGA)"]
-            )
-            Report_type = st.selectbox(
-            "Report Type",
-            ["Pathway", "List of license"]
-        )
-            Detailed_information = st.text_area("detailed information", height=100, placeholder="Please provide any specific regulatory license reuirement or concerns...")
-               
-    submit_col1, submit_col2, submit_col3 = st.columns([1, 2, 1])
-    with submit_col2:
-            if st.button("Check Results", use_container_width=True):
-                if not product_type or Regulatory_Authorities or not Report_type :
-                    st.error("Please fill in all required fields")
+        options["product_name"] = st.text_input("💊 Product Name", placeholder="e.g., Paracetamol")
+        if st.button("🔬 Get Structure"):
+            if not options["product_name"]:
+                st.error("⚠️ Please write product name!")
+            else:
+                with st.spinner("🛠️ Processing... Please wait"):
+                    fig = showStructure(options["product_name"])
+                if fig == "":
+                    st.error("⚠️ Drug not found, please input a valid drug name")
                 else:
-                    st.success("Thank you for your request! Our regulatory team will contact you within 24 hours to discuss your regulatory gap analysis.")
+                    st.image(fig, caption=f"{options['product_name']} Molecule")
+
+        if st.button("📊 Show FTIR Graph"):
+            if options.get("product_name"):  # Ensure product name exists
+                ftir_image = get_ftir_image(options["product_name"])
+                if ftir_image:
+                    st.image(ftir_image, caption=f"FTIR Graph for {options['product_name']}", use_column_width=True)
+                else:
+                    st.error(f"⚠️ No FTIR data available for {options['product_name']}.")
+            else:
+                st.error("⚠️ Please enter a product name.")            
+
+    with col2:
+        options["quanOfMed"] = st.text_input("📦 Quantity of Medicine", placeholder="e.g., 1000 tablets")
+        options["jurisdiction"] = st.selectbox("🌎 Select Jurisdiction", 
+            ["INDIAN PHARMACOPIEA", "BRITISH PHARMACOPIEA", "UNITED STATES PHARMACOPOEIA", "MARTINDALE-EXTRA PHARMACOPIEA", "COMPARE WITH ALL"])
+        options["powerOfDrug"] = st.text_input("⚡ Power of Drug", placeholder="e.g., 500 mg")
+
+    # st.markdown('</div>', unsafe_allow_html=True)
+
+    # Analysis Options in a separate card
+    # st.markdown('<div class="card">', unsafe_allow_html=True)
+    options["typeOfInfo"] = st.selectbox("📊 Select Analysis Type:", 
+            ["METHOD OF PREPARATION", "CHARACTARIZATION/EVALUATION", "Both of above", "CHECK RESULTS"])
+
+    if options["typeOfInfo"] == "CHECK RESULTS":
+        options["resultsToCheck"] = st.text_area("🔍 Enter Your Results:", height=200, placeholder="Paste lab results here...", key="checkResults")
+
+    options["ftir_required"] = st.checkbox("📡 Include FTIR Analysis")
+    # st.markdown('</div>', unsafe_allow_html=True)
+
+    # Submit button with enhanced styling
+    submit_button = st.button("🚀 Generate Report")
+    if submit_button:
+        if not all([options.get("product_name"), options.get("quanOfMed"), options.get("powerOfDrug")]):
+            st.error("⚠️ Please fill in all required fields!")
+        else:
+            prompt = prompts.getPromptForOptions(options)
+            with st.spinner("🛠️ Generating comprehensive report... Please wait"):
+                api_response = chat_with_gpt.chatWithGpt(prompt)
+                st.session_state.api_response = api_response
+
+            st.session_state.update(options)
+            st.session_state.page = "result"
+            st.experimental_rerun()
     
     # Case studies
     st.markdown('<h3 class="section-title">Success Stories</h3>', unsafe_allow_html=True)
