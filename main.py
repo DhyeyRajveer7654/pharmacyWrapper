@@ -1004,7 +1004,7 @@ if "page" not in st.session_state:
     st.session_state.page = "form"
 if "api_response" not in st.session_state:
     st.session_state.api_response = None
-
+options = dict()
 # 📌 FORM PAGE
 if st.session_state.page == "form":
     st.markdown('<div class="main-header"><h1>🧪 QRx Model AI-Powered Regulatory Complaince</h1><p> CREATED BY :- MEERA ACHARYA & RAJ PATEL</P><p>Enter details below to generate a comprehensive quality report</p></div>', unsafe_allow_html=True)
@@ -1014,13 +1014,13 @@ if st.session_state.page == "form":
     col1, col2 = st.columns(2)
 
     with col1:
-        Options["product_type"] = st.selectbox("🌎 Product Type"["API", "Tablets(com)", "Syrups", "Infusion", "Capsules", "Injectables","Other"]
-            )
+        options["product_type"] = st.selectbox("🌎 Product Type", ["API", "Tablets(com)", "Syrups", "Infusion", "Capsules", "Injectables", "Other"])
+
           
     with col2:
-        Options["regulatory_authorities"] = st.selectbox("🌎 Regulatory Authorities", 
+        options["regulatory_authorities"] = st.selectbox("🌎 Regulatory Authorities", 
             ["CDSCO", "United States (FDA)", "European Union (EMA)","Brazil (ANVISA)", "Australia (TGA)"])
-        Options["report_Type"] = st.selectbox("Report Type", 
+        options["report_Type"] = st.selectbox("Report Type", 
             ["Pathway", "List of license"])
         
 
@@ -1029,20 +1029,20 @@ if st.session_state.page == "form":
     # Analysis Options in a separate card
     # st.markdown('<div class="card">', unsafe_allow_html=True)
    
-    if Options["typeOfInfo"] == "Detailed Information":
-        Options["resultsToCheck"] = st.text_area("🔍 Please Provide any specific regulatory license requirements:", height=200, placeholder="Paste lab results here...", key="checkResults")
+    if options["typeOfInfo"] == "Detailed Information":
+        options["resultsToCheck"] = st.text_area("🔍 Please Provide any specific regulatory license requirements:", height=200, placeholder="Paste lab results here...", key="checkResults")
 
     submit_button = st.button("🚀 Generate Report")
     if submit_button:
-        if not all([Options.get("product_type"), Options.get("regulatory_authorities"), Options.get("report_Type")]):
+        if not all([options.get("product_type"), options.get("regulatory_authorities"), options.get("report_Type")]):
             st.error("⚠️ Please fill in all required fields!")
         else:
-            prompt = prompts.getPromptForOptions(Options)
+            prompt = prompts.getPromptForOptions(options)
             with st.spinner("🛠️ Generating comprehensive report... Please wait"):
                 api_response = chat_with_gpt.chatWithGpt(prompt)
                 st.session_state.api_response = api_response
 
-            st.session_state.update(Options)
+            st.session_state.update(options)
             st.session_state.page = "result"
             st.experimental_rerun()
 
