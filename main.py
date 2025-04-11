@@ -211,6 +211,13 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+if st.session_state.page == "home":
+    show_home_page()
+elif st.session_state.page == "regulatory":
+    show_regulatory_page()
+elif st.session_state.page == "quality":
+    show_quality_page()
+
 # Define a simple navigation bar directly at the top
 st.markdown('<div style="background-color: white; padding: 1rem 0; border-bottom: 1px solid #e0e0e0; margin-bottom: 1rem;">', unsafe_allow_html=True)
 col1, col2, col3, col4, col5 = st.columns([1.5, 1, 1, 1, 1])
@@ -222,7 +229,7 @@ with col2:
         st.rerun()
 with col3:
     if st.button("REGULATORY", key="nav_regulatory", use_container_width=True, type="secondary", help="View regulatory guidance"):
-        st.session_state.current_page = 'regulatory'
+        st.session_state.current_page == 'regulatory'
         st.rerun()
 with col4:
     if st.button("CONTACT", key="nav_contact", use_container_width=True, type="secondary", help="Contact us"):
@@ -230,7 +237,7 @@ with col4:
         st.rerun()
 with col5:
     if st.button("QUALITY", key="nav_quality", use_container_width=True, type="secondary", help="View quality compliance info"):
-        st.session_state.current_page = 'quality'
+        st.session_state.current_page == 'quality'
         st.rerun()
 st.markdown('</div>', unsafe_allow_html=True)
 
