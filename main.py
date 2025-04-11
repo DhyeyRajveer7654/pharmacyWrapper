@@ -867,12 +867,10 @@ elif st.session_state.current_page == 'about':
 # Regulatory Page
 elif st.session_state.current_page == 'regulatory':
     st.markdown('<h1 class="section-title">Regulatory Compliance Services</h1>', unsafe_allow_html=True)
-    tab1, = st.tabs(["QRx"])
-    with tab1:
-        st.markdown("<h2 style='color: #1e40af;'>QRx- An AI powered Reuglatory Compliance</h2>", unsafe_allow_html=True)   
-        col1, col2 = st.columns(2)
+    st.markdown("<h2 style='color: #1e40af;'>QRx- An AI powered Reuglatory Compliance</h2>", unsafe_allow_html=True)   
+    col1, col2 = st.columns(2)
         
-        with col1:
+    with col1:
             product_type = st.selectbox(
                 "Product Type",
                 ["API", "Tablets(com)", "Syrups", "Infusion", "Capsules", "Injectables","Other"]
@@ -882,7 +880,7 @@ elif st.session_state.current_page == 'regulatory':
             Detailed_information = st.text_area("detailed information", height=100, placeholder="Please provide any specific regulatory license reuirement or concerns...")
 
         
-        with col2:
+    with col2:
             Regulatory_Authorities = st.selectbox(
                 "Regulatory Authorities",
                 ["CDSCO", "United States (FDA)", "European Union (EMA)","Brazil (ANVISA)", "Australia (TGA)"]
@@ -892,8 +890,8 @@ elif st.session_state.current_page == 'regulatory':
             ["Pathway", "List of license"]
         )
               
-        submit_col1, submit_col2, submit_col3 = st.columns([1, 2, 1])
-        with submit_col2:
+    submit_col1, submit_col2, submit_col3 = st.columns([1, 2, 1])
+    with submit_col2:
             if st.button("Check Results", use_container_width=True):
                 if not product_type or Regulatory_Authorities or not Report_type :
                     st.error("Please fill in all required fields")
@@ -902,10 +900,10 @@ elif st.session_state.current_page == 'regulatory':
        
 # Quality Page
 elif st.session_state.current_page == 'quality':
-    st.markdown('<h1 class="section-title">Quality Assurance Services</h1>', unsafe_allow_html=True)
+        st.markdown('<h1 class="section-title">Quality Assurance Services</h1>', unsafe_allow_html=True)
     
     # Introduction
-    st.markdown("""
+        st.markdown("""
     <style>
         /* Global Styles */
         body {
