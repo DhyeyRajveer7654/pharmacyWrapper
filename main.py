@@ -213,7 +213,7 @@ st.markdown("""
 
 # Define a simple navigation bar directly at the top
 st.markdown('<div style="background-color: white; padding: 1rem 0; border-bottom: 1px solid #e0e0e0; margin-bottom: 1rem;">', unsafe_allow_html=True)
-col1, col2, col3, col4, col5, col6, col7 = st.columns([7])
+col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
 with col1:
     st.markdown('<h1 style="color:#1e40af; margin:0; padding:0; font-size:2.5rem; font-weight:700;">QRx</h1>', unsafe_allow_html=True)
 with col2:
