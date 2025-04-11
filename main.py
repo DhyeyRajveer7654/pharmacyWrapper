@@ -865,10 +865,12 @@ elif st.session_state.current_page == 'about':
         change_page('contact')
 
 # Regulatory Page
-if st.session_state.current_page == 'regulatory':
+elif st.session_state.current_page == 'regulatory':
     st.markdown('<h1 class="section-title">Regulatory Compliance Services</h1>', unsafe_allow_html=True)
-    st.markdown("<h3 style='color: #1e40af;'>QRx- An AI powered Reuglatory Compliance</h3>", unsafe_allow_html=True)
-        
+    tab1 = st.tabs([
+        "Regulatory Strategy"])
+    with tab1:
+        st.markdown("<h3 style='color: #1e40af;'>QRx- An AI powered Reuglatory Compliance</h3>", unsafe_allow_html=True)   
     col1, col2 = st.columns(2)
         
     with col1:
