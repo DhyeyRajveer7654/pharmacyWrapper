@@ -867,197 +867,199 @@ elif st.session_state.current_page == 'about':
 # Regulatory Page
 elif st.session_state.current_page == 'regulatory':
     st.markdown('<h2 class="section-title">Regulatory Compliance Services</h2>', unsafe_allow_html=True)
-    
-    # Introduction
+     # Introduction
     st.markdown("""
-    <div class="card">
-        <p>QRx offers comprehensive regulatory compliance solutions to help pharmaceutical companies navigate the complex and evolving regulatory landscape. Our team of regulatory experts provides strategic guidance and hands-on support to ensure your products meet all applicable requirements efficiently and effectively.</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Main content with tabs
-    tab1, tab2, tab3, tab4 = st.tabs([
-        "Regulatory Strategy", 
-        "Submission Support", 
-        "Compliance Management",
-        "AI-Powered Gap Analysis"
-    ])
-    
-    with tab1:
-        st.markdown("""
-        <div class="card">
-            <h3>Comprehensive Regulatory Strategy Development</h3>
-            <p>Our regulatory strategists work with you to develop tailored regulatory roadmaps that align with your business objectives while ensuring compliance with all applicable requirements.</p>
-            <p><strong>Our approach includes:</strong></p>
-            <ul>
-                <li>Assessment of product classification and regulatory pathways</li>
-                <li>Development of global registration strategies</li>
-                <li>Regulatory agency meeting preparation and representation</li>
-                <li>Life cycle management planning</li>
-                <li>Strategic planning for complex or innovative products</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
+    <style>
+        /* Global Styles */
+        body {
+            background-color: #f0f2f6;
+            color: #1e293b;
+            font-family: 'Inter', 'sans serif';
+        }
+
+        /* Header Styling */
+        .main-header {
+            background: linear-gradient(135deg, #0052cc, #00a3bf);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        /* Form Elements */
+        div[data-testid="stTextInput"] input,
+        div[data-testid="stTextArea"] textarea,
+        div[data-testid="stSelectbox"] > div[data-baseweb="select"] {
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        div[data-testid="stTextInput"] input:focus,
+        div[data-testid="stTextArea"] textarea:focus {
+            border-color: #0052cc;
+            box-shadow: 0 0 0 2px rgba(0,82,204,0.2);
+        }
+
+        /* Button Styling */
+        .stButton > button {
+            width: 100%;
+            background: linear-gradient(135deg, #0052cc, #00a3bf);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stButton > button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,82,204,0.2);
+        }
+
+        /* Card Styling */
+        .card div[data-testid="stSelectbox"]{
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Results Table */
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-collapse: collapse;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin: 1rem 0;
+        }
+
+        th {
+            background: #0052cc;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Loading Spinner */
+        .stSpinner > div {
+            border-color: #0052cc !important;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: #dcfce7;
+            color: #166534;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        /* Error Message */
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
         
-        st.markdown("""
-        <div class="card">
-            <h3>Regulatory Intelligence</h3>
-            <p>Stay informed about the evolving regulatory landscape with our regulatory intelligence services:</p>
-            <ul>
-                <li>Monitoring of regulatory changes and updates</li>
-                <li>Impact assessment of new regulations</li>
-                <li>Competitive landscape analysis</li>
-                <li>Region-specific regulatory requirements</li>
-                <li>Custom regulatory intelligence reports</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with tab2:
-        st.markdown("""
-        <div class="card">
-            <h3>Regulatory Submission Management</h3>
-            <p>Our team provides end-to-end support for regulatory submissions across multiple regions:</p>
-            <ul>
-                <li>Common Technical Document (CTD) preparation</li>
-                <li>Electronic submission preparation (eCTD)</li>
-                <li>Chemistry, Manufacturing, and Controls (CMC) documentation</li>
-                <li>Clinical and nonclinical data review and summary preparation</li>
-                <li>Document lifecycle management</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="card">
-            <h3>Regulatory Agency Interaction</h3>
-            <p>Navigate interactions with regulatory authorities effectively:</p>
-            <ul>
-                <li>Preparation for agency meetings and inspections</li>
-                <li>Development of response strategies for agency queries</li>
-                <li>Representation in agency discussions</li>
-                <li>Scientific advice meeting preparation</li>
-                <li>Post-approval regulatory communications</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with tab3:
-        st.markdown("""
-        <div class="card">
-            <h3>Compliance Monitoring & Management</h3>
-            <p>Maintain ongoing compliance with regulatory requirements:</p>
-            <ul>
-                <li>Compliance gap assessment and remediation planning</li>
-                <li>Implementation of regulatory compliance systems</li>
-                <li>Preparation for regulatory inspections</li>
-                <li>Post-approval compliance monitoring</li>
-                <li>Management of regulatory commitment tracking</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="card">
-            <h3>Training & Knowledge Transfer</h3>
-            <p>Build internal regulatory capabilities with our specialized training programs:</p>
-            <ul>
-                <li>Customized regulatory training for cross-functional teams</li>
-                <li>Regulatory requirements workshops</li>
-                <li>GMP/GCP/GLP compliance training</li>
-                <li>Regulatory strategy development training</li>
-                <li>Documentation practices and standards</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with tab4:
-        st.markdown("""
-        <div class="card">
-            <h3>AI-Powered Regulatory Gap Analysis</h3>
-            <p>Leverage our advanced AI tools to identify and address regulatory gaps efficiently:</p>
-            
-            <div style="background-color: #f8fafc; padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
-                <h4 style="color: #1e40af; margin-top: 0;">How Our AI Solution Works</h4>
-                <ol>
-                    <li>Upload your regulatory documentation</li>
-                    <li>Select target markets and applicable regulations</li>
-                    <li>Our AI analyzes your documents against current requirements</li>
-                    <li>Receive a comprehensive gap analysis report</li>
-                    <li>Get actionable recommendations to address identified gaps</li>
-                </ol>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # AI Regulatory Analysis Form
-        st.markdown("<h3 style='color: #1e40af;'>QRx- An AI powered Reuglatory Compliance</h3>", unsafe_allow_html=True)
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            product_type = st.selectbox(
-                "Product Type",
-                ["API", "Tablets(com)", "Syrups", "Infusion", "Capsules", "Injectables","Other"]
+    </style>
+""", unsafe_allow_html=True)
+
+# Page Navigation
+if "current_page" not in st.session_state:
+    st.session_state.current_page = "form"
+if "api_response" not in st.session_state:
+    st.session_state.api_response = None
+
+# 📌 FORM PAGE
+if st.session_state.page == "form":
+    st.markdown('<div class="main-header"><h1>🧪 QRx Model AI-Powered Regulatory Complaince</h1><p> CREATED BY :- MEERA ACHARYA & RAJ PATEL</P><p>Enter details below to generate a comprehensive quality report</p></div>', unsafe_allow_html=True)
+
+    # User Input Form in a card layout
+    # st.markdown('<div class="card">', unsafe_allow_html=True)
+    col1, col2 = st.columns(2)
+
+    with col1:
+        options["product_type"] = st.selectbox("🌎 Product Type"["API", "Tablets(com)", "Syrups", "Infusion", "Capsules", "Injectables","Other"]
             )
-            if product_type == "Other":
-                other_type = st.text_input("Please specify product type")
+          
+    with col2:
+        options["regulatory_authorities"] = st.selectbox("🌎 Regulatory Authorities", 
+            ["CDSCO", "United States (FDA)", "European Union (EMA)","Brazil (ANVISA)", "Australia (TGA)"])
+        options["report_Type"] = st.selectbox("Report Type", 
+            ["Pathway", "List of license"])
         
-        with col2:
-            Regulatory_Authorities = st.selectbox(
-                "Regulatory Authorities",
-                ["CDSCO", "United States (FDA)", "European Union (EMA)","Brazil (ANVISA)", "Australia (TGA)"]
-            )
-            Report_type = st.selectbox(
-            "Report Type",
-            ["Pathway", "List of license"]
-        )
-            Detailed_information = st.text_area("detailed information", height=100, placeholder="Please provide any specific regulatory license reuirement or concerns...")
-               
-        submit_col1, submit_col2, submit_col3 = st.columns([1, 2, 1])
-        with submit_col2:
-            if st.button("Check Results", use_container_width=True):
-                if not product_type or Regulatory_Authorities or not Report_type :
-                    st.error("Please fill in all required fields")
-                else:
-                    st.success("Thank you for your request! Our regulatory team will contact you within 24 hours to discuss your regulatory gap analysis.")
+
+    # st.markdown('</div>', unsafe_allow_html=True)
+
+    # Analysis Options in a separate card
+    # st.markdown('<div class="card">', unsafe_allow_html=True)
+   
+    if options["typeOfInfo"] == "Detailed Information":
+        options["resultsToCheck"] = st.text_area("🔍 Please Provide any specific regulatory license requirements:", height=200, placeholder="Paste lab results here...", key="checkResults")
+
+    submit_button = st.button("🚀 Generate Report")
+    if submit_button:
+        if not all([options.get("product_type"), options.get("regulatory_authorities"), options.get("report_Type")]):
+            st.error("⚠️ Please fill in all required fields!")
+        else:
+            prompt = prompts.getPromptForOptions(options)
+            with st.spinner("🛠️ Generating comprehensive report... Please wait"):
+                api_response = chat_with_gpt.chatWithGpt(prompt)
+                st.session_state.api_response = api_response
+
+            st.session_state.update(options)
+            st.session_state.page = "result"
+            st.experimental_rerun()
+
+# 📌 RESULT PAGE
+elif st.session_state.page == "result":
+    st.markdown('<div class="main-header"><h1>📑 Regulatory Report</h1></div>', unsafe_allow_html=True)
     
-    # Case studies
-    st.markdown('<h3 class="section-title">Success Stories</h3>', unsafe_allow_html=True)
-    
-    case_study_col1, case_study_col2 = st.columns(2)
-    
-    with case_study_col1:
-        st.markdown("""
-        <div class="card">
-            <h3>Accelerated Approval for Novel Therapy</h3>
-            <p><strong>Challenge:</strong> A mid-sized pharmaceutical company sought to obtain accelerated approval for a novel therapy targeting a rare disease with significant unmet need.</p>
-            <p><strong>Solution:</strong> Our regulatory team developed a comprehensive strategy leveraging expedited programs, conducted thorough gap analysis of submission documents, and prepared for key agency interactions.</p>
-            <p><strong>Result:</strong> Successful accelerated approval with a 30% reduction in standard review timeline and favorable labeling.</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with case_study_col2:
-        st.markdown("""
-        <div class="card">
-            <h3>Global Regulatory Harmonization</h3>
-            <p><strong>Challenge:</strong> A global pharmaceutical company needed to harmonize regulatory submissions across 15 markets while addressing region-specific requirements.</p>
-            <p><strong>Solution:</strong> We implemented a centralized regulatory strategy with market-specific adaptations, developed a unified documentation approach, and created a global regulatory intelligence monitoring system.</p>
-            <p><strong>Result:</strong> Streamlined global submissions with 40% reduction in document preparation time and successful approvals in all target markets.</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Contact section
-    st.markdown("""
-    <div class="card" style="background: linear-gradient(135deg, #f0f9ff, #e0f2fe); text-align: center; padding: 2rem; margin-top: 2rem;">
-        <h3>Need Regulatory Support?</h3>
-        <p style="margin-bottom: 1.5rem;">Contact our regulatory experts to discuss your specific challenges and requirements.</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    if st.button("Contact Our Regulatory Team", key="contact_reg_btn"):
-        change_page('contact')
-        
+    if st.button("🔙 Return to Form", key="back_button"):
+        st.session_state.page = "form"
+        st.experimental_rerun()
+
+    # st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.markdown("### 📋 Regulatory deatils Details")
+    st.markdown(f"**💊 Product Type:** {st.session_state.product_type}",)
+    st.markdown(f"**📦 Regulatory Authorities:** {st.session_state.regulatory_authorities}")
+    st.markdown(f"**⚡ Report Type:** {st.session_state.report_Type}")
+    # st.markdown('</div>', unsafe_allow_ht ml=True)
+
+    if st.session_state.api_response:
+        components.html("<div class='table-container'>"+st.session_state.api_response+"</div>",height=800,width=1000,scrolling=True)
+    else:
+        st.warning("⚠️ No response received. Please try again.")
+
 # Quality Page
 elif st.session_state.current_page == 'quality':
     st.markdown('<h1 class="section-title">Quality Assurance Services</h1>', unsafe_allow_html=True)
