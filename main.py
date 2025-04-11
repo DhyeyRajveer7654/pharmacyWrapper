@@ -1021,16 +1021,10 @@ if st.session_state.page == "form":
         options["regulatory_authorities"] = st.selectbox("🌎 Regulatory Authorities", 
             ["CDSCO", "United States (FDA)", "European Union (EMA)","Brazil (ANVISA)", "Australia (TGA)"])
         options["report_Type"] = st.selectbox("Report Type", 
-            ["Pathway", "List of license"])
-        
-
-    # st.markdown('</div>', unsafe_allow_html=True)
-
-    # Analysis Options in a separate card
-    # st.markdown('<div class="card">', unsafe_allow_html=True)
-   
-    if options["typeOfInfo"] == "Detailed Information":
-        options["resultsToCheck"] = st.text_area("🔍 Please Provide any specific regulatory license requirements:", height=200, placeholder="Paste lab results here...", key="checkResults")
+            ["Pathway", "List of license", "Detailed Information"])
+ 
+        if options["report_type"] == "Detailed Information":
+            options["resultsToCheck"] = st.text_area("🔍 Please Provide any specific regulatory license requirements:", height=200, placeholder="Paste lab results here...", key="checkResults")
 
     submit_button = st.button("🚀 Generate Report")
     if submit_button:
