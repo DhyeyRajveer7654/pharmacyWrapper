@@ -1022,8 +1022,7 @@ if st.session_state.page == "form":
             ["CDSCO", "United States (FDA)", "European Union (EMA)","Brazil (ANVISA)", "Australia (TGA)"])
         options["report_Type"] = st.selectbox("Report Type", 
             ["Pathway", "List of license", "Detailed Information"])
- 
-        if options["report_type"] == "Detailed Information":
+        if options.get("report_type") == "Detailed Information":
             options["resultsToCheck"] = st.text_area("🔍 Please Provide any specific regulatory license requirements:", height=200, placeholder="Paste lab results here...", key="checkResults")
 
     submit_button = st.button("🚀 Generate Report")
