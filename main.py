@@ -866,113 +866,9 @@ elif st.session_state.current_page == 'about':
 
 # Regulatory Page
 elif st.session_state.current_page == 'regulatory':
-    st.markdown('<h2 class="section-title">Regulatory Compliance Services</h2>', unsafe_allow_html=True)
+    st.markdown('<h1 class="section-title">Regulatory Compliance Services</h1>', unsafe_allow_html=True)
     
-    # Introduction
     st.markdown("""
-    <div class="card">
-        <p>QRx offers comprehensive regulatory compliance solutions to help pharmaceutical companies navigate the complex and evolving regulatory landscape. Our team of regulatory experts provides strategic guidance and hands-on support to ensure your products meet all applicable requirements efficiently and effectively.</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Main content with tabs
-    tab1, tab2, tab3, tab4 = st.tabs([
-        "Regulatory Strategy", 
-        "Submission Support", 
-        "Compliance Management",
-        "AI-Powered Gap Analysis"
-    ])
-    
-    with tab1:
-        st.markdown("""
-        <div class="card">
-            <h3>Comprehensive Regulatory Strategy Development</h3>
-            <p>Our regulatory strategists work with you to develop tailored regulatory roadmaps that align with your business objectives while ensuring compliance with all applicable requirements.</p>
-            <p><strong>Our approach includes:</strong></p>
-            <ul>
-                <li>Assessment of product classification and regulatory pathways</li>
-                <li>Development of global registration strategies</li>
-                <li>Regulatory agency meeting preparation and representation</li>
-                <li>Life cycle management planning</li>
-                <li>Strategic planning for complex or innovative products</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="card">
-            <h3>Regulatory Intelligence</h3>
-            <p>Stay informed about the evolving regulatory landscape with our regulatory intelligence services:</p>
-            <ul>
-                <li>Monitoring of regulatory changes and updates</li>
-                <li>Impact assessment of new regulations</li>
-                <li>Competitive landscape analysis</li>
-                <li>Region-specific regulatory requirements</li>
-                <li>Custom regulatory intelligence reports</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with tab2:
-        st.markdown("""
-        <div class="card">
-            <h3>Regulatory Submission Management</h3>
-            <p>Our team provides end-to-end support for regulatory submissions across multiple regions:</p>
-            <ul>
-                <li>Common Technical Document (CTD) preparation</li>
-                <li>Electronic submission preparation (eCTD)</li>
-                <li>Chemistry, Manufacturing, and Controls (CMC) documentation</li>
-                <li>Clinical and nonclinical data review and summary preparation</li>
-                <li>Document lifecycle management</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="card">
-            <h3>Regulatory Agency Interaction</h3>
-            <p>Navigate interactions with regulatory authorities effectively:</p>
-            <ul>
-                <li>Preparation for agency meetings and inspections</li>
-                <li>Development of response strategies for agency queries</li>
-                <li>Representation in agency discussions</li>
-                <li>Scientific advice meeting preparation</li>
-                <li>Post-approval regulatory communications</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with tab3:
-        st.markdown("""
-        <div class="card">
-            <h3>Compliance Monitoring & Management</h3>
-            <p>Maintain ongoing compliance with regulatory requirements:</p>
-            <ul>
-                <li>Compliance gap assessment and remediation planning</li>
-                <li>Implementation of regulatory compliance systems</li>
-                <li>Preparation for regulatory inspections</li>
-                <li>Post-approval compliance monitoring</li>
-                <li>Management of regulatory commitment tracking</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="card">
-            <h3>Training & Knowledge Transfer</h3>
-            <p>Build internal regulatory capabilities with our specialized training programs:</p>
-            <ul>
-                <li>Customized regulatory training for cross-functional teams</li>
-                <li>Regulatory requirements workshops</li>
-                <li>GMP/GCP/GLP compliance training</li>
-                <li>Regulatory strategy development training</li>
-                <li>Documentation practices and standards</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with tab4:
-        st.markdown("""
         <div class="card">
             <h3>AI-Powered Regulatory Gap Analysis</h3>
             <p>Leverage our advanced AI tools to identify and address regulatory gaps efficiently:</p>
@@ -991,11 +887,11 @@ elif st.session_state.current_page == 'regulatory':
         """, unsafe_allow_html=True)
         
         # AI Regulatory Analysis Form
-        st.markdown("<h3 style='color: #1e40af;'>QRx- An AI powered Reuglatory Compliance</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #1e40af;'>QRx- An AI powered Reuglatory Compliance</h3>", unsafe_allow_html=True)
         
-        col1, col2 = st.columns(2)
+    col1, col2 = st.columns(2)
         
-        with col1:
+    with col1:
             product_type = st.selectbox(
                 "Product Type",
                 ["API", "Tablets(com)", "Syrups", "Infusion", "Capsules", "Injectables","Other"]
@@ -1003,7 +899,7 @@ elif st.session_state.current_page == 'regulatory':
             if product_type == "Other":
                 other_type = st.text_input("Please specify product type")
         
-        with col2:
+    with col2:
             Regulatory_Authorities = st.selectbox(
                 "Regulatory Authorities",
                 ["CDSCO", "United States (FDA)", "European Union (EMA)","Brazil (ANVISA)", "Australia (TGA)"]
@@ -1014,8 +910,8 @@ elif st.session_state.current_page == 'regulatory':
         )
             Detailed_information = st.text_area("detailed information", height=100, placeholder="Please provide any specific regulatory license reuirement or concerns...")
                
-        submit_col1, submit_col2, submit_col3 = st.columns([1, 2, 1])
-        with submit_col2:
+    submit_col1, submit_col2, submit_col3 = st.columns([1, 2, 1])
+    with submit_col2:
             if st.button("Check Results", use_container_width=True):
                 if not product_type or Regulatory_Authorities or not Report_type :
                     st.error("Please fill in all required fields")
