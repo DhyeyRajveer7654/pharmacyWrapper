@@ -9,10 +9,6 @@ import requests
 import os
 import streamlit as st
 
-# Initialize session state keys if not already present
-if "page" not in st.session_state:
-    st.session_state.page = "home"  # or your desired default page
-    
 ###############################################################################
 # UTILITY FUNCTIONS
 ###############################################################################
