@@ -1004,30 +1004,61 @@ if "page" not in st.session_state:
     st.session_state.page = "form"
 if "api_response" not in st.session_state:
     st.session_state.api_response = None
-options = dict()
+
 # 📌 FORM PAGE
 if st.session_state.page == "form":
-    st.markdown('<div class="main-header"><h1>🧪 QRx Model AI-Powered Regulatory Complaince</h1><p> CREATED BY :- MEERA ACHARYA & RAJ PATEL</P><p>Enter details below to generate a comprehensive quality report</p></div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header"><h1>🧪 QAI Model AI-Powered Quality Assistance</h1><p> CREATED BY :- MEERA ACHARYA & RAJ PATEL</P><p>Enter details below to generate a comprehensive quality report</p></div>', unsafe_allow_html=True)
 
     # User Input Form in a card layout
     # st.markdown('<div class="card">', unsafe_allow_html=True)
     col1, col2 = st.columns(2)
 
     with col1:
-        options["product_type"] = st.selectbox("🌎 Product Type", ["API", "Tablets(com)", "Syrups", "Infusion", "Capsules", "Injectables", "Other"])
+        options["product_name"] = st.text_input("💊 Product Name", placeholder="e.g., Paracetamol")
+        if st.button("🔬 Get Structure"):
+            if not options["product_name"]:
+                st.error("⚠️ Please write product name!")
+            else:
+                with st.spinner("🛠️ Processing... Please wait"):
+                    fig = showStructure(options["product_name"])
+                if fig == "":
+                    st.error("⚠️ Drug not found, please input a valid drug name")
+                else:
+                    st.image(fig, caption=f"{options['product_name']} Molecule")
 
-          
+        if st.button("📊 Show FTIR Graph"):
+            if options.get("product_name"):  # Ensure product name exists
+                ftir_image = get_ftir_image(options["product_name"])
+                if ftir_image:
+                    st.image(ftir_image, caption=f"FTIR Graph for {options['product_name']}", use_column_width=True)
+                else:
+                    st.error(f"⚠️ No FTIR data available for {options['product_name']}.")
+            else:
+                st.error("⚠️ Please enter a product name.")            
+
     with col2:
-        options["regulatory_authorities"] = st.selectbox("🌎 Regulatory Authorities", 
-            ["CDSCO", "United States (FDA)", "European Union (EMA)","Brazil (ANVISA)", "Australia (TGA)"])
-        options["report_Type"] = st.selectbox("Report Type", 
-            ["Pathway", "List of license", "Detailed Information"])
-        if options.get("report_type") == "Detailed Information":
-            options["resultsToCheck"] = st.text_area("🔍 Please Provide any specific regulatory license requirements:", height=200, placeholder="Paste lab results here...", key="checkResults")
+        options["quanOfMed"] = st.text_input("📦 Quantity of Medicine", placeholder="e.g., 1000 tablets")
+        options["jurisdiction"] = st.selectbox("🌎 Select Jurisdiction", 
+            ["INDIAN PHARMACOPIEA", "BRITISH PHARMACOPIEA", "UNITED STATES PHARMACOPOEIA", "MARTINDALE-EXTRA PHARMACOPIEA", "COMPARE WITH ALL"])
+        options["powerOfDrug"] = st.text_input("⚡ Power of Drug", placeholder="e.g., 500 mg")
 
+    # st.markdown('</div>', unsafe_allow_html=True)
+
+    # Analysis Options in a separate card
+    # st.markdown('<div class="card">', unsafe_allow_html=True)
+    options["typeOfInfo"] = st.selectbox("📊 Select Analysis Type:", 
+            ["METHOD OF PREPARATION", "CHARACTARIZATION/EVALUATION", "Both of above", "CHECK RESULTS"])
+
+    if options["typeOfInfo"] == "CHECK RESULTS":
+        options["resultsToCheck"] = st.text_area("🔍 Enter Your Results:", height=200, placeholder="Paste lab results here...", key="checkResults")
+
+    options["ftir_required"] = st.checkbox("📡 Include FTIR Analysis")
+    # st.markdown('</div>', unsafe_allow_html=True)
+
+    # Submit button with enhanced styling
     submit_button = st.button("🚀 Generate Report")
     if submit_button:
-        if not all([options.get("product_type"), options.get("regulatory_authorities"), options.get("report_Type")]):
+        if not all([options.get("product_name"), options.get("quanOfMed"), options.get("powerOfDrug")]):
             st.error("⚠️ Please fill in all required fields!")
         else:
             prompt = prompts.getPromptForOptions(options)
@@ -1041,23 +1072,31 @@ if st.session_state.page == "form":
 
 # 📌 RESULT PAGE
 elif st.session_state.page == "result":
-    st.markdown('<div class="main-header"><h1>📑 Regulatory Report</h1></div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header"><h1>📑 Quality Analysis Report</h1></div>', unsafe_allow_html=True)
     
     if st.button("🔙 Return to Form", key="back_button"):
         st.session_state.page = "form"
         st.experimental_rerun()
 
     # st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown("### 📋 Regulatory deatils Details")
-    st.markdown(f"**💊 Product Type:** {st.session_state.product_type}",)
-    st.markdown(f"**📦 Regulatory Authorities:** {st.session_state.regulatory_authorities}")
-    st.markdown(f"**⚡ Report Type:** {st.session_state.report_Type}")
+    st.markdown("### 📋 Analysis Details")
+    st.markdown(f"**💊 Product:** {st.session_state.product_name}",)
+    st.markdown(f"**📦 Quantity:** {st.session_state.quanOfMed}")
+    st.markdown(f"**⚡ Strength:** {st.session_state.powerOfDrug}")
     # st.markdown('</div>', unsafe_allow_ht ml=True)
+
+    if st.session_state.get("ftir_required"):
+        with st.spinner("📡 Analyzing FTIR Data..."):
+            ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
+            components.html("### 🔬 FTIR Analysis")
+            st.markdown(ftir_data, unsafe_allow_html=True)
+            # components.html(ftir_data)
 
     if st.session_state.api_response:
         components.html("<div class='table-container'>"+st.session_state.api_response+"</div>",height=800,width=1000,scrolling=True)
     else:
         st.warning("⚠️ No response received. Please try again.")
+
     # Case studies
     st.markdown('<h3 class="section-title">Success Stories</h3>', unsafe_allow_html=True)
     
