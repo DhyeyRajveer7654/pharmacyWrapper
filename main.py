@@ -1,13 +1,14 @@
-import streamlit as st
-import streamlit.components.v1 as components
+from ssl import Options
+import streamlit as st # type: ignore
+import streamlit.components.v1 as components # type: ignore
 from string import Template
 import prompts # type: ignore
-import chat_with_gpt
-from rdkit import Chem
-from rdkit.Chem import Draw
-import requests
+import chat_with_gpt # type: ignore
+from rdkit import Chem # type: ignore
+from rdkit.Chem import Draw # type: ignore
+import requests # type: ignore
 import os
-import streamlit as st
+import streamlit as st # type: ignore
 
 ###############################################################################
 # UTILITY FUNCTIONS
@@ -1003,13 +1004,13 @@ if st.session_state.page == "regulatory":
     col1, col2 = st.columns(2)
 
     with col1:
-        options["product_type"] = st.selectbox("🌎 Product Type"["API", "Tablets(com)", "Syrups", "Infusion", "Capsules", "Injectables","Other"]
+        Options["product_type"] = st.selectbox("🌎 Product Type"["API", "Tablets(com)", "Syrups", "Infusion", "Capsules", "Injectables","Other"]
             )
           
     with col2:
-        options["regulatory_authorities"] = st.selectbox("🌎 Regulatory Authorities", 
+        Options["regulatory_authorities"] = st.selectbox("🌎 Regulatory Authorities", 
             ["CDSCO", "United States (FDA)", "European Union (EMA)","Brazil (ANVISA)", "Australia (TGA)"])
-        options["report_Type"] = st.selectbox("Report Type", 
+        Options["report_Type"] = st.selectbox("Report Type", 
             ["Pathway", "List of license"])
         
 
@@ -1018,20 +1019,20 @@ if st.session_state.page == "regulatory":
     # Analysis Options in a separate card
     # st.markdown('<div class="card">', unsafe_allow_html=True)
    
-    if options["typeOfInfo"] == "Detailed Information":
-        options["resultsToCheck"] = st.text_area("🔍 Please Provide any specific regulatory license requirements:", height=200, placeholder="Paste lab results here...", key="checkResults")
+    if Options["typeOfInfo"] == "Detailed Information":
+        Options["resultsToCheck"] = st.text_area("🔍 Please Provide any specific regulatory license requirements:", height=200, placeholder="Paste lab results here...", key="checkResults")
 
     submit_button = st.button("🚀 Generate Report")
     if submit_button:
-        if not all([options.get("product_type"), options.get("regulatory_authorities"), options.get("report_Type")]):
+        if not all([Options.get("product_type"), Options.get("regulatory_authorities"), Options.get("report_Type")]):
             st.error("⚠️ Please fill in all required fields!")
         else:
-            prompt = prompts.getPromptForOptions(options)
+            prompt = prompts.getPromptForOptions(Options)
             with st.spinner("🛠️ Generating comprehensive report... Please wait"):
                 api_response = chat_with_gpt.chatWithGpt(prompt)
                 st.session_state.api_response = api_response
 
-            st.session_state.update(options)
+            st.session_state.update(Options)
             st.session_state.page = "result"
             st.experimental_rerun()
 
