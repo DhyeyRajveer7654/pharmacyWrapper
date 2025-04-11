@@ -865,7 +865,7 @@ elif st.session_state.current_page == 'about':
         change_page('contact')
 
 # Regulatory Page
-elif st.session_state.current_page == 'regulatory':
+if st.session_state.current_page == 'regulatory':
     st.markdown('<h1 class="section-title">Regulatory Compliance Services</h1>', unsafe_allow_html=True)
     st.markdown("<h3 style='color: #1e40af;'>QRx- An AI powered Reuglatory Compliance</h3>", unsafe_allow_html=True)
         
@@ -898,7 +898,7 @@ elif st.session_state.current_page == 'regulatory':
                     st.error("Please fill in all required fields")
                 else:
                     st.success("Thank you for your request! Our regulatory team will contact you within 24 hours to discuss your regulatory gap analysis.")
-    
+    st.markdown("## Regulatory Page")
     
 # Quality Page
 elif st.session_state.current_page == 'quality':
