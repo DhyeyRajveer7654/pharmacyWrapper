@@ -878,6 +878,8 @@ elif st.session_state.current_page == 'regulatory':
             )
             if product_type == "Other":
                 other_type = st.text_input("Please specify product type")
+            Detailed_information = st.text_area("detailed information", height=100, placeholder="Please provide any specific regulatory license reuirement or concerns...")
+
         
     with col2:
             Regulatory_Authorities = st.selectbox(
@@ -888,8 +890,7 @@ elif st.session_state.current_page == 'regulatory':
             "Report Type",
             ["Pathway", "List of license"]
         )
-            Detailed_information = st.text_area("detailed information", height=100, placeholder="Please provide any specific regulatory license reuirement or concerns...")
-               
+              
     submit_col1, submit_col2, submit_col3 = st.columns([1, 2, 1])
     with submit_col2:
             if st.button("Check Results", use_container_width=True):
