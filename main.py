@@ -867,26 +867,6 @@ elif st.session_state.current_page == 'about':
 # Regulatory Page
 elif st.session_state.current_page == 'regulatory':
     st.markdown('<h1 class="section-title">Regulatory Compliance Services</h1>', unsafe_allow_html=True)
-    
-    st.markdown("""
-        <div class="card">
-            <h3>AI-Powered Regulatory Gap Analysis</h3>
-            <p>Leverage our advanced AI tools to identify and address regulatory gaps efficiently:</p>
-            
-            <div style="background-color: #f8fafc; padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
-                <h4 style="color: #1e40af; margin-top: 0;">How Our AI Solution Works</h4>
-                <ol>
-                    <li>Upload your regulatory documentation</li>
-                    <li>Select target markets and applicable regulations</li>
-                    <li>Our AI analyzes your documents against current requirements</li>
-                    <li>Receive a comprehensive gap analysis report</li>
-                    <li>Get actionable recommendations to address identified gaps</li>
-                </ol>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # AI Regulatory Analysis Form
     st.markdown("<h3 style='color: #1e40af;'>QRx- An AI powered Reuglatory Compliance</h3>", unsafe_allow_html=True)
         
     col1, col2 = st.columns(2)
