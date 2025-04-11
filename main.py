@@ -904,7 +904,7 @@ elif st.session_state.current_page == 'regulatory':
         )
             Detailed_information = st.text_area("detailed information", height=100, placeholder="Please provide any specific regulatory license reuirement or concerns...")
                
-        submit_col1, submit_col2, submit_col3 = st.columns([1, 2, 1])
+    submit_col1, submit_col2, submit_col3 = st.columns([1, 2, 1])
     with submit_col2:
             if st.button("Check Results", use_container_width=True):
                 if not product_type or Regulatory_Authorities or not Report_type :
