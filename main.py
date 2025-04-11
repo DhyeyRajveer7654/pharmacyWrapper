@@ -1029,8 +1029,8 @@ elif st.session_state.current_page == 'quality':
 """, unsafe_allow_html=True)
 
 # Page Navigation
-if "page" not in st.session_state:
-    st.session_state.page = "form"
+if "current_page" not in st.session_state:
+    st.session_state.current_page = "form"
 if "api_response" not in st.session_state:
     st.session_state.api_response = None
 
