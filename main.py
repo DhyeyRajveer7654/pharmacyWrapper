@@ -570,7 +570,14 @@ if st.session_state.current_page == 'home':
         if st.button("Learn More About us", key="home_About_us"):
             st.session_state.current_page = 'About us'
             st.rerun()
-    
+    st.markdown("## 📄 ISO Certification")
+
+# Display the PDF inside the app
+    st.markdown(display_pdf("iso_certificate.pdf"), unsafe_allow_html=True)
+
+# Download button below the PDF
+    with open("iso_certificate.pdf", "rb") as f:
+        st.download_button("📥 Download ISO Certificate", f, file_name="iso_certificate.pdf")
     # Footer
     st.markdown("""
     <div class="footer">
@@ -616,9 +623,7 @@ elif st.session_state.current_page == 'contact':
 
 # About Page
 elif st.session_state.current_page == 'about':
-    st.markdown('<h2 class="section-title">About Us</h2>', unsafe_allow_html=True)
-    
-    
+   
     st.markdown("""
     <div class="hero">
         <h2>Our Story</h2>
