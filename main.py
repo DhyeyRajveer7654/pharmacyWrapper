@@ -923,12 +923,6 @@ elif st.session_state.current_page == 'regulatory':
             components.html("<div class='table-container'>"+st.session_state.api_response+"</div>",height=800,width=1000,scrolling=True)
         else:
             st.warning("⚠️ No response received. Please try again.")
-    # CTA section
-    st.markdown("""
-    <div style="text-align: center; margin: 3rem 0;">
-        <h2>Need personalized regulatory support?</h2>
-    </div>
-    """, unsafe_allow_html=True)
     
     if st.button("Contact Our Regulatory Team", key="contact_reg_btn"):
         change_page('contact')
