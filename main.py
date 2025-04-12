@@ -366,22 +366,22 @@ st.markdown("""
     .footer {
         background-color: #f0f9ff;
         color: #1e3a8a;
-        padding: 2rem;
+        padding: 1rem;
         border-radius: 10px 10px 0 0;
-        margin-top: 3rem;
+        margin-top: 1rem;
     }
     
     .footer h3 {
-        color: #1e40af;
+        color: #ffffff;
         margin-bottom: 1rem;
     }
     
     .footer-bottom {
         text-align: center;
-        margin-top: 2rem;
+        margin-top: 1rem;
         padding-top: 1rem;
         border-top: 1px solid #bfdbfe;
-        color: #1e40af;
+        color: #ffffff;
     }
     
     /* Popup styling */
