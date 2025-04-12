@@ -121,8 +121,12 @@ def getPromptForOptions(options):
 def getPromptForOptions(options):
       if options['report_type'] == "Pathway":
         prompt_template = PATHYWAY_PROMPT
-      print(options)
-      final_prompt = prompt_template.substitute(product_type=options['product_type'], report_type=options['report_type'], regulatory_authorities=options['regulatory'])
+      print("Options received:", options)
+      final_prompt = prompt_template.substitute(
+    product_type=options.get('product_type', 'default_product'),
+    report_type=options.get('report_type', 'default_report'),
+    regulatory_authorities=options.get('regulatory', 'default_regulatory')
+)      
       return final_prompt
 
     
