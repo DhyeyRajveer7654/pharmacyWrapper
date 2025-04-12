@@ -1,6 +1,6 @@
 from string import Template
 
-T# Template for Table Style
+# Template for Table Style
 TABLE_STYLE = """
 <table border="1" style="border-collapse: collapse; text-align: center; width: 100%;">
     <thead>
