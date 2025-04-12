@@ -497,13 +497,13 @@ st.markdown("""
 
     .main-header h1 {
         color: #000000;
-        font-size: 2rem;
+        font-size: 1.5rem;
         margin-bottom: 0.5rem;
     }
 
     .main-header p {
         color: #000000;
-        font-size: 1.1rem;
+        font-size: 1.5rem;
     }
 
     /* Results styling */
