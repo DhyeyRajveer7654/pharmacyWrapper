@@ -84,8 +84,7 @@ Return only the canonical SMILES code and no other text.
 If the drug is not found, return "NO DRUG FOUND".
 """)
 
-
-PATHYWAY_PROMPT = Template("""
+PATHWAY_PROMPT = Template("""
 You are a regulatory expert tasked with guiding a registered pharmacist in India who has completed a Bachelor's degree in Pharmacy and now plans to start a pharmaceutical manufacturing company focused on $product_type.
 
 Please provide a **strictly HTML table-only output** that outlines all necessary steps, licenses, documentation, and compliance requirements according to the $regulatory_authorities guidelines.
@@ -99,6 +98,7 @@ Include the following columns in the HTML table:
 - Relevant Links
 
 DO NOT include any text before or after the table. DO NOT add headings, explanations, or markdown formatting. RETURN ONLY THE TABLE STRICTLY IN HTML TABLE FORMAT WITH HEADINGS. """ + TABLE_STYLE)
+
 # Function to generate prompt
 def getPromptForOptions(options):
     print("Options received:", options)
