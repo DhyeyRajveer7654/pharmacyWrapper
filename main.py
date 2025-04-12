@@ -583,7 +583,11 @@ if st.session_state.current_page == 'home':
     st.markdown("## 📄 ISO Certification")
 
     # Display the embedded PDF
-    st.image("iso_preview.png", caption="ISO Certificate Preview", width=400)
+    if os.path.exists("iso_preview.png"):
+        st.image("iso_preview.png", caption="ISO Certificate Preview", width=400)
+    else:
+        st.warning("ISO preview image not found.")
+
 
     with open("iso_certificate.pdf", "rb") as f:
         st.download_button("📥 Download Full ISO Certificate", f, file_name="iso_certificate.pdf")
