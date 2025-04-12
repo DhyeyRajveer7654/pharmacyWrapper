@@ -583,8 +583,8 @@ if st.session_state.current_page == 'home':
     st.markdown("## 📄 ISO Certification")
 
     # Display the embedded PDF
-    if os.path.exists("iso_preview.png"):
-        st.image("iso_preview.png", caption="ISO Certificate Preview", width=400)
+    if os.path.exists("iso_preview.jpg"):
+        st.image("iso_preview.jpg", caption="ISO Certificate Preview", width=400)
     else:
         st.warning("ISO preview image not found.")
 
