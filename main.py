@@ -579,7 +579,7 @@ if st.session_state.current_page == 'home':
         if st.button("Learn More About us", key="home_About_us"):
             st.session_state.current_page = 'About us'
             st.rerun()
-    col1, col_gap, col2 = st.columns([3, 1, 6])
+    col1, col_gap, col2 = st.columns([3, 0.5, 4])
     with col1:
         st.markdown("## 📄 ISO Certification")
         if os.path.exists("iso_preview.jpg"):
@@ -599,7 +599,7 @@ if st.session_state.current_page == 'home':
             st.warning("Award image not found. Please upload 'ncip_award.jpg'.")
 
     # Professional award description
-    st.markdown("""
+        st.markdown("""
     **QAI MODEL** proudly secured **2nd Prize** at the **National Conference of Institute of Pharmacy (NCIP 2025)**  
     hosted by **Nirma University**. This recognition reflects the innovation, impact, and future potential of QRx AI in transforming pharmaceutical education and compliance.
     """)
