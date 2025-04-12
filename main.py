@@ -15,68 +15,6 @@ RDKIT_AVAILABLE = True
 # UTILITY FUNCTIONS
 ###############################################################################
 
-def chatWithGpt(prompt):
-    """Simulate a GPT API call with a deterministic response"""
-    # In a real implementation, this would call an API
-    # For demo purposes, return a formatted HTML response
-    html_response = f"""
-    <h3>Quality Analysis Report</h3>
-    <table style="width:100%; border-collapse: collapse;">
-        <tr style="background-color: #1e40af; color: white;">
-            <th style="padding: 8px; text-align: left;">Parameter</th>
-            <th style="padding: 8px; text-align: left;">Specification</th>
-            <th style="padding: 8px; text-align: left;">Result</th>
-        </tr>
-        <tr>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Description</td>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">White to off-white crystalline powder</td>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Complies</td>
-        </tr>
-        <tr>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Identification</td>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">IR spectrum matches reference standard</td>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Complies</td>
-        </tr>
-        <tr>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Assay</td>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">98.0% - 102.0%</td>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">99.7%</td>
-        </tr>
-        <tr>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Dissolution</td>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">NLT 80% in 30 minutes</td>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">92% in 30 minutes</td>
-        </tr>
-        <tr>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Related Substances</td>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Any individual impurity: NMT 0.5%</td>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Maximum individual impurity: 0.3%</td>
-        </tr>
-        <tr>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Water Content</td>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">NMT 0.5%</td>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">0.3%</td>
-        </tr>
-    </table>
-    """
-    return html_response
-
-def get_ftir_from_gpt(product_name):
-    """Generate FTIR analysis data for a product"""
-    ftir_html = f"""
-    <h3>FTIR Analysis for {product_name}</h3>
-    <p>Key peaks identified:</p>
-    <ul>
-        <li>3400-3200 cm<sup>-1</sup>: O-H stretching</li>
-        <li>2960-2850 cm<sup>-1</sup>: C-H stretching</li>
-        <li>1700-1680 cm<sup>-1</sup>: C=O stretching</li>
-        <li>1600-1450 cm<sup>-1</sup>: Aromatic ring vibrations</li>
-        <li>1300-1000 cm<sup>-1</sup>: C-O stretching</li>
-    </ul>
-    <p>All characteristic peaks match the reference standard for {product_name}.</p>
-    """
-    return ftir_html
-
 # Template for drug structure prompt
 STRUCTURE_PROMPT = Template("What is the SMILES notation for $product_name?")
 
@@ -97,69 +35,6 @@ def getPromptForOptions(options):
         prompt += f" Evaluate the following results: {options.get('resultsToCheck', '')}."
     
     return prompt
-
-def get_cid_from_name(drug_name):
-    """Get compound ID from PubChem by compound name"""
-    url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{drug_name}/cids/JSON"
-    response = requests.get(url)
-
-    if response.status_code == 200:
-        try:
-            cids = response.json()["IdentifierList"]["CID"]
-            return cids[0]  # Return the first matching CID
-        except (KeyError, IndexError):
-            return None
-    else:
-        return None
-        
-def get_pubchem_product_code(product_name):
-    """Get SMILES notation for a compound from PubChem"""
-    product_code_from_pubchem = ""
-    url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{product_name}/property/CanonicalSMILES/JSON"
-    response = requests.get(url)
-    if response.status_code == 200:
-        try:
-            smiles = response.json()["PropertyTable"]["Properties"][0]["CanonicalSMILES"]
-            product_code_from_pubchem = smiles
-        except (KeyError, IndexError):
-            product_code_from_pubchem = "NO DRUG FOUND"
-    else:
-        product_code_from_pubchem = "NO DRUG FOUND"
-    if product_code_from_pubchem == "NO DRUG FOUND":
-        return ""
-    else:
-        return product_code_from_pubchem
-        
-def showStructure(product_name):
-    """Generate molecular structure image from compound name"""
-    product_code = ""
-    product_code_from_pubchem = get_pubchem_product_code(product_name)
-    if product_code_from_pubchem == "":
-        product_code_prompt = STRUCTURE_PROMPT.substitute(product_name=product_name)
-        print("Prompt is: " + product_code_prompt)
-        product_code = chatWithGpt(product_code_prompt)
-        if product_code == "NO DRUG FOUND":
-            return ""
-    else:
-        product_code = product_code_from_pubchem
-
-    print("product code is: " + product_code)
-    print("product code from pubchem: " + product_code_from_pubchem)
-    m = Chem.MolFromSmiles(product_code)
-    if m:
-        return Draw.MolToImage(m, size=(400, 400))
-    return None
-
-# Directory where FTIR images are stored
-FTIR_IMAGE_DIR = "./"
-
-def get_ftir_image(product_name):
-    """Fetches the corresponding FTIR image for the given product name."""
-    image_filename = f"{product_name.lower()}.png"
-    image_path = os.path.join(FTIR_IMAGE_DIR, image_filename)
-    if os.path.exists(image_path):
-        return image_path
-    return None
 
 ###############################################################################
 # MAIN APPLICATION
@@ -249,277 +124,6 @@ def handle_js_close():
     st.session_state.show_popup = False
     st.rerun()
 
-# Custom CSS styling
-st.markdown("""
-<style>
-    /* Global styles */
-    body {
-        font-family: 'Segoe UI', sans-serif;
-        color: #333;
-        background-color: #ffffff;
-    }
-    
-    /* Header styling */
-    .header-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 9999;
-        background-color: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        padding: 0.8rem 2rem;
-        height: 30px;
-    }
-    
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        max-width: 1400px;
-        margin: 0 auto;
-        height: 50%;
-    }
-    
-    .logo {
-        color: #1e40af;
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin: 0;
-        letter-spacing: -1px;
-    }
-    
-    .nav-links {
-        display: flex;
-        gap: 1.5rem;
-        align-items: justify;
-        height: 100%;
-    }
-    
-    .nav-link {
-        color: #1e40af;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 0.9rem;
-        letter-spacing: 0.5px;
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        transition: all 0.3s ease;
-        display: inline-block;
-    }
-    
-    .nav-link:hover {
-        background-color: #e0f2fe;
-        color: #1e3a8a;
-    }
-    
-    /* Add margin to content to prevent overlap with fixed header */
-    .main-content {
-        margin-top: 20px; /* Increased to ensure content doesn't hide under header */
-        padding-top: 1rem;
-    }
-    
-    /* Hero section */
-    .hero {
-        background: linear-gradient(135deg, #e0f2fe, #bfdbfe);
-        color: #1e40af;
-        padding: 3rem 2rem;
-        border-radius: 10px;
-        text-align: center;
-        margin-bottom: 2rem;
-    }
-    
-    .hero h2 {
-        font-size: 2rem;
-        margin-bottom: 1rem;
-    }
-    
-    .hero p {
-        font-size: 1.1rem;
-        margin: 0 auto;
-        max-width: 800px;
-    }
-    
-    /* Card styling */
-    .card {
-        background-color: white;
-        border-radius: 10px;
-        padding: 1.5rem;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        margin-bottom: 1.5rem;
-    }
-    
-    .card h3 {
-        color: #1e40af;
-        margin-bottom: 1rem;
-    }
-    
-    /* Section titles */
-    .section-title {
-        color: #1e40af;
-        margin: 2rem 0 1rem 0;
-        text-align: center;
-        font-size: 1.8rem;
-    }
-    
-    /* Footer */
-    .footer {
-        background-color: #f0f9ff;
-        color: #1e3a8a;
-        padding: 2rem;
-        border-radius: 10px 10px 0 0;
-        margin-top: 3rem;
-    }
-    
-    .footer h3 {
-        color: #1e40af;
-        margin-bottom: 1rem;
-    }
-    
-    .footer-bottom {
-        text-align: justify;
-        margin-top: 2rem;
-        padding-top: 1rem;
-        border-top: 1px solid #bfdbfe;
-        color: #1e40af;
-    }
-    
-    /* Popup styling */
-    .popup-container {
-        background-color: white;
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-        padding: 2rem;
-        max-width: 500px;
-        margin: 0 auto 2rem auto;
-        position: relative;
-    }
-    
-    .popup-container h3 {
-        color: #1e40af;
-        text-align: justify;
-        margin-bottom: 1.5rem;
-    }
-    
-    .popup-close {
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        cursor: pointer;
-        font-size: 1.5rem;
-        color: #94a3b8;
-    }
-    
-    /* Override Streamlit elements */
-    .stButton > button {
-        background-color: #1e40af;
-        color: white;
-        font-weight: 600;
-        border: none;
-        width: 100%;
-    }
-    
-    .stButton > button:hover {
-        background-color: #2563eb;
-    }
-    
-    div[data-testid="stToolbar"] {
-        display: none;
-    }
-    
-    div[data-testid="stDecoration"] {
-        display: none;
-    }
-    
-    section[data-testid="stSidebar"] {
-        display: none;
-    }
-    
-    #MainMenu {
-        display: none;
-    }
-    
-    footer {
-        display: none;
-    }
-    
-    /* Enhanced Form Elements from OLD AI.py */
-    div[data-testid="stTextInput"] input,
-    div[data-testid="stTextArea"] textarea,
-    div[data-testid="stSelectbox"] > div[data-baseweb="select"] {
-        background-color: white;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        padding: 0.75rem;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-
-    div[data-testid="stTextInput"] input:focus,
-    div[data-testid="stTextArea"] textarea:focus {
-        border-color: #0052cc;
-        box-shadow: 0 0 0 2px rgba(0,82,204,0.2);
-    }
-    
-    /* Results Table */
-    .table-container {
-        background: white;
-        border-radius: 10px;
-        padding: 1rem;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        border-collapse: collapse;
-    }
-
-    /* Success Message */
-    .success-message {
-        background: #dcfce7;
-        color: #166534;
-        padding: 1rem;
-        border-radius: 8px;
-        margin: 1rem 0;
-    }
-
-    /* Error Message */
-    .error-message {
-        background: #fee2e2;
-        color: #991b1b;
-        padding: 1rem;
-        border-radius: 8px;
-        margin: 1rem 0;
-    }
-    
-    /* Main header styling */
-    .main-header {
-        text-align: center;
-        margin-bottom: 2rem;
-    }
-
-    .main-header h1 {
-        color: #0ea5e9;
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .main-header p {
-        color: #000000;
-        font-size: 1.1rem;
-    }
-
-    /* Results styling */
-    .result-section {
-        margin-top: 2rem;
-    }
-
-    .result-header {
-        color: #0ea5e9;
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
-        border-bottom: 2px solid #e2e8f0;
-        padding-bottom: 0.5rem;
-    }
-</style>
-""", unsafe_allow_html=True)
 
 # Also handle direct page changes via URLs or buttons
 if 'direct_nav' in st.session_state and st.session_state.direct_nav:
@@ -580,7 +184,7 @@ if st.session_state.current_page == 'home':
     
     # CTA section
     st.markdown("""
-    <div style="text-align: justify; margin: 3rem 0;">
+    <div style="text-align: center; margin: 3rem 0;">
         <h2>Ready to elevate your pharmaceutical quality and compliance?</h2>
     </div>
     """, unsafe_allow_html=True)
@@ -718,9 +322,9 @@ elif st.session_state.current_page == 'about':
 
     with col1:
         st.markdown("""
-        <div class="card" style="text-align: justify;">
+        <div class="card" style="text-align: center;">
             <img src="meera.png" alt="Meera Acharya" style="width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom: 10px;">
-            <h3>Meera Rahul Acharya</h3>
+            <h3>Meera Acharya</h3>
             <p><em>Founder & Tech Lead</em></p>
             <p>Innovator and visionary behind QRx AI. Obsessed with AI and passionate about transforming pharmacy education. She ideates and designs all project implementations.</p>
         </div>
@@ -728,9 +332,9 @@ elif st.session_state.current_page == 'about':
 
     with col2:
         st.markdown("""
-        <div class="card" style="text-align: justify;">
+        <div class="card" style="text-align: center;">
             <img src="raj.png" alt="Raj H. Patel" style="width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom: 10px;">
-            <h3>Raj H Patel</h3>
+            <h3>Raj H. Patel</h3>
             <p><em>Co-Founder & Tech Lead</em></p>
             <p>Owner of Redocy Lifecare and co-founder of QRx AI. Raj handles all the coding and back-end development, turning Meera's ideas into working AI solutions.</p>
         </div>
@@ -738,7 +342,7 @@ elif st.session_state.current_page == 'about':
 
     with col3:
         st.markdown("""
-        <div class="card" style="text-align: justify;">
+        <div class="card" style="text-align: center;">
             <img src="dhyey.png" alt="Dhyey Rajveer" style="width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom: 10px;">
             <h3>Dhyey Rajveer</h3>
             <p><em>Model Development Support</em></p>
@@ -771,7 +375,7 @@ elif st.session_state.current_page == 'regulatory':
                 padding: 2rem;
                 border-radius: 10px;
                 margin-bottom: 2rem;
-                text-align: justify;
+                text-align: center;
             }
 
             /* Form Elements */
@@ -949,7 +553,7 @@ elif st.session_state.current_page == 'regulatory':
             st.warning("⚠️ No response received. Please try again.")
     # CTA section
     st.markdown("""
-    <div style="text-align: justify; margin: 3rem 0;">
+    <div style="text-align: center; margin: 3rem 0;">
         <h2>Need personalized regulatory support?</h2>
     </div>
     """, unsafe_allow_html=True)
@@ -985,7 +589,7 @@ elif st.session_state.current_page == 'quality':
                 padding: 2rem;
                 border-radius: 10px;
                 margin-bottom: 2rem;
-                text-align: justify;
+                text-align: center;
             }
 
             /* Form Elements */

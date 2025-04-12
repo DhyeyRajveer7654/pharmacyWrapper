@@ -91,7 +91,7 @@ I am a registered pharmacist in Australia who has completed a Bachelor's degree 
 
 Please provide:
 
-Provide a detailed comprehensive well structured table of $report_type outlining all the steps from company registration to manufacturing and marketing of pharmaceutical $product_type.
+Provide a detailed comprehensive well structured table of pathway outlining all the steps from company registration to manufacturing and marketing of pharmaceutical $product_type.
 
 A list of all required licenses and approvals at each stage, including but not limited to manufacturing license, product registration as per $regulatory_authorities guidelines.
 
@@ -113,7 +113,7 @@ A comprehensive table that lists all documents required to be submitted with the
 
 If applicable, include any requirements or processes related to pharmacovigilance, post-market surveillance, and export licensing or certification under $regulatory_authorities.
 
-The goal is to have a single, well-structured document that can guide a beginner pharmacist like me through the entire journey of starting a $product_type manufacturing company in full compliance with $regulatory_authorities standards.
+The goal is to have a single, well-structured document that can guide a beginner pharmacist like me through the entire journey of starting a $product_type manufacturing company in full compliance with $regulatory_authorities standards. and only answer in table proper structure table do not reply anything other than table. nothing above and below table
 
 """)
 
@@ -127,7 +127,7 @@ Provide a detailed comprehensive well-structured table of licenses required for 
    - Eligibility criteria
    - Regulatory body issuing the license
 3. Direct links to each license application form and the relevant guidelines from $regulatory_authorities.
-4. ONLY output in HTML table format.
+4. ONLY output in HTML table format and if you canot provide links then just do not provide it but do not give response anyother than table.
 """)
 
 
