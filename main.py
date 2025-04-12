@@ -750,7 +750,7 @@ elif st.session_state.current_page == 'contact':
     </div>
     """, unsafe_allow_html=True)
     
-    col1 = st.columns(1)
+    col1, = st.columns(1)
     
     with col1:
         st.markdown("""
