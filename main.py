@@ -1,17 +1,15 @@
 import streamlit as st
 import streamlit.components.v1 as components
+import prompts
+import chat_with_gpt
 from string import Template
+from rdkit import Chem
+from rdkit.Chem import Draw
 import requests
 import os
 
-# Try to import RDKit with a fallback if it doesn't work
-try:
-    from rdkit import Chem
-    from rdkit.Chem import Draw
-    RDKIT_AVAILABLE = True
-except ImportError:
-    RDKIT_AVAILABLE = False
-    print("RDKit not available. Chemical structure rendering will be disabled.")
+# Set flag for RDKit availability
+RDKIT_AVAILABLE = True
 
 ###############################################################################
 # UTILITY FUNCTIONS
@@ -134,10 +132,6 @@ def get_pubchem_product_code(product_name):
         
 def showStructure(product_name):
     """Generate molecular structure image from compound name"""
-    if not RDKIT_AVAILABLE:
-        st.warning("RDKit is not available. Cannot render molecular structure.")
-        return None
-        
     product_code = ""
     product_code_from_pubchem = get_pubchem_product_code(product_name)
     if product_code_from_pubchem == "":
@@ -379,238 +373,352 @@ st.markdown("""
         padding: 2rem;
         border-radius: 10px 10px 0 0;
         margin-top: 3rem;
-        text-align: center;
     }
     
-    .footer a {
+    .footer h3 {
         color: #1e40af;
-        text-decoration: none;
-        transition: color 0.3s ease;
+        margin-bottom: 1rem;
     }
     
-    .footer a:hover {
-        color: #3b82f6;
+    .footer-bottom {
+        text-align: center;
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid #bfdbfe;
+        color: #1e40af;
     }
     
-    /* Button styling */
-    .primary-button {
-        background-color: #1e40af;
-        color: white;
-        padding: 0.7rem 1.5rem;
-        border-radius: 5px;
-        font-weight: 600;
-        display: inline-block;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        border: none;
-        cursor: pointer;
-    }
-    
-    .primary-button:hover {
-        background-color: #1e3a8a;
-        transform: translateY(-2px);
-    }
-    
-    /* Modal/popup styling */
-    .popup-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 1000;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    
-    .popup-content {
+    /* Popup styling */
+    .popup-container {
         background-color: white;
-        padding: 2rem;
         border-radius: 10px;
-        max-width: 90%;
-        width: 800px;
-        max-height: 90vh;
-        overflow-y: auto;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        padding: 2rem;
+        max-width: 500px;
+        margin: 0 auto 2rem auto;
         position: relative;
     }
     
-    .close-button {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        background: none;
-        border: none;
-        font-size: 1.5rem;
-        cursor: pointer;
+    .popup-container h3 {
         color: #1e40af;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .popup-close {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        cursor: pointer;
+        font-size: 1.5rem;
+        color: #94a3b8;
+    }
+    
+    /* Override Streamlit elements */
+    .stButton > button {
+        background-color: #1e40af;
+        color: white;
+        font-weight: 600;
+        border: none;
+        width: 100%;
+    }
+    
+    .stButton > button:hover {
+        background-color: #2563eb;
+    }
+    
+    div[data-testid="stToolbar"] {
+        display: none;
+    }
+    
+    div[data-testid="stDecoration"] {
+        display: none;
+    }
+    
+    section[data-testid="stSidebar"] {
+        display: none;
+    }
+    
+    #MainMenu {
+        display: none;
+    }
+    
+    footer {
+        display: none;
+    }
+    
+    /* Enhanced Form Elements from OLD AI.py */
+    div[data-testid="stTextInput"] input,
+    div[data-testid="stTextArea"] textarea,
+    div[data-testid="stSelectbox"] > div[data-baseweb="select"] {
+        background-color: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 0.75rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    div[data-testid="stTextInput"] input:focus,
+    div[data-testid="stTextArea"] textarea:focus {
+        border-color: #0052cc;
+        box-shadow: 0 0 0 2px rgba(0,82,204,0.2);
+    }
+    
+    /* Results Table */
+    .table-container {
+        background: white;
+        border-radius: 10px;
+        padding: 1rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border-collapse: collapse;
+    }
+
+    /* Success Message */
+    .success-message {
+        background: #dcfce7;
+        color: #166534;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+    }
+
+    /* Error Message */
+    .error-message {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+    }
+    
+    /* Main header styling */
+    .main-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .main-header h1 {
+        color: #0ea5e9;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .main-header p {
+        color: #64748b;
+        font-size: 1.1rem;
+    }
+
+    /* Results styling */
+    .result-section {
+        margin-top: 2rem;
+    }
+
+    .result-header {
+        color: #0ea5e9;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #e2e8f0;
+        padding-bottom: 0.5rem;
     }
 </style>
 """, unsafe_allow_html=True)
 
+# Also handle direct page changes via URLs or buttons
+if 'direct_nav' in st.session_state and st.session_state.direct_nav:
+    page = st.session_state.direct_nav
+    st.session_state.direct_nav = None
+    change_page(page)
+
+# Main content wrapper
+st.markdown('<div class="main-content">', unsafe_allow_html=True)
+
 ###############################################################################
-# HOME PAGE
+# PAGE CONTENT BASED ON CURRENT PAGE
 ###############################################################################
-def show_home_page():
-    st.markdown('<div class="hero">', unsafe_allow_html=True)
-    st.markdown('<h2>Your Partner in Pharmaceutical Quality & Regulatory Compliance</h2>', unsafe_allow_html=True)
-    st.markdown('<p>QRx provides expert guidance and support for pharmaceutical companies navigating complex quality and regulatory requirements. Our specialized knowledge helps you bring safe, effective products to market faster.</p>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+
+# Home Page
+if st.session_state.current_page == 'home':
+    # Hero section
+    st.markdown("""
+    <div class="hero">
+        <h2>Pharmaceutical Quality & Regulatory Excellence</h2>
+        <p>QRx provides comprehensive quality assurance and regulatory compliance solutions for the pharmaceutical industry. 
+        With our expert team and advanced AI-powered tools, we ensure your products meet the highest standards at every stage.</p>
+    </div>
+    """, unsafe_allow_html=True)
     
-    # Three columns for services highlights
-    col1, col2, col3 = st.columns(3)
+    # Services section
+    st.markdown('<h2 class="section-title">Our Services</h2>', unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Quality Analysis</h3>', unsafe_allow_html=True)
-        st.markdown('<p>Comprehensive quality testing and verification services to ensure your products meet all applicable standards.</p>', unsafe_allow_html=True)
-        if st.button("Learn More", key="quality_learn_more"):
-            st.session_state.current_page = 'quality'
-            st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("""
+        <div class="card">
+            <h3>Regulatory Compliance</h3>
+            <p>Navigate complex regulatory requirements with our comprehensive compliance services:</p>
+            <ul>
+                <li>Regulatory strategy development</li>
+                <li>Product registration support</li>
+                <li>Regulatory submissions management</li>
+                <li>Post-approval regulatory maintenance</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
         
     with col2:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Regulatory Support</h3>', unsafe_allow_html=True)
-        st.markdown('<p>Navigate complex regulatory landscapes with our expert guidance on compliance requirements across multiple jurisdictions.</p>', unsafe_allow_html=True)
-        if st.button("Learn More", key="regulatory_learn_more"):
-            st.session_state.current_page = 'regulatory'
+        st.markdown("""
+        <div class="card">
+            <h3>Quality Assurance</h3>
+            <p>Ensure product safety, efficacy, and compliance with our quality assurance services:</p>
+            <ul>
+                <li>Quality management system development</li>
+                <li>GMP compliance audits</li>
+                <li>Quality control testing</li>
+                <li>CAPA system implementation</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # CTA section
+    st.markdown("""
+    <div style="text-align: center; margin: 3rem 0;">
+        <h2>Ready to elevate your pharmaceutical quality and compliance?</h2>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("Contact Us", key="home_contact"):
+            st.session_state.current_page = 'contact'
             st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-    with col3:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Consulting Services</h3>', unsafe_allow_html=True)
-        st.markdown('<p>Strategic pharmaceutical consulting to optimize your development, manufacturing, and compliance processes.</p>', unsafe_allow_html=True)
-        if st.button("Learn More", key="services_learn_more"):
+    with col2:
+        if st.button("Learn More About Our Services", key="home_services"):
             st.session_state.current_page = 'services'
             st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
     
-    # About us section
-    st.markdown('<h2 class="section-title">Why Choose QRx?</h2>', unsafe_allow_html=True)
+    # Footer
+    st.markdown("""
+    <div class="footer">
+        <p>© 2025 QRx Pharmaceutical Consultants. All rights reserved.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Services Page
+elif st.session_state.current_page == 'services':
+    st.markdown('<h2 class="section-title">Our Services</h2>', unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div class="hero">
+        <h2>Comprehensive Pharmaceutical Services</h2>
+        <p>QRx offers a wide range of services designed to support pharmaceutical companies throughout the product lifecycle, from development to post-marketing activities.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Regulatory Services
+    st.markdown('<h3 class="section-title">Regulatory Services</h3>', unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Expert Team</h3>', unsafe_allow_html=True)
-        st.markdown('<p>Our team of pharmaceutical scientists, regulatory specialists, and quality professionals brings decades of combined experience from leading global pharmaceutical companies.</p>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("""
+        <div class="card">
+            <h3>Regulatory Strategy</h3>
+            <p>Develop comprehensive strategies for product registration and lifecycle management:</p>
+            <ul>
+                <li>Global regulatory pathway assessment</li>
+                <li>Strategic planning for market access</li>
+                <li>Regulatory gap analysis</li>
+                <li>Product development roadmaps</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
         
     with col2:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Tailored Solutions</h3>', unsafe_allow_html=True)
-        st.markdown('<p>We understand that every client has unique needs. Our services are customized to address your specific challenges and objectives.</p>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("""
+        <div class="card">
+            <h3>Regulatory Submissions</h3>
+            <p>Complete preparation and management of regulatory dossiers:</p>
+            <ul>
+                <li>CTD/eCTD compilation</li>
+                <li>CMC documentation</li>
+                <li>Clinical and non-clinical summaries</li>
+                <li>Agency meeting preparation</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
     
-    # CTA section
-    st.markdown('<div style="text-align: center; margin: 3rem 0;">', unsafe_allow_html=True)
-    st.markdown('<h2>Ready to streamline your pharmaceutical compliance?</h2>', unsafe_allow_html=True)
-    if st.button("Contact Us Today", key="home_contact_button"):
-        st.session_state.current_page = 'contact'
-        st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
+    # Quality Services
+    st.markdown('<h3 class="section-title">Quality Services</h3>', unsafe_allow_html=True)
     
-    # Footer
-    st.markdown('<div class="footer">', unsafe_allow_html=True)
-    st.markdown('<p>© 2025 QRx Pharmaceutical Consultants. All rights reserved.</p>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-###############################################################################
-# SERVICES PAGE
-###############################################################################
-def show_services_page():
-    st.markdown('<div class="hero">', unsafe_allow_html=True)
-    st.markdown('<h2>Our Comprehensive Services</h2>', unsafe_allow_html=True)
-    st.markdown('<p>QRx offers a wide range of pharmaceutical consulting services designed to help you navigate complex quality and regulatory requirements while optimizing your development and manufacturing processes.</p>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Services overview
-    st.markdown('<h2 class="section-title">Core Service Areas</h2>', unsafe_allow_html=True)
-    
-    # Create three columns for different service areas
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Research & Development</h3>', unsafe_allow_html=True)
-        st.markdown('<ul>', unsafe_allow_html=True)
-        st.markdown('<li>Formulation development support</li>', unsafe_allow_html=True)
-        st.markdown('<li>Analytical method development</li>', unsafe_allow_html=True)
-        st.markdown('<li>Stability studies design</li>', unsafe_allow_html=True)
-        st.markdown('<li>Technical documentation</li>', unsafe_allow_html=True)
-        st.markdown('</ul>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("""
+        <div class="card">
+            <h3>Quality Management Systems</h3>
+            <p>Design and implement robust quality systems for GMP compliance:</p>
+            <ul>
+                <li>QMS development and implementation</li>
+                <li>SOP creation and management</li>
+                <li>Quality metrics implementation</li>
+                <li>Training program development</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
         
     with col2:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Regulatory Affairs</h3>', unsafe_allow_html=True)
-        st.markdown('<ul>', unsafe_allow_html=True)
-        st.markdown('<li>Regulatory strategy development</li>', unsafe_allow_html=True)
-        st.markdown('<li>Submission preparation and review</li>', unsafe_allow_html=True)
-        st.markdown('<li>Regulatory intelligence</li>', unsafe_allow_html=True)
-        st.markdown('<li>Post-approval maintenance</li>', unsafe_allow_html=True)
-        st.markdown('</ul>', unsafe_allow_html=True)
-        if st.button("See Regulatory Details", key="see_regulatory"):
+        st.markdown("""
+        <div class="card">
+            <h3>Analytical Services</h3>
+            <p>Comprehensive quality control and product characterization:</p>
+            <ul>
+                <li>Method development and validation</li>
+                <li>Product characterization</li>
+                <li>Stability testing</li>
+                <li>Reference standard qualification</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # CTA section
+    st.markdown("""
+    <div style="text-align: center; margin: 3rem 0;">
+        <h2>Interested in our services?</h2>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("Contact Our Regulatory Team", key="services_reg_contact"):
             st.session_state.current_page = 'regulatory'
             st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-    with col3:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Quality Assurance</h3>', unsafe_allow_html=True)
-        st.markdown('<ul>', unsafe_allow_html=True)
-        st.markdown('<li>Quality management systems</li>', unsafe_allow_html=True)
-        st.markdown('<li>Audit preparation and remediation</li>', unsafe_allow_html=True)
-        st.markdown('<li>Quality risk management</li>', unsafe_allow_html=True)
-        st.markdown('<li>Validation and qualification</li>', unsafe_allow_html=True)
-        st.markdown('</ul>', unsafe_allow_html=True)
-        if st.button("See Quality Details", key="see_quality"):
+    with col2:
+        if st.button("Contact Our Quality Team", key="services_quality_contact"):
             st.session_state.current_page = 'quality'
             st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Additional services section
-    st.markdown('<h2 class="section-title">Specialized Services</h2>', unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Training & Education</h3>', unsafe_allow_html=True)
-        st.markdown('<p>We offer customized training programs for your staff on various aspects of pharmaceutical development, manufacturing, quality, and regulatory affairs.</p>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-    with col2:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Due Diligence</h3>', unsafe_allow_html=True)
-        st.markdown('<p>Comprehensive evaluation of pharmaceutical products, facilities, and documentation for potential investments, mergers, or acquisitions.</p>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    # CTA section
-    st.markdown('<div style="text-align: center; margin: 3rem 0;">', unsafe_allow_html=True)
-    st.markdown('<h2>Ready to optimize your pharmaceutical operations?</h2>', unsafe_allow_html=True)
-    if st.button("Contact Us Today", key="services_contact_button"):
-        st.session_state.current_page = 'contact'
-        st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
-    
+            
     # Footer
-    st.markdown('<div class="footer">', unsafe_allow_html=True)
-    st.markdown('<p>© 2025 QRx Pharmaceutical Consultants. All rights reserved.</p>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="footer">
+        <p>© 2025 QRx Pharmaceutical Consultants. All rights reserved.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-###############################################################################
-# CONTACT PAGE
-###############################################################################
-def show_contact_page():
-    st.markdown('<div class="hero">', unsafe_allow_html=True)
-    st.markdown('<h2>Contact QRx</h2>', unsafe_allow_html=True)
-    st.markdown('<p>We\'re here to answer your questions and discuss how we can support your pharmaceutical quality and regulatory compliance needs. Reach out to our team of experts today.</p>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+# Contact Page
+elif st.session_state.current_page == 'contact':
+    st.markdown('<h2 class="section-title">Contact Us</h2>', unsafe_allow_html=True)
     
+    st.markdown("""
+    <div class="hero">
+        <h2>Get in Touch</h2>
+        <p>Have questions about our services? Need expert assistance with your pharmaceutical quality and regulatory challenges? Contact our team and get the help you need.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Contact Form
     st.markdown("""
     <div class="card">
         <h3>Contact Form</h3>
@@ -663,319 +771,603 @@ def show_contact_page():
     </div>
     """, unsafe_allow_html=True)
 
-###############################################################################
-# ABOUT PAGE
-###############################################################################
-def show_about_page():
-    st.markdown('<div class="hero">', unsafe_allow_html=True)
-    st.markdown('<h2>About QRx</h2>', unsafe_allow_html=True)
-    st.markdown('<p>QRx is a premier pharmaceutical consulting firm specializing in quality assurance and regulatory compliance. With decades of combined experience, our team of experts provides comprehensive solutions to help pharmaceutical companies navigate complex regulatory landscapes and maintain the highest quality standards.</p>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+# About Page
+elif st.session_state.current_page == 'about':
+    st.markdown('<h2 class="section-title">About QRx</h2>', unsafe_allow_html=True)
     
-    # Company overview
-    st.markdown('<h2 class="section-title">Our Story</h2>', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="hero">
+        <h2>Our Story</h2>
+        <p>QRx was founded by pharmaceutical industry veterans with a mission to simplify quality and regulatory compliance for pharmaceutical companies of all sizes.</p>
+    </div>
+    """, unsafe_allow_html=True)
     
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown('<p>Founded in 2015 by a team of pharmaceutical industry veterans, QRx was established with a mission to simplify quality and regulatory compliance for pharmaceutical companies of all sizes. What began as a small consulting practice has grown into a trusted partner for dozens of companies across the pharmaceutical industry.</p>', unsafe_allow_html=True)
-    st.markdown('<p>Our founders recognized that many pharmaceutical companies struggle with navigating the complex and ever-changing regulatory landscape while maintaining rigorous quality standards. Drawing on their experience from leading global pharmaceutical firms, they created QRx to provide expert guidance and practical solutions to these challenges.</p>', unsafe_allow_html=True)
-    st.markdown('<p>Today, QRx serves clients ranging from emerging biotech startups to established pharmaceutical manufacturers, helping them bring safe and effective products to market efficiently while maintaining compliance with global regulations.</p>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    # Company Profile
+    st.markdown("""
+    <div class="card">
+        <h3>Who We Are</h3>
+        <p>QRx is a specialized pharmaceutical consulting firm focused on quality and regulatory excellence. Founded in 2015, we've helped over 200 companies across 25 countries navigate complex regulatory pathways and implement robust quality systems.</p>
+        <p>Our team consists of former regulatory agency officials, quality directors, and pharmaceutical development experts who bring decades of real-world experience to every client project.</p>
+    </div>
+    """, unsafe_allow_html=True)
     
-    # Core values section
-    st.markdown('<h2 class="section-title">Our Core Values</h2>', unsafe_allow_html=True)
+    # Mission and Values
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("""
+        <div class="card">
+            <h3>Our Mission</h3>
+            <p>To advance global health by helping pharmaceutical companies navigate complex quality and regulatory challenges efficiently and effectively.</p>
+            <p>We believe in making compliance accessible to companies of all sizes, from startups to multinational corporations, through practical solutions and technology-enabled services.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+    with col2:
+        st.markdown("""
+        <div class="card">
+            <h3>Our Values</h3>
+            <ul>
+                <li><strong>Excellence:</strong> We maintain the highest standards in all our work</li>
+                <li><strong>Integrity:</strong> We operate with honesty and transparency</li>
+                <li><strong>Innovation:</strong> We embrace new technologies and approaches</li>
+                <li><strong>Partnership:</strong> We work as an extension of our clients' teams</li>
+                <li><strong>Impact:</strong> We measure success by our clients' outcomes</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Team Section
+    st.markdown('<h3 class="section-title">Our Leadership</h3>', unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Excellence</h3>', unsafe_allow_html=True)
-        st.markdown('<p>We are committed to delivering the highest quality service and exceeding client expectations in everything we do.</p>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("""
+        <div class="card">
+            <h3>Dr. Sarah Johnson</h3>
+            <p><em>CEO & Founder</em></p>
+            <p>Former FDA reviewer with 20+ years of experience in pharmaceutical regulatory affairs. Ph.D. in Pharmaceutical Sciences.</p>
+        </div>
+        """, unsafe_allow_html=True)
         
     with col2:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Integrity</h3>', unsafe_allow_html=True)
-        st.markdown('<p>We operate with honesty, transparency, and strong ethical principles in all our client relationships and business practices.</p>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("""
+        <div class="card">
+            <h3>Dr. Michael Chen</h3>
+            <p><em>Chief Quality Officer</em></p>
+            <p>Previously Quality Director at a global pharmaceutical company. Expert in QMS implementation and remediation.</p>
+        </div>
+        """, unsafe_allow_html=True)
         
     with col3:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Innovation</h3>', unsafe_allow_html=True)
-        st.markdown('<p>We continuously seek creative and efficient solutions to complex pharmaceutical quality and regulatory challenges.</p>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Team section
-    st.markdown('<h2 class="section-title">Our Leadership Team</h2>', unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Dr. Sarah Johnson</h3>', unsafe_allow_html=True)
-        st.markdown('<p><strong>Founder & CEO</strong></p>', unsafe_allow_html=True)
-        st.markdown('<p>Dr. Johnson has over 20 years of experience in pharmaceutical development and regulatory affairs, previously serving as VP of Regulatory Affairs at a global pharmaceutical company. She holds a Ph.D. in Pharmaceutical Sciences and an MBA.</p>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-    with col2:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Dr. Michael Chen</h3>', unsafe_allow_html=True)
-        st.markdown('<p><strong>Chief Scientific Officer</strong></p>', unsafe_allow_html=True)
-        st.markdown('<p>With extensive experience in pharmaceutical quality systems and compliance, Dr. Chen leads our quality consulting practice. He previously held senior positions at FDA and major pharmaceutical manufacturers. He holds a Ph.D. in Chemistry.</p>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("""
+        <div class="card">
+            <h3>Dr. Elena Rodriguez</h3>
+            <p><em>Head of Regulatory Strategy</em></p>
+            <p>Former EMA scientific advisor with expertise in global regulatory strategy and submissions.</p>
+        </div>
+        """, unsafe_allow_html=True)
     
     # Footer
-    st.markdown('<div class="footer">', unsafe_allow_html=True)
-    st.markdown('<p>© 2025 QRx Pharmaceutical Consultants. All rights reserved.</p>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="footer">
+        <p>© 2025 QRx Pharmaceutical Consultants. All rights reserved.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-###############################################################################
-# REGULATORY PAGE
-###############################################################################
-def show_regulatory_page():
-    st.markdown('<div class="hero">', unsafe_allow_html=True)
-    st.markdown('<h2>Regulatory Compliance Services</h2>', unsafe_allow_html=True)
-    st.markdown('<p>QRx offers comprehensive regulatory compliance services to help pharmaceutical companies navigate complex regulatory landscapes across global markets. Our team of regulatory experts provides strategic guidance and practical support throughout the product lifecycle.</p>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Regulatory services overview
-    st.markdown('<h2 class="section-title">Our Regulatory Services</h2>', unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Regulatory Strategy</h3>', unsafe_allow_html=True)
-        st.markdown('<p>We develop comprehensive regulatory strategies tailored to your specific products and target markets. Our approach helps you navigate complex regulatory pathways efficiently, saving time and resources while maximizing chances for approval.</p>', unsafe_allow_html=True)
-        st.markdown('<ul>', unsafe_allow_html=True)
-        st.markdown('<li>Global regulatory pathway assessment</li>', unsafe_allow_html=True)
-        st.markdown('<li>Regulatory risk evaluation</li>', unsafe_allow_html=True)
-        st.markdown('<li>Strategic planning for submissions</li>', unsafe_allow_html=True)
-        st.markdown('<li>Regulatory intelligence and monitoring</li>', unsafe_allow_html=True)
-        st.markdown('</ul>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-    with col2:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Submission Support</h3>', unsafe_allow_html=True)
-        st.markdown('<p>Our experts assist with preparation, review, and management of regulatory submissions across multiple jurisdictions, ensuring compliance with all requirements and standards.</p>', unsafe_allow_html=True)
-        st.markdown('<ul>', unsafe_allow_html=True)
-        st.markdown('<li>IND/CTA preparation and submissions</li>', unsafe_allow_html=True)
-        st.markdown('<li>NDA/MAA preparation and submissions</li>', unsafe_allow_html=True)
-        st.markdown('<li>DMF preparation and maintenance</li>', unsafe_allow_html=True)
-        st.markdown('<li>Responses to regulatory authority queries</li>', unsafe_allow_html=True)
-        st.markdown('</ul>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Regulatory Compliance</h3>', unsafe_allow_html=True)
-        st.markdown('<p>We help ensure ongoing compliance with regulatory requirements throughout the product lifecycle, from development through post-marketing phases.</p>', unsafe_allow_html=True)
-        st.markdown('<ul>', unsafe_allow_html=True)
-        st.markdown('<li>GMP compliance assessment and remediation</li>', unsafe_allow_html=True)
-        st.markdown('<li>Regulatory inspection preparation</li>', unsafe_allow_html=True)
-        st.markdown('<li>Post-approval change management</li>', unsafe_allow_html=True)
-        st.markdown('<li>Pharmacovigilance and safety reporting</li>', unsafe_allow_html=True)
-        st.markdown('</ul>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-    with col2:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Global Regulatory Support</h3>', unsafe_allow_html=True)
-        st.markdown('<p>Our global regulatory expertise covers major and emerging markets worldwide, helping you navigate varied requirements across different regions.</p>', unsafe_allow_html=True)
-        st.markdown('<ul>', unsafe_allow_html=True)
-        st.markdown('<li>US FDA regulations compliance</li>', unsafe_allow_html=True)
-        st.markdown('<li>European Medicines Agency (EMA) requirements</li>', unsafe_allow_html=True)
-        st.markdown('<li>Health Canada submissions</li>', unsafe_allow_html=True)
-        st.markdown('<li>Emerging markets regulatory strategy</li>', unsafe_allow_html=True)
-        st.markdown('</ul>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Regulatory expertise highlights
-    st.markdown('<h2 class="section-title">Regulatory Areas of Expertise</h2>', unsafe_allow_html=True)
-    
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Small Molecules</h3>', unsafe_allow_html=True)
-        st.markdown('<p>Comprehensive regulatory support for small molecule drug products, including generics, new chemical entities, and complex formulations.</p>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-    with col2:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Biologics</h3>', unsafe_allow_html=True)
-        st.markdown('<p>Specialized regulatory guidance for biological products, biosimilars, and advanced therapy medicinal products (ATMPs).</p>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-    with col3:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Combination Products</h3>', unsafe_allow_html=True)
-        st.markdown('<p>Expert navigation of the complex regulatory landscape for drug-device combination products.</p>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    # CTA section
-    st.markdown('<div style="text-align: center; margin: 3rem 0;">', unsafe_allow_html=True)
-    st.markdown('<h2>Need regulatory support for your pharmaceutical products?</h2>', unsafe_allow_html=True)
-    if st.button("Contact Our Regulatory Experts", key="regulatory_contact_button"):
-        st.session_state.current_page = 'contact'
-        st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Footer
-    st.markdown('<div class="footer">', unsafe_allow_html=True)
-    st.markdown('<p>© 2025 QRx Pharmaceutical Consultants. All rights reserved.</p>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+# Regulatory Page - ONLY SHOWS REGULATORY CONTENT
+elif st.session_state.current_page == 'regulatory':
+    st.markdown("""
+        <style>
+            /* Global Styles */
+            body {
+                background-color: #f0f2f6;
+                color: #1e293b;
+                font-family: 'Inter', 'sans serif';
+            }
 
-###############################################################################
-# QUALITY PAGE
-###############################################################################
-def show_quality_page():
-    st.markdown('<div class="hero">', unsafe_allow_html=True)
-    st.markdown('<h2>Pharmaceutical Quality Services</h2>', unsafe_allow_html=True)
-    st.markdown('<p>QRx delivers comprehensive quality analysis and assurance services to help pharmaceutical companies meet global quality standards. Our experienced team ensures your products are manufactured with the highest level of quality and consistency.</p>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Example quality analysis form - ONLY SHOWN ON QUALITY PAGE
-    st.markdown('<h2 class="section-title">Quality Analysis Capabilities</h2>', unsafe_allow_html=True)
-    
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown('<h3>Comprehensive Product Quality Assessment</h3>', unsafe_allow_html=True)
-    
-    # Sample product selection form (simplified for demo)
-    st.markdown('<p>Explore our quality analysis capabilities with this interactive demo:</p>', unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        product_name = st.text_input("Enter product name (e.g., Acetaminophen)", "Acetaminophen")
-        jurisdiction = st.selectbox("Select regulatory jurisdiction", ["US FDA", "EMA (Europe)", "Health Canada", "WHO"])
-        
-    with col2:
-        strength = st.text_input("Strength (e.g., 500 mg)", "500 mg")
-        quantity = st.text_input("Quantity (e.g., 100 tablets)", "100 tablets")
-        
-    analysis_type = st.radio("Select analysis type", ["CHARACTARIZATION/EVALUATION", "METHOD OF PREPARATION", "Both of above"])
-    
-    if st.button("Generate Quality Analysis", key="gen_quality_analysis"):
-        options = {
-            'product_name': product_name,
-            'powerOfDrug': strength,
-            'quanOfMed': quantity,
-            'jurisdiction': jurisdiction,
-            'typeOfInfo': analysis_type
-        }
-        
-        # Generate and display analysis report
-        st.markdown('### Quality Analysis Results', unsafe_allow_html=True)
-        
-        # Structure display (if RDKit is available)
+            /* Header Styling */
+            .main-header {
+                background: linear-gradient(135deg, #0052cc, #00a3bf);
+                color: white;
+                padding: 2rem;
+                border-radius: 10px;
+                margin-bottom: 2rem;
+                text-align: center;
+            }
+
+            /* Form Elements */
+            div[data-testid="stTextInput"] input,
+            div[data-testid="stTextArea"] textarea,
+            div[data-testid="stSelectbox"] > div[data-baseweb="select"] {
+                background-color: white;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                padding: 0.75rem;
+                font-size: 1rem;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            }
+
+            div[data-testid="stTextInput"] input:focus,
+            div[data-testid="stTextArea"] textarea:focus {
+                border-color: #0052cc;
+                box-shadow: 0 0 0 2px rgba(0,82,204,0.2);
+            }
+
+            /* Button Styling */
+            .stButton > button {
+                width: 100%;
+                background: linear-gradient(135deg, #0052cc, #00a3bf);
+                color: white;
+                border: none;
+                padding: 0.75rem 1.5rem;
+                border-radius: 8px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .stButton > button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,82,204,0.2);
+            }
+
+            /* Card Styling */
+            .card div[data-testid="stSelectbox"]{
+                background: white;
+                border-radius: 10px;
+                padding: 1.5rem;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                margin-bottom: 1.5rem;
+            }
+
+            /* Results Table */
+            .table-container {
+                background: white;
+                border-radius: 10px;
+                padding: 1rem;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                border-collapse: collapse;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                border-spacing: 0;
+                margin: 1rem 0;
+            }
+
+            th {
+                background: #0052cc;
+                color: white;
+                padding: 1rem;
+                text-align: left;
+                font-weight: 600;
+            }
+
+            td {
+                padding: 1rem;
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+            tr:hover {
+                background: #f8fafc;
+            }
+
+            /* Loading Spinner */
+            .stSpinner > div {
+                border-color: #0052cc !important;
+            }
+
+            /* Success Message */
+            .success-message {
+                background: #dcfce7;
+                color: #166534;
+                padding: 1rem;
+                border-radius: 8px;
+                margin: 1rem 0;
+            }
+
+            /* Error Message */
+            .error-message {
+                background: #fee2e2;
+                color: #991b1b;
+                padding: 1rem;
+                border-radius: 8px;
+                margin: 1rem 0;
+            }
+            
+        </style>
+    """, unsafe_allow_html=True)
+
+    # Page Navigation
+    if "page" not in st.session_state:
+        st.session_state.page = "form"
+    if "api_response" not in st.session_state:
+        st.session_state.api_response = None
+
+    options = dict()
+
+    # 📌 FORM PAGE
+    if st.session_state.page == "form":
+        st.markdown('<div class="main-header"><h1>🧪 QAI Model AI-Powered Quality Assistance</h1><p> CREATED BY :- MEERA ACHARYA & RAJ PATEL</P><p>Enter details below to generate a comprehensive quality report</p></div>', unsafe_allow_html=True)
+
+        # User Input Form in a card layout
+        # st.markdown('<div class="card">', unsafe_allow_html=True)
         col1, col2 = st.columns(2)
-        
+
         with col1:
-            if RDKIT_AVAILABLE:
-                structure_img = showStructure(product_name)
-                if structure_img is not None:
-                    st.image(structure_img, caption=f"Molecular structure of {product_name}")
-                else:
-                    st.warning(f"Could not generate structure for {product_name}")
-            else:
-                st.warning("Molecular structure display is currently unavailable")
-        
+            options["prodct_type"] = st.selectbox("🌎 Select Product Type", 
+                ["API", "Tablets(com)", "Syrups", "Infusion", "Capsules", "Injectables","Other"])
+            
         with col2:
-            # FTIR analysis
-            ftir_analysis = get_ftir_from_gpt(product_name)
-            st.markdown(ftir_analysis, unsafe_allow_html=True)
+            options["report_type"] = st.selectbox("🌎 Select Report Type", 
+                ["Pathway", "List of license", "Detailed Information"])
+            if options["report_type"] == "Detailed Information":
+                options["resultsToCheck"] = st.text_area("🔍 Enter Your Results:", height=200, placeholder="Provide Licence you need info about here...", key="checkResults")
+            options["regulatory"] = st.selectbox("🌎 Select Regulatory Authority", 
+                ["CDSCO", "United States (FDA)", "European Union (EMA)","Brazil (ANVISA)", "Australia (TGA)"])
+            
+        # st.markdown('</div>', unsafe_allow_html=True)
+
+        # Analysis Options in a separate card
+        # st.markdown('<div class="card">', unsafe_allow_html=True)
+    # Submit button with enhanced styling
+        submit_button = st.button("🚀 Generate Regulatory Report")
+        if submit_button:
+            if not all([options.get("prodct_type"), options.get("report_type"), options.get("regulatory")]):
+                st.error("⚠️ Please fill in all required fields!")
+            else:
+                prompt = prompts.getPromptForOptions(options)
+                with st.spinner("🛠️ Generating comprehensive report... Please wait"):
+                    api_response = chat_with_gpt.chatWithGpt(prompt)
+                    st.session_state.api_response = api_response
+
+                st.session_state.update(options)
+                st.session_state.page = "result"
+                st.experimental_rerun()
+
+    # 📌 RESULT PAGE
+    elif st.session_state.page == "result":
+        st.markdown('<div class="main-header"><h1>📑 Quality Analysis Report</h1></div>', unsafe_allow_html=True)
         
-        # Quality report
-        quality_report = chatWithGpt(getPromptForOptions(options))
-        st.markdown(quality_report, unsafe_allow_html=True)
+        if st.button("🔙 Return to Form", key="back_button"):
+            st.session_state.page = "form"
+            st.experimental_rerun()
+
+        # st.markdown('<div class="card">', unsafe_allow_html=True)
+        st.markdown("### 📋 Analysis Details")
+        st.markdown(f"**💊 Product Type:** {st.session_state.prodct_type}",)
+        st.markdown(f"**📦 Reoprt Type:** {st.session_state.report_type}")
+        st.markdown(f"**⚡ Regulatory Authority:** {st.session_state.regulatory}")
+        # st.markdown('</div>', unsafe_allow_ht ml=True)
+
         
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Quality services overview - moved after the analysis form
-    st.markdown('<h2 class="section-title">Our Quality Services</h2>', unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Quality Management Systems</h3>', unsafe_allow_html=True)
-        st.markdown('<p>We help design, implement, and improve quality management systems that ensure compliance with global regulations while optimizing operational efficiency.</p>', unsafe_allow_html=True)
-        st.markdown('<ul>', unsafe_allow_html=True)
-        st.markdown('<li>QMS development and implementation</li>', unsafe_allow_html=True)
-        st.markdown('<li>Gap analysis and remediation</li>', unsafe_allow_html=True)
-        st.markdown('<li>SOP development and review</li>', unsafe_allow_html=True)
-        st.markdown('<li>Quality metrics and performance monitoring</li>', unsafe_allow_html=True)
-        st.markdown('</ul>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-    with col2:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Quality Assurance</h3>', unsafe_allow_html=True)
-        st.markdown('<p>Our quality assurance services help maintain ongoing compliance and product quality throughout the manufacturing process.</p>', unsafe_allow_html=True)
-        st.markdown('<ul>', unsafe_allow_html=True)
-        st.markdown('<li>Batch record review</li>', unsafe_allow_html=True)
-        st.markdown('<li>Change control management</li>', unsafe_allow_html=True)
-        st.markdown('<li>Deviation investigation and CAPA implementation</li>', unsafe_allow_html=True)
-        st.markdown('<li>Release testing oversight</li>', unsafe_allow_html=True)
-        st.markdown('</ul>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Quality Control</h3>', unsafe_allow_html=True)
-        st.markdown('<p>We provide expert guidance on testing methods, specifications, and laboratory operations to ensure accurate and reliable product quality data.</p>', unsafe_allow_html=True)
-        st.markdown('<ul>', unsafe_allow_html=True)
-        st.markdown('<li>Analytical method validation</li>', unsafe_allow_html=True)
-        st.markdown('<li>Laboratory compliance (GLP/GMP)</li>', unsafe_allow_html=True)
-        st.markdown('<li>Stability testing programs</li>', unsafe_allow_html=True)
-        st.markdown('<li>Specification development and justification</li>', unsafe_allow_html=True)
-        st.markdown('</ul>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-    with col2:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Auditing & Inspection Readiness</h3>', unsafe_allow_html=True)
-        st.markdown('<p>We help prepare your facilities, systems, and personnel for regulatory inspections and customer audits.</p>', unsafe_allow_html=True)
-        st.markdown('<ul>', unsafe_allow_html=True)
-        st.markdown('<li>Mock FDA/EMA inspections</li>', unsafe_allow_html=True)
-        st.markdown('<li>Audit response support</li>', unsafe_allow_html=True)
-        st.markdown('<li>Supplier qualification audits</li>', unsafe_allow_html=True)
-        st.markdown('<li>GMP audit programs</li>', unsafe_allow_html=True)
-        st.markdown('</ul>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-    
+        if st.session_state.api_response:
+            components.html("<div class='table-container'>"+st.session_state.api_response+"</div>",height=800,width=1000,scrolling=True)
+        else:
+            st.warning("⚠️ No response received. Please try again.")
     # CTA section
-    st.markdown('<div style="text-align: center; margin: 3rem 0;">', unsafe_allow_html=True)
-    st.markdown('<h2>Ready to elevate your quality assurance program?</h2>', unsafe_allow_html=True)
+    st.markdown("""
+    <div style="text-align: center; margin: 3rem 0;">
+        <h2>Need personalized regulatory support?</h2>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    if st.button("Contact Our Regulatory Team", key="contact_reg_btn"):
+        change_page('contact')
+        
+    # Footer
+    st.markdown("""
+    <div class="footer">
+        <p>© 2025 QRx Pharmaceutical Consultants. All rights reserved.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Quality Page - ONLY SHOWS QUALITY CONTENT
+elif st.session_state.current_page == 'quality':
+    st.markdown('<h2 class="section-title">Pharmaceutical Quality Services</h2>', unsafe_allow_html=True)
+    
+    # Introduction
+    st.markdown("""
+        <style>
+            /* Global Styles */
+            body {
+                background-color: #f0f2f6;
+                color: #1e293b;
+                font-family: 'Inter', 'sans serif';
+            }
+
+            /* Header Styling */
+            .main-header {
+                background: linear-gradient(135deg, #0052cc, #00a3bf);
+                color: white;
+                padding: 2rem;
+                border-radius: 10px;
+                margin-bottom: 2rem;
+                text-align: center;
+            }
+
+            /* Form Elements */
+            div[data-testid="stTextInput"] input,
+            div[data-testid="stTextArea"] textarea,
+            div[data-testid="stSelectbox"] > div[data-baseweb="select"] {
+                background-color: white;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                padding: 0.75rem;
+                font-size: 1rem;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            }
+
+            div[data-testid="stTextInput"] input:focus,
+            div[data-testid="stTextArea"] textarea:focus {
+                border-color: #0052cc;
+                box-shadow: 0 0 0 2px rgba(0,82,204,0.2);
+            }
+
+            /* Button Styling */
+            .stButton > button {
+                width: 100%;
+                background: linear-gradient(135deg, #0052cc, #00a3bf);
+                color: white;
+                border: none;
+                padding: 0.75rem 1.5rem;
+                border-radius: 8px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .stButton > button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,82,204,0.2);
+            }
+
+            /* Card Styling */
+            .card div[data-testid="stSelectbox"]{
+                background: white;
+                border-radius: 10px;
+                padding: 1.5rem;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                margin-bottom: 1.5rem;
+            }
+
+            /* Results Table */
+            .table-container {
+                background: white;
+                border-radius: 10px;
+                padding: 1rem;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                border-collapse: collapse;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                border-spacing: 0;
+                margin: 1rem 0;
+            }
+
+            th {
+                background: #0052cc;
+                color: white;
+                padding: 1rem;
+                text-align: left;
+                font-weight: 600;
+            }
+
+            td {
+                padding: 1rem;
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+            tr:hover {
+                background: #f8fafc;
+            }
+
+            /* Loading Spinner */
+            .stSpinner > div {
+                border-color: #0052cc !important;
+            }
+
+            /* Success Message */
+            .success-message {
+                background: #dcfce7;
+                color: #166534;
+                padding: 1rem;
+                border-radius: 8px;
+                margin: 1rem 0;
+            }
+
+            /* Error Message */
+            .error-message {
+                background: #fee2e2;
+                color: #991b1b;
+                padding: 1rem;
+                border-radius: 8px;
+                margin: 1rem 0;
+            }
+            
+        </style>
+    """, unsafe_allow_html=True)
+
+    # Page Navigation
+    if "page" not in st.session_state:
+        st.session_state.page = "form"
+    if "api_response" not in st.session_state:
+        st.session_state.api_response = None
+
+    options = dict()
+
+    def get_cid_from_name(drug_name):
+        url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{drug_name}/cids/JSON"
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            try:
+                cids = response.json()["IdentifierList"]["CID"]
+                return cids[0]  # Return the first matching CID
+            except (KeyError, IndexError):
+                return None
+        else:
+            return None
+
+    def get_pubchem_product_code(product_name):
+        product_code_from_pubchem = ""
+        url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{product_name}/property/CanonicalSMILES/JSON"
+        response = requests.get(url)
+        if response.status_code == 200:
+            try:
+                smiles = response.json()["PropertyTable"]["Properties"][0]["CanonicalSMILES"]
+                product_code_from_pubchem=smiles
+            except (KeyError, IndexError):
+                product_code_from_pubchem = "NO DRUG FOUND"
+        else:
+            product_code_from_pubchem="NO DRUG FOUND"
+        if product_code_from_pubchem=="NO DRUG FOUND":
+            return ""
+        else:
+            return product_code_from_pubchem
+
+    def showStructure(product_name):
+        product_code = ""
+        product_code_from_pubchem = get_pubchem_product_code(product_name)
+        if product_code_from_pubchem=="":
+            product_code_prompt = prompts.STRUCTURE_PROMPT.substitute(product_name=product_name)
+            print("Prompt is: "+product_code_prompt)
+            product_code = chat_with_gpt.chatWithGpt(product_code_prompt)
+            if product_code == "NO DRUG FOUND":
+                return ""
+        else:
+            product_code = product_code_from_pubchem
+
+        print("product code is: "+product_code)
+        print("product code from pubchem: "+product_code_from_pubchem)
+        m = Chem.MolFromSmiles(product_code)
+        if m:
+            return Draw.MolToImage(m, size=(400, 400))
+        return None
+
+    # Directory where FTIR images are stored
+    FTIR_IMAGE_DIR = "./"
+
+    def get_ftir_image(product_name):
+        """Fetches the corresponding FTIR image for the given product name."""
+        image_filename = f"{product_name.lower()}.png"
+        image_path = os.path.join(FTIR_IMAGE_DIR, image_filename)
+        if os.path.exists(image_path):
+            return image_path
+        return None
+
+    # 📌 FORM PAGE
+    if st.session_state.page == "form":
+        st.markdown('<div class="main-header"><h1>🧪 QAI Model AI-Powered Quality Assistance</h1><p> CREATED BY :- MEERA ACHARYA & RAJ PATEL</P><p>Enter details below to generate a comprehensive quality report</p></div>', unsafe_allow_html=True)
+
+        # User Input Form in a card layout
+        # st.markdown('<div class="card">', unsafe_allow_html=True)
+        col1, col2 = st.columns(2)
+
+        with col1:
+            options["product_name"] = st.text_input("💊 Product Name", placeholder="e.g., Paracetamol")
+            if st.button("🔬 Get Structure"):
+                if not options["product_name"]:
+                    st.error("⚠️ Please write product name!")
+                else:
+                    with st.spinner("🛠️ Processing... Please wait"):
+                        fig = showStructure(options["product_name"])
+                    if fig == "":
+                        st.error("⚠️ Drug not found, please input a valid drug name")
+                    else:
+                        st.image(fig, caption=f"{options['product_name']} Molecule")
+
+            if st.button("📊 Show FTIR Graph"):
+                if options.get("product_name"):  # Ensure product name exists
+                    ftir_image = get_ftir_image(options["product_name"])
+                    if ftir_image:
+                        st.image(ftir_image, caption=f"FTIR Graph for {options['product_name']}", use_column_width=True)
+                    else:
+                        st.error(f"⚠️ No FTIR data available for {options['product_name']}.")
+                else:
+                    st.error("⚠️ Please enter a product name.")            
+
+        with col2:
+            options["quanOfMed"] = st.text_input("📦 Quantity of Medicine", placeholder="e.g., 1000 tablets")
+            options["jurisdiction"] = st.selectbox("🌎 Select Jurisdiction", 
+                ["INDIAN PHARMACOPIEA", "BRITISH PHARMACOPIEA", "UNITED STATES PHARMACOPOEIA", "MARTINDALE-EXTRA PHARMACOPIEA", "COMPARE WITH ALL"])
+            options["powerOfDrug"] = st.text_input("⚡ Power of Drug", placeholder="e.g., 500 mg")
+
+        # st.markdown('</div>', unsafe_allow_html=True)
+
+        # Analysis Options in a separate card
+        # st.markdown('<div class="card">', unsafe_allow_html=True)
+        options["typeOfInfo"] = st.selectbox("📊 Select Analysis Type:", 
+                ["METHOD OF PREPARATION", "CHARACTARIZATION/EVALUATION", "Both of above", "CHECK RESULTS"])
+
+        if options["typeOfInfo"] == "CHECK RESULTS":
+            options["resultsToCheck"] = st.text_area("🔍 Enter Your Results:", height=200, placeholder="Paste lab results here...", key="checkResults")
+
+        options["ftir_required"] = st.checkbox("📡 Include FTIR Analysis")
+        # st.markdown('</div>', unsafe_allow_html=True)
+
+        # Submit button with enhanced styling
+        submit_button = st.button("🚀 Generate Report")
+        if submit_button:
+            if not all([options.get("product_name"), options.get("quanOfMed"), options.get("powerOfDrug")]):
+                st.error("⚠️ Please fill in all required fields!")
+            else:
+                prompt = prompts.getPromptForOptions(options)
+                with st.spinner("🛠️ Generating comprehensive report... Please wait"):
+                    api_response = chat_with_gpt.chatWithGpt(prompt)
+                    st.session_state.api_response = api_response
+
+                st.session_state.update(options)
+                st.session_state.page = "result"
+                st.experimental_rerun()
+
+    # 📌 RESULT PAGE
+    elif st.session_state.page == "result":
+        st.markdown('<div class="main-header"><h1>📑 Quality Analysis Report</h1></div>', unsafe_allow_html=True)
+        
+        if st.button("🔙 Return to Form", key="back_button"):
+            st.session_state.page = "form"
+            st.experimental_rerun()
+
+        # st.markdown('<div class="card">', unsafe_allow_html=True)
+        st.markdown("### 📋 Analysis Details")
+        st.markdown(f"**💊 Product:** {st.session_state.product_name}",)
+        st.markdown(f"**📦 Quantity:** {st.session_state.quanOfMed}")
+        st.markdown(f"**⚡ Strength:** {st.session_state.powerOfDrug}")
+        # st.markdown('</div>', unsafe_allow_ht ml=True)
+
+        if st.session_state.get("ftir_required"):
+            with st.spinner("📡 Analyzing FTIR Data..."):
+                ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
+                components.html("### 🔬 FTIR Analysis")
+                st.markdown(ftir_data, unsafe_allow_html=True)
+                # components.html(ftir_data)
+
+        if st.session_state.api_response:
+            components.html("<div class='table-container'>"+st.session_state.api_response+"</div>",height=800,width=1000,scrolling=True)
+        else:
+            st.warning("⚠️ No response received. Please try again.")
+
+    
     if st.button("Contact Our Quality Experts", key="quality_contact_button"):
         st.session_state.current_page = 'contact'
         st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
-    
+        
     # Footer
-    st.markdown('<div class="footer">', unsafe_allow_html=True)
-    st.markdown('<p>© 2025 QRx Pharmaceutical Consultants. All rights reserved.</p>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="footer">
+        <p>© 2025 QRx Pharmaceutical Consultants. All rights reserved.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-###############################################################################
-# MAIN PAGE RENDERING
-###############################################################################
-
-# Display the appropriate page based on session state
-if st.session_state.current_page == 'home':
-    show_home_page()
-elif st.session_state.current_page == 'services':
-    show_services_page()
-elif st.session_state.current_page == 'contact':
-    show_contact_page()
-elif st.session_state.current_page == 'about':
-    show_about_page()
-elif st.session_state.current_page == 'regulatory':
-    show_regulatory_page()
-elif st.session_state.current_page == 'quality':
-    show_quality_page()
+# Close the main content div
+st.markdown('</div>', unsafe_allow_html=True)
