@@ -7,7 +7,16 @@ from rdkit import Chem
 from rdkit.Chem import Draw
 import requests
 import os
+import base64
 
+def display_pdf(file_path):
+    with open(file_path, "rb") as f:
+        base64_pdf = base64.b64encode(f.read()).decode("utf-8")
+    pdf_display = f'''
+        <iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="600" type="application/pdf">
+        </iframe>
+    '''
+    return pdf_display
 # Set flag for RDKit availability
 RDKIT_AVAILABLE = True
 
@@ -570,12 +579,13 @@ if st.session_state.current_page == 'home':
         if st.button("Learn More About us", key="home_About_us"):
             st.session_state.current_page = 'About us'
             st.rerun()
+    
     st.markdown("## 📄 ISO Certification")
 
-# Display the PDF inside the app
+    # Display the embedded PDF
     st.markdown(display_pdf("iso_certificate.pdf"), unsafe_allow_html=True)
 
-# Download button below the PDF
+    # Add a download button
     with open("iso_certificate.pdf", "rb") as f:
         st.download_button("📥 Download ISO Certificate", f, file_name="iso_certificate.pdf")
     # Footer
