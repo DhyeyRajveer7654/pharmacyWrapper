@@ -1,6 +1,4 @@
 from string import Template
-import streamlit as st # type: ignore
-from prompts import getPromptForOptions
 
 TABLE_STYLE = """
 <table border="1" style="border-collapse: collapse; text-align: center; width: 100%;">
@@ -136,9 +134,10 @@ The response should be formatted in a well-structured HTML table, showing:
     - Links to Application Forms and Guidelines
 """ + TABLE_STYLE)
 
+
+# Define the getPromptForOptions function here to avoid circular imports
 def getPromptForOptions(options):
     # Check for report_type based prompts
-    
     if options.get('report_type') == "Pathway":
         return PATHWAY_PROMPT.substitute(
             product_type=options.get('product_type', 'default_product'),
@@ -146,7 +145,7 @@ def getPromptForOptions(options):
             regulatory_authorities=options.get('regulatory', 'default_regulatory')
         )
 
-    elif options.get('report_type') == "List of Licenses":
+    elif options.get('report_type') == "List of License":
         return LIST_OF_LICENSES_PROMPT.substitute(
             product_type=options.get('product_type', 'default_product'),
             regulatory_authorities=options.get('regulatory', 'default_regulatory')
@@ -160,7 +159,7 @@ def getPromptForOptions(options):
     if options.get('typeOfInfo') == "METHOD OF PREPARATION":
         prompt_template = METHOD_OF_PREPARATION_PROMPT
     elif options.get('typeOfInfo') == "CHARACTARIZATION/EVALUATION":
-        prompt_template = CHARACTERIZATION_EVALUATION_PROMPT
+        prompt_template = CHARACTARIZATION_EVALUATION_PROMPT
     elif options.get('typeOfInfo') == "Both of above":
         prompt_template = COMBINED_PROMPT
     elif options.get('typeOfInfo') == "CHECK RESULTS":
