@@ -614,30 +614,29 @@ elif st.session_state.current_page == 'contact':
     
     col1, col2 = st.columns(2)
 
-with col1:
-    st.markdown("""
-    <div class="card">
-        <h3>Main Office</h3>
-        <h4>Redoxy Lifecare</h4>
-        <p>2,3 Medicare Complex,<br>
-        Old Housing Road,<br>
-        Surendranagar, 363001 <br>
-        Gujarat, India</p>
-        <p>Phone: +91-8849122744, +91-9723449306<br>
-        Email: redoxylifecare@gmail.com</p>
-    </div>
-    """, unsafe_allow_html=True)
+    with col1:
+        st.markdown("""
+        <div class="card">
+            <h3>Main Office</h3>
+            <h4>Redoxy Lifecare</h4>
+            <p>2,3 Medicare Complex,<br>
+            Old Housing Road,<br>
+            Surendranagar, 363001 <br>
+            Gujarat, India</p>
+            <p>Phone: +91-8849122744, +91-9723449306<br>
+            Email: redoxylifecare@gmail.com</p>
+        </div>
+        """, unsafe_allow_html=True)
 
-with col2:
-    # Show Logo in Column 2
-    st.image("path_to_logo/logo.png", width=200)
+    with col2:
+        st.image('LOGO.png', width=200)
 
-    # Footer
-    st.markdown("""
-    <div class="footer">
-        <p>© 2025 QRx Pharmaceutical Consultants. All rights reserved.</p>
-    </div>
-    """, unsafe_allow_html=True)
+        # Footer
+        st.markdown("""
+        <div class="footer">
+            <p>© 2025 QRx Pharmaceutical Consultants. All rights reserved.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
 # About Page
 elif st.session_state.current_page == 'about':
