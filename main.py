@@ -866,7 +866,7 @@ elif st.session_state.current_page == 'regulatory':
 
     # 📌 FORM PAGE
     if st.session_state.page == "form":
-        st.markdown('<div class="main-header"><h1>🧪 QRx AI-Powered Regulatory Complaince</h1><p> CREATED BY :- MEERA ACHARYA & RAJ PATEL</P><p>Enter details below to generate a comprehensive quality report</p></div>', unsafe_allow_html=True)
+        st.markdown('<div class="main-header"><h1>🧪 QRx AI-Powered Regulatory Complaince</h1><p> CREATED BY :- MEERA ACHARYA & RAJ PATEL</P><p>Enter details below to generate a comprehensive regulatory report</p></div>', unsafe_allow_html=True)
 
         # User Input Form in a card layout
         # st.markdown('<div class="card">', unsafe_allow_html=True)
