@@ -580,9 +580,8 @@ if st.session_state.current_page == 'home':
             st.session_state.current_page = 'About us'
             st.rerun()
     col1, col_gap, col2 = st.columns([3, 1, 6])
-    st.markdown("## 📄 ISO Certification")
-
     with col1:
+        st.markdown("## 📄 ISO Certification")
         if os.path.exists("iso_preview.jpg"):
             st.image("iso_preview.jpg", caption="ISO Certificate Preview", width=400)
         else:
