@@ -364,10 +364,10 @@ st.markdown("""
     
     /* Footer */
     .footer {
-        background-color: #f0f9ff;
+        background-color: #fffff;
         color: #1e3a8a;
         padding: 1rem;
-        border-radius: 10px 10px 0 0;
+        border-radius: 5px 5px 0 0;
         margin-top: 1rem;
     }
     
@@ -380,7 +380,7 @@ st.markdown("""
         text-align: center;
         margin-top: 1rem;
         padding-top: 1rem;
-        border-top: 1px solid #bfdbfe;
+        border-top: 1px solid #ffffff;
         color: #ffffff;
     }
     
@@ -418,31 +418,7 @@ st.markdown("""
         border: none;
         width: 100%;
     }
-    
-    .stButton > button:hover {
-        background-color: #2563eb;
-    }
-    
-    div[data-testid="stToolbar"] {
-        display: none;
-    }
-    
-    div[data-testid="stDecoration"] {
-        display: none;
-    }
-    
-    section[data-testid="stSidebar"] {
-        display: none;
-    }
-    
-    #MainMenu {
-        display: none;
-    }
-    
-    footer {
-        display: none;
-    }
-    
+        
     /* Enhanced Form Elements from OLD AI.py */
     div[data-testid="stTextInput"] input,
     div[data-testid="stTextArea"] textarea,
