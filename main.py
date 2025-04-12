@@ -209,7 +209,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown('<div style="background-color: white; padding: 1rem 0; border-bottom: 1px solid #e0e0e0; margin-bottom: 1rem;">', unsafe_allow_html=True)
-col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
+col1, col2, col3, col4, col5, col6 = st.columns(6)
 with col1:
     st.markdown('<h1 style="color:#1e40af; margin:0; padding:0; font-size:2.5rem; font-weight:700;">QRx</h1>', unsafe_allow_html=True)
 with col2:
@@ -217,22 +217,18 @@ with col2:
         st.session_state.current_page = 'home'
         st.rerun()
 with col3:
-    if st.button("SERVICES", key="nav_services", use_container_width=True, type="secondary", help="View our services"):
-        st.session_state.current_page = 'services'
-        st.rerun()
-with col4:
     if st.button("CONTACT", key="nav_contact", use_container_width=True, type="secondary", help="Contact us"):
         st.session_state.current_page = 'contact'
         st.rerun()
-with col5:
+with col4:
     if st.button("ABOUT", key="nav_about", use_container_width=True, type="secondary", help="About QRx"):
         st.session_state.current_page = 'about'
         st.rerun()
-with col6:
+with col5:
     if st.button("REGULATORY", key="nav_regulatory", use_container_width=True, type="secondary", help="Regulatory Info"):
         st.session_state.current_page = 'regulatory'
         st.rerun()
-with col7:
+with col6:
     if st.button("QUALITY", key="nav_quality", use_container_width=True, type="secondary", help="Quality Info"):
         st.session_state.current_page = 'quality'
         st.rerun()
@@ -725,7 +721,7 @@ elif st.session_state.current_page == 'about':
         <div class="card" style="text-align: center;">
             <img src="meera.png" alt="Meera Acharya" style="width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom: 10px;">
             <h3>Meera Acharya</h3>
-            <p><em>Founder</em></p>
+            <p><em>Founder & Tech Lead</em></p>
             <p>Innovator and visionary behind QRx AI. Obsessed with AI and passionate about transforming pharmacy education. She ideates and designs all project implementations.</p>
         </div>
         """, unsafe_allow_html=True)
