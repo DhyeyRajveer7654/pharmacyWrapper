@@ -586,7 +586,7 @@ if st.session_state.current_page == 'home':
     st.image("iso_preview.png", caption="ISO Certificate Preview", width=400)
 
     with open("iso_certificate.pdf", "rb") as f:
-    st.download_button("📥 Download Full ISO Certificate", f, file_name="iso_certificate.pdf")
+        st.download_button("📥 Download Full ISO Certificate", f, file_name="iso_certificate.pdf")
     # Footer
     st.markdown("""
     <div class="footer">
