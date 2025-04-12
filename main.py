@@ -723,7 +723,7 @@ elif st.session_state.current_page == 'about':
         """, unsafe_allow_html=True)
 
         # Footer
-        st.markdown("""
+    st.markdown("""
         <div class="footer">
             <p>© 2025 QRx AI. All rights reserved. Built with passion by pharmacy minds.</p>
         </div>
