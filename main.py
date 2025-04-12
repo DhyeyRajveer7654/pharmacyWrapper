@@ -496,7 +496,7 @@ st.markdown("""
     }
 
     .main-header h1 {
-        color: #0ea5e9;
+        color: #000000;
         font-size: 2rem;
         margin-bottom: 0.5rem;
     }
@@ -512,7 +512,7 @@ st.markdown("""
     }
 
     .result-header {
-        color: #0ea5e9;
+        color: #000000;
         font-size: 1.5rem;
         margin-bottom: 1rem;
         border-bottom: 2px solid #e2e8f0;
