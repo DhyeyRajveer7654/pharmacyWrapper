@@ -87,7 +87,7 @@ Provide the **canonical SMILES notation** for the drug $product_name based on Pu
 
 # PATHWAY PROMPT (For starting a pharmaceutical manufacturing company)
 PATHWAY_PROMPT = Template("""
-I am a registered pharmacist in Australia and I am starting a pharmaceutical manufacturing company for $product_type. Provide a comprehensive and detailed HTML table with all the following:
+I am a registered pharmacist in India and I am starting a pharmaceutical manufacturing company for $product_type. Provide a comprehensive and detailed HTML table with all the following:
 
 1. **All steps** required from company registration to manufacturing and marketing of $product_type.
 2. **Documents required** at each stage.
