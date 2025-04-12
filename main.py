@@ -744,24 +744,19 @@ elif st.session_state.current_page == 'contact':
         st.success("Thank you for contacting us! We'll get back to you shortly.")
     
     # Office Locations 
-    st.markdown("""
-    <div class="card">
-        <h3>Our Office</h3>
-    </div>
-    """, unsafe_allow_html=True)
-    
     col1, = st.columns(1)
     
     with col1:
         st.markdown("""
         <div class="card">
             <h3>Main Office</h3>
+            <h4>Redoxy lifecare<h4>
             <p>2,3 medicare complex,<br>
             old housing road,<br>
             Surendranagar, 363001 <br>
             Gujarat, India</p>
             <p>Phone: +91-8849122744, +91-9723449306<br>
-            Email: redoxYlifecare@gmail.com</p>
+            Email: redoxylifecare@gmail.com</p>
         </div>
         """, unsafe_allow_html=True)
     # Footer
