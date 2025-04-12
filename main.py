@@ -275,7 +275,7 @@ st.markdown("""
     .header {
         display: flex;
         justify-content: space-between;
-        align-items: justify;
+        align-items: center;
         max-width: 1400px;
         margin: 0 auto;
         height: 50%;
@@ -315,7 +315,7 @@ st.markdown("""
     
     /* Add margin to content to prevent overlap with fixed header */
     .main-content {
-        margin-top: 90px; /* Increased to ensure content doesn't hide under header */
+        margin-top: 20px; /* Increased to ensure content doesn't hide under header */
         padding-top: 1rem;
     }
     
@@ -325,7 +325,7 @@ st.markdown("""
         color: #1e40af;
         padding: 3rem 2rem;
         border-radius: 10px;
-        text-align: justify;
+        text-align: center;
         margin-bottom: 2rem;
     }
     
@@ -358,7 +358,7 @@ st.markdown("""
     .section-title {
         color: #1e40af;
         margin: 2rem 0 1rem 0;
-        text-align: justify;
+        text-align: center;
         font-size: 1.8rem;
     }
     
@@ -491,7 +491,7 @@ st.markdown("""
     
     /* Main header styling */
     .main-header {
-        text-align: justify;
+        text-align: center;
         margin-bottom: 2rem;
     }
 
