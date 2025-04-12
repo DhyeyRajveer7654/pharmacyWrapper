@@ -544,8 +544,8 @@ if st.session_state.current_page == 'home':
     st.markdown("""
     <div class="hero">
         <h2>Pharmaceutical Quality & Regulatory Excellence</h2>
-        <p>QRx provides comprehensive quality assurance and regulatory compliance solutions for the pharmaceutical industry. 
-        With our expert team and advanced AI-powered tools, we ensure your products meet the highest standards at every stage.</p>
+        <p>QRx AI provides comprehensive quality assurance and regulatory compliance solutions for the pharmaceutical students. 
+        With our models and advanced AI-powered tools, we ensure your products meet the highest standards at every stage.</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -557,13 +557,12 @@ if st.session_state.current_page == 'home':
     with col1:
         st.markdown("""
         <div class="card">
-            <h3>Regulatory Compliance</h3>
-            <p>Navigate complex regulatory requirements with our comprehensive compliance services:</p>
+            <h3>QRx AI powered Regulatory Complaince</h3>
+            <p>Navigate complex regulatory requirements with our comprehensive compliance model:</p>
             <ul>
-                <li>Regulatory strategy development</li>
-                <li>Product registration support</li>
-                <li>Regulatory submissions management</li>
-                <li>Post-approval regulatory maintenance</li>
+                <li>Pathway for beginners</li>
+                <li>Liciense check list</li>
+                <li>Detailed Information on Particular forms</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
@@ -571,13 +570,14 @@ if st.session_state.current_page == 'home':
     with col2:
         st.markdown("""
         <div class="card">
-            <h3>Quality Assurance</h3>
+            <h3>QAI AI Powered Quality Assurance</h3>
             <p>Ensure product safety, efficacy, and compliance with our quality assurance services:</p>
             <ul>
-                <li>Quality management system development</li>
-                <li>GMP compliance audits</li>
-                <li>Quality control testing</li>
-                <li>CAPA system implementation</li>
+                <li>Pharmacopieal Complaince</li>
+                <li>Deatiled Method of Preparation</li>
+                <li>All the Evaluation Checklist</li>
+                <li>Check your results with pharmacopiea</li>
+                <li>FTIR Graphs of Anti-Cancer Drugs (IP)</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
@@ -595,8 +595,8 @@ if st.session_state.current_page == 'home':
             st.session_state.current_page = 'contact'
             st.rerun()
     with col2:
-        if st.button("Learn More About Our Services", key="home_services"):
-            st.session_state.current_page = 'services'
+        if st.button("Learn More About us", key="home_About_us"):
+            st.session_state.current_page = 'About us'
             st.rerun()
     
     # Footer
@@ -606,106 +606,6 @@ if st.session_state.current_page == 'home':
     </div>
     """, unsafe_allow_html=True)
 
-# Services Page
-elif st.session_state.current_page == 'services':
-    st.markdown('<h2 class="section-title">Our Services</h2>', unsafe_allow_html=True)
-    
-    st.markdown("""
-    <div class="hero">
-        <h2>Comprehensive Pharmaceutical Services</h2>
-        <p>QRx offers a wide range of services designed to support pharmaceutical companies throughout the product lifecycle, from development to post-marketing activities.</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Regulatory Services
-    st.markdown('<h3 class="section-title">Regulatory Services</h3>', unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown("""
-        <div class="card">
-            <h3>Regulatory Strategy</h3>
-            <p>Develop comprehensive strategies for product registration and lifecycle management:</p>
-            <ul>
-                <li>Global regulatory pathway assessment</li>
-                <li>Strategic planning for market access</li>
-                <li>Regulatory gap analysis</li>
-                <li>Product development roadmaps</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-    with col2:
-        st.markdown("""
-        <div class="card">
-            <h3>Regulatory Submissions</h3>
-            <p>Complete preparation and management of regulatory dossiers:</p>
-            <ul>
-                <li>CTD/eCTD compilation</li>
-                <li>CMC documentation</li>
-                <li>Clinical and non-clinical summaries</li>
-                <li>Agency meeting preparation</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Quality Services
-    st.markdown('<h3 class="section-title">Quality Services</h3>', unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown("""
-        <div class="card">
-            <h3>Quality Management Systems</h3>
-            <p>Design and implement robust quality systems for GMP compliance:</p>
-            <ul>
-                <li>QMS development and implementation</li>
-                <li>SOP creation and management</li>
-                <li>Quality metrics implementation</li>
-                <li>Training program development</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-    with col2:
-        st.markdown("""
-        <div class="card">
-            <h3>Analytical Services</h3>
-            <p>Comprehensive quality control and product characterization:</p>
-            <ul>
-                <li>Method development and validation</li>
-                <li>Product characterization</li>
-                <li>Stability testing</li>
-                <li>Reference standard qualification</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # CTA section
-    st.markdown("""
-    <div style="text-align: center; margin: 3rem 0;">
-        <h2>Interested in our services?</h2>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("Contact Our Regulatory Team", key="services_reg_contact"):
-            st.session_state.current_page = 'regulatory'
-            st.rerun()
-    with col2:
-        if st.button("Contact Our Quality Team", key="services_quality_contact"):
-            st.session_state.current_page = 'quality'
-            st.rerun()
-            
-    # Footer
-    st.markdown("""
-    <div class="footer">
-        <p>© 2025 QRx Pharmaceutical Consultants. All rights reserved.</p>
-    </div>
-    """, unsafe_allow_html=True)
 
 # Contact Page
 elif st.session_state.current_page == 'contact':
@@ -768,86 +668,92 @@ elif st.session_state.current_page == 'contact':
 
 # About Page
 elif st.session_state.current_page == 'about':
-    st.markdown('<h2 class="section-title">About QRx</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">About Us</h2>', unsafe_allow_html=True)
+    
     
     st.markdown("""
     <div class="hero">
         <h2>Our Story</h2>
-        <p>QRx was founded by pharmaceutical industry veterans with a mission to simplify quality and regulatory compliance for pharmaceutical companies of all sizes.</p>
+        <p>QRx AI was founded in 2024 by Meera Acharya, a passionate pharmacy student at A.P.M.C. College of Pharmacy and Research, with a dream to blend artificial intelligence and pharmaceutical science. 
+        Her journey began in the 6th semester of her B.Pharm at C.U. Shah College of Pharmacy and Research, where she fell in love with AI. 
+        Meera never hesitates to take up an opportunity in this field — her dedication led her to win 2nd prize for the same AI model at NCIP 2025.</p>
     </div>
     """, unsafe_allow_html=True)
-    
+
     # Company Profile
     st.markdown("""
     <div class="card">
         <h3>Who We Are</h3>
-        <p>QRx is a specialized pharmaceutical consulting firm focused on quality and regulatory excellence. Founded in 2015, we've helped over 200 companies across 25 countries navigate complex regulatory pathways and implement robust quality systems.</p>
-        <p>Our team consists of former regulatory agency officials, quality directors, and pharmaceutical development experts who bring decades of real-world experience to every client project.</p>
+        <p>QRx AI is a startup focused on empowering pharmacy students by simplifying regulatory compliance and enabling them to perform dosage form manufacturing as per pharmacopoeial standards in laboratory settings.</p>
+        <p>Registered under Redocy Lifecare, QRx AI is co-founded by Raj H. Patel, with Meera Acharya as the founder. Our tools provide easy-to-use solutions and educational resources tailored for pharma students.</p>
     </div>
     """, unsafe_allow_html=True)
-    
+
     # Mission and Values
     col1, col2 = st.columns(2)
-    
+
     with col1:
         st.markdown("""
         <div class="card">
             <h3>Our Mission</h3>
-            <p>To advance global health by helping pharmaceutical companies navigate complex quality and regulatory challenges efficiently and effectively.</p>
-            <p>We believe in making compliance accessible to companies of all sizes, from startups to multinational corporations, through practical solutions and technology-enabled services.</p>
+            <p>To create something unique in the field of pharmacy by integrating artificial intelligence into pharmaceutical processes.</p>
+            <p>We aim to bridge the gap between AI and the pharma industry while educating students and professionals alike.</p>
         </div>
         """, unsafe_allow_html=True)
-        
+
     with col2:
         st.markdown("""
         <div class="card">
             <h3>Our Values</h3>
             <ul>
-                <li><strong>Excellence:</strong> We maintain the highest standards in all our work</li>
-                <li><strong>Integrity:</strong> We operate with honesty and transparency</li>
-                <li><strong>Innovation:</strong> We embrace new technologies and approaches</li>
-                <li><strong>Partnership:</strong> We work as an extension of our clients' teams</li>
-                <li><strong>Impact:</strong> We measure success by our clients' outcomes</li>
+                <li><strong>Passion:</strong> Driven by curiosity and love for AI</li>
+                <li><strong>Education:</strong> Focused on making learning easy and practical</li>
+                <li><strong>Innovation:</strong> Building smart, student-focused tools</li>
+                <li><strong>Teamwork:</strong> Collaborating across disciplines</li>
+                <li><strong>Impact:</strong> Making real-world lab experiences more accessible</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
-    
+
     # Team Section
     st.markdown('<h3 class="section-title">Our Leadership</h3>', unsafe_allow_html=True)
-    
+
     col1, col2, col3 = st.columns(3)
-    
+
     with col1:
         st.markdown("""
-        <div class="card">
-            <h3>Dr. Sarah Johnson</h3>
-            <p><em>CEO & Founder</em></p>
-            <p>Former FDA reviewer with 20+ years of experience in pharmaceutical regulatory affairs. Ph.D. in Pharmaceutical Sciences.</p>
+        <div class="card" style="text-align: center;">
+            <img src="meera.jpg" alt="Meera Acharya" style="width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom: 10px;">
+            <h3>Meera Acharya</h3>
+            <p><em>Founder</em></p>
+            <p>Innovator and visionary behind QRx AI. Obsessed with AI and passionate about transforming pharmacy education. She ideates and designs all project implementations.</p>
         </div>
         """, unsafe_allow_html=True)
-        
+
     with col2:
         st.markdown("""
-        <div class="card">
-            <h3>Dr. Michael Chen</h3>
-            <p><em>Chief Quality Officer</em></p>
-            <p>Previously Quality Director at a global pharmaceutical company. Expert in QMS implementation and remediation.</p>
+        <div class="card" style="text-align: center;">
+            <img src="raj.jpg" alt="Raj H. Patel" style="width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom: 10px;">
+            <h3>Raj H. Patel</h3>
+            <p><em>Co-Founder & Tech Lead</em></p>
+            <p>Owner of Redocy Lifecare and co-founder of QRx AI. Raj handles all the coding and back-end development, turning Meera's ideas into working AI solutions.</p>
         </div>
         """, unsafe_allow_html=True)
-        
+
     with col3:
         st.markdown("""
-        <div class="card">
-            <h3>Dr. Elena Rodriguez</h3>
-            <p><em>Head of Regulatory Strategy</em></p>
-            <p>Former EMA scientific advisor with expertise in global regulatory strategy and submissions.</p>
+        <div class="card" style="text-align: center;">
+            <img src="dhyey.jpg" alt="Dhyey Rajveer" style="width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom: 10px;">
+            <h3>Dhyey Rajveer</h3>
+            <p><em>Model Development Support</em></p>
+            <p>Key contributor in the creation and fine-tuning of the AI models. His technical insights have been instrumental in QRx AI’s early success.</p>
         </div>
         """, unsafe_allow_html=True)
-    
+
     # Footer
     st.markdown("""
     <div class="footer">
-        <p>© 2025 QRx Pharmaceutical Consultants. All rights reserved.</p>
+        <p>© 2025 QRx AI. All rights reserved. Built with passion by pharmacy minds.</p>
     </div>
     """, unsafe_allow_html=True)
 
