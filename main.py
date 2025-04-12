@@ -1,10 +1,12 @@
 import streamlit as st
 import streamlit.components.v1 as components
+import prompts
+import chat_with_gpt
 from string import Template
-import os
-import requests
-from rdkit import Chem 
+from rdkit import Chem
 from rdkit.Chem import Draw
+import requests
+import os
 
 # Set flag for RDKit availability
 RDKIT_AVAILABLE = True
