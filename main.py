@@ -912,31 +912,7 @@ elif st.session_state.current_page == 'regulatory':
                 else:
                     st.success("Thank you for your request! Our regulatory team will contact you within 24 hours to discuss your regulatory gap analysis.")
     
-    # Case studies
-    st.markdown('<h3 class="section-title">Success Stories</h3>', unsafe_allow_html=True)
-    
-    case_study_col1, case_study_col2 = st.columns(2)
-    
-    with case_study_col1:
-        st.markdown("""
-        <div class="card">
-            <h3>Accelerated Approval for Novel Therapy</h3>
-            <p><strong>Challenge:</strong> A mid-sized pharmaceutical company sought to obtain accelerated approval for a novel therapy targeting a rare disease with significant unmet need.</p>
-            <p><strong>Solution:</strong> Our regulatory team developed a comprehensive strategy leveraging expedited programs, conducted thorough gap analysis of submission documents, and prepared for key agency interactions.</p>
-            <p><strong>Result:</strong> Successful accelerated approval with a 30% reduction in standard review timeline and favorable labeling.</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with case_study_col2:
-        st.markdown("""
-        <div class="card">
-            <h3>Global Regulatory Harmonization</h3>
-            <p><strong>Challenge:</strong> A global pharmaceutical company needed to harmonize regulatory submissions across 15 markets while addressing region-specific requirements.</p>
-            <p><strong>Solution:</strong> We implemented a centralized regulatory strategy with market-specific adaptations, developed a unified documentation approach, and created a global regulatory intelligence monitoring system.</p>
-            <p><strong>Result:</strong> Streamlined global submissions with 40% reduction in document preparation time and successful approvals in all target markets.</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
+       
     # Contact section
     st.markdown("""
     <div class="card" style="background: linear-gradient(135deg, #f0f9ff, #e0f2fe); text-align: center; padding: 2rem; margin-top: 2rem;">
@@ -1246,44 +1222,15 @@ elif st.session_state.page == "result":
     </div>
     """, unsafe_allow_html=True)
     
-    if st.button("Contact Our Quality Team", key="quality_contact_btn"):
-        change_page('contact')
-
-# Footer section (shown on all pages)
-st.markdown("""
-<div class="footer">
-    <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
-        <div style="flex: 1; min-width: 250px; padding-right: 20px;">
-            <h3>QRx</h3>
-            <p>Your trusted partner for pharmaceutical quality and regulatory excellence. We combine expert knowledge with innovative technology to ensure your products meet the highest standards.</p>
-        </div>
-        
-        <div style="flex: 1; min-width: 250px; padding-right: 20px;">
-            <h3>Quick Links</h3>
-            <ul>
-                <li><a href="#" style="color: #1e40af; text-decoration: none;">Home</a></li>
-                <li><a href="#" style="color: #1e40af; text-decoration: none;">Services</a></li>
-                <li><a href="#" style="color: #1e40af; text-decoration: none;">Contact</a></li>
-                <li><a href="#" style="color: #1e40af; text-decoration: none;">About</a></li>
-                <li><a href="#" style="color: #1e40af; text-decoration: none;">Resources</a></li>
-            </ul>
-        </div>
-        
-        <div style="flex: 1; min-width: 250px;">
-            <h3>Contact Us</h3>
-            <p>
-                <strong>Email:</strong> info@qrxpharma.com<br>
-                <strong>Phone:</strong> +1 (617) 555-0123<br>
-                <strong>Address:</strong> 123 Pharma Boulevard, Suite 200, Boston, MA 02110
-            </p>
-        </div>
+# Contact section
+    st.markdown("""
+    <div class="card" style="background: linear-gradient(135deg, #f0f9ff, #e0f2fe); text-align: center; padding: 2rem; margin-top: 2rem;">
+        <h3>Need Regulatory Support?</h3>
+        <p style="margin-bottom: 1.5rem;">Contact our Quality experts to discuss your specific requirements.</p>
     </div>
+    """, unsafe_allow_html=True)
     
-    <div class="footer-bottom">
-        <p>&copy; 2023 QRx Pharmaceutical Quality & Regulatory Experts. All rights reserved.</p>
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
+    if st.button("Contact Our Quality Team", key="contact_reg_btn"):
+        change_page('contact')
 # Close main content wrapper
 st.markdown('</div>', unsafe_allow_html=True)
