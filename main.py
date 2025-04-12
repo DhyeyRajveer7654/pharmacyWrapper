@@ -611,42 +611,57 @@ def show_contact_page():
     st.markdown('<p>We\'re here to answer your questions and discuss how we can support your pharmaceutical quality and regulatory compliance needs. Reach out to our team of experts today.</p>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
     
-    # Contact form and information
+    st.markdown("""
+    <div class="card">
+        <h3>Contact Form</h3>
+        <p>Fill out the form below and one of our experts will get back to you within 24 hours.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Send Us a Message</h3>', unsafe_allow_html=True)
-        
-        # Contact form
         name = st.text_input("Name")
         email = st.text_input("Email")
-        company = st.text_input("Company")
-        subject = st.selectbox("Subject", ["General Inquiry", "Quality Services", "Regulatory Support", "Partnership Opportunities", "Other"])
-        message = st.text_area("Message", height=150)
-        
-        if st.button("Submit"):
-            st.success("Your message has been sent! Our team will get back to you within 24 hours.")
-            
-        st.markdown('</div>', unsafe_allow_html=True)
+        phone = st.text_input("Phone Number")
         
     with col2:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<h3>Contact Information</h3>', unsafe_allow_html=True)
+        company = st.text_input("Company")
+        topic = st.selectbox("Topic", ["Regulatory Services", "Quality Services", "General Inquiry", "Other"])
         
-        st.markdown('<p><strong>Email:</strong> redoxYlifecare@gmail.com</p>', unsafe_allow_html=True)
-        st.markdown('<p><strong>Phone:</strong> +918849122744, +919723449306 </p>', unsafe_allow_html=True)
-        st.markdown('<p><strong>Address:</strong> 2,3 medicare complex, old housing road <br> Surendranagar, 363001 <br> India </p>', unsafe_allow_html=True)
-        
-        st.markdown('<h4 style="margin-top: 2rem;">Office Hours</h4>', unsafe_allow_html=True)
-        st.markdown('<p>Monday - Saturday: 10:00 AM - 8:00 PM IST</p>', unsafe_allow_html=True)
-        
-        st.markdown('</div>', unsafe_allow_html=True)
+    message = st.text_area("Message", height=150)
     
+    if st.button("Submit", key="contact_submit"):
+        # In a real implementation, this would send the form data
+        st.success("Thank you for contacting us! We'll get back to you shortly.")
+    
+    # Office Locations 
+    st.markdown("""
+    <div class="card">
+        <h3>Our Office</h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col1 = st.columns(1)
+    
+    with col1:
+        st.markdown("""
+        <div class="card">
+            <h3>Main Office</h3>
+            <p>2,3 medicare complex,<br>
+            old housing road,<br>
+            Surendranagar, 363001 <br>
+            Gujarat, India</p>
+            <p>Phone: +91-8849122744, +91-9723449306<br>
+            Email: redoxYlifecare@gmail.com</p>
+        </div>
+        """, unsafe_allow_html=True)
     # Footer
-    st.markdown('<div class="footer">', unsafe_allow_html=True)
-    st.markdown('<p>© 2025 QRx Pharmaceutical Consultants. All rights reserved.</p>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="footer">
+        <p>© 2025 QRx Pharmaceutical Consultants. All rights reserved.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 ###############################################################################
 # ABOUT PAGE
