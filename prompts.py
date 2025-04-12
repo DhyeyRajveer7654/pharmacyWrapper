@@ -87,7 +87,24 @@ Provide the **canonical SMILES notation** for the drug $product_name based on Pu
 
 # PATHWAY PROMPT (For starting a pharmaceutical manufacturing company)
 PATHWAY_PROMPT = Template("""
-Provide ONLY a clean HTML table showing all steps to start a $product_type manufacturing company under $regulatory_authorities. Do NOT add any text or explanation. For official links, if exact URLs are not known, write “Refer to official $regulatory_authorities website”.
+I am a registered pharmacist in Australia and I am starting a pharmaceutical manufacturing company for $product_type. Provide a comprehensive and detailed HTML table with all the following:
+
+1. **All steps** required from company registration to manufacturing and marketing of $product_type.
+2. **Documents required** at each stage.
+3. **Regulatory bodies** involved at each stage.
+4. **Eligibility criteria** for each process.
+5. **Links to the application forms** for each process. If the exact link is unavailable, provide the **official webpage link** or guidance on how to access it.
+
+The output should ONLY be in a structured HTML table format. Each row should represent a specific process in the pathway with the following columns:
+
+- Stage: The stage in the process.
+- Step: The specific action to be taken in this stage.
+- Description: A detailed description of the step.
+- Documents Required: List all documents necessary for the step.
+- Regulatory Body: The body responsible for that step.
+- Application Link: The direct application link (or official webpage link if the specific link is unavailable).
+
+If a step requires accessing a specific document or application form, provide a direct link to the official website (e.g., TGA or any relevant authority for $regulatory_authorities).
 
 <table border="1" style="border-collapse: collapse; text-align: center; width: 100%;">
     <thead>
@@ -95,9 +112,9 @@ Provide ONLY a clean HTML table showing all steps to start a $product_type manuf
             <th>Stage</th>
             <th>Step</th>
             <th>Description</th>
-            <th>Required Documents</th>
-            <th>Issuing Body</th>
-            <th>Official Link</th>
+            <th>Documents Required</th>
+            <th>Regulatory Body</th>
+            <th>Application Link</th>
         </tr>
     </thead>
     <tbody>
@@ -106,11 +123,27 @@ Provide ONLY a clean HTML table showing all steps to start a $product_type manuf
 </table>
 """)
 
-
-
-# LIST OF LICENSES PROMPT (To be added)
 LIST_OF_LICENSES_PROMPT = Template("""
-You must respond ONLY with a clean HTML table. Do NOT include explanations, disclaimers, or text outside the table. If exact application links are not known, leave the link cell blank or write “Refer to official $regulatory_authorities website”.
+Provide a detailed and comprehensive HTML table of licenses required for manufacturing, marketing, and distribution of $product_type under the guidelines of $regulatory_authorities. The table should include the following:
+
+1. A list of all required licenses.
+2. For each license:
+   - **Application process**: A description of how to apply for each license.
+   - **Documents required**: List the exact documents necessary for the application.
+   - **Eligibility criteria**: Describe who is eligible to apply for each license.
+   - **Issuing authority**: The official body responsible for issuing the license.
+   - **Official application link**: Provide the direct link to the official application page, or provide guidance on where to find it on the relevant official website.
+
+The output should be in a structured HTML table format with these columns:
+
+- License Name: The name of the required license.
+- Application Process: Description of the application process for the license.
+- Documents Required: List the specific documents needed.
+- Eligibility Criteria: Who is eligible to apply for this license.
+- Issuing Body: The official authority issuing the license.
+- Application Link: The link to the official application page (or a reference to the official website).
+
+If you can't find the exact link, provide the **best possible link** to the related **regulatory page or guidance** for obtaining the license.
 
 <table border="1" style="border-collapse: collapse; text-align: center; width: 100%;">
     <thead>
@@ -119,18 +152,15 @@ You must respond ONLY with a clean HTML table. Do NOT include explanations, disc
             <th>Application Process</th>
             <th>Documents Required</th>
             <th>Eligibility Criteria</th>
-            <th>Issuing Authority</th>
+            <th>Issuing Body</th>
             <th>Application Link</th>
         </tr>
     </thead>
     <tbody>
-        <!-- Fill table rows with licenses for $product_type under $regulatory_authorities -->
+        <!-- Fill table rows with each required license details -->
     </tbody>
 </table>
 """)
-
-
-
 
 def getPromptForOptions(options):
     report_type = options.get('report_type', '').strip().lower()
