@@ -143,7 +143,7 @@ The output should be in a structured HTML table format with these columns:
 - Issuing Body: The official authority issuing the license.
 - Application Link: The link to the official application page (or a reference to the official website).
 
-If you can't find the exact link, provide the **best possible link** to the related **regulatory page or guidance** for obtaining the license.
+If you can't find the exact link, provide the **best possible link** to the related **regulatory page or guidance** for obtaining the license. and do not provide any other response other than table nothing above table or below table
 
 <table border="1" style="border-collapse: collapse; text-align: center; width: 100%;">
     <thead>
