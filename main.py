@@ -892,7 +892,9 @@ elif st.session_state.current_page == 'regulatory':
             )
             if product_type == "Other":
                 other_type = st.text_input("Please specify product type")
-        
+            
+            Detailed_information = st.text_area("detailed information", height=100, placeholder="Please provide any specific regulatory license reuirement or concerns...")
+
     with col2:
             Regulatory_Authorities = st.selectbox(
                 "Regulatory Authorities",
@@ -902,7 +904,6 @@ elif st.session_state.current_page == 'regulatory':
             "Report Type",
             ["Pathway", "List of license"]
         )
-            Detailed_information = st.text_area("detailed information", height=100, placeholder="Please provide any specific regulatory license reuirement or concerns...")
                
     submit_col1, submit_col2, submit_col3 = st.columns([1, 2, 1])
     with submit_col2:
@@ -1213,24 +1214,5 @@ elif st.session_state.page == "result":
         components.html("<div class='table-container'>"+st.session_state.api_response+"</div>",height=800,width=1000,scrolling=True)
     else:
         st.warning("⚠️ No response received. Please try again.")
-    
-    # Contact Us section
-    st.markdown("""
-    <div class="card" style="background: linear-gradient(135deg, #f0f9ff, #e0f2fe); text-align: center; padding: 2rem; margin-top: 2rem;">
-        <h3>Need Advanced Quality Analysis?</h3>
-        <p style="margin-bottom: 1.5rem;">Contact our quality experts to discuss comprehensive testing and certification for your pharmaceutical products.</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-# Contact section
-    st.markdown("""
-    <div class="card" style="background: linear-gradient(135deg, #f0f9ff, #e0f2fe); text-align: center; padding: 2rem; margin-top: 2rem;">
-        <h3>Need Regulatory Support?</h3>
-        <p style="margin-bottom: 1.5rem;">Contact our Quality experts to discuss your specific requirements.</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    if st.button("Contact Our Quality Team", key="contact_reg_btn"):
-        change_page('contact')
 # Close main content wrapper
 st.markdown('</div>', unsafe_allow_html=True)
