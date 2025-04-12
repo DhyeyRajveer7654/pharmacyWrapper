@@ -1001,14 +1001,14 @@ elif st.session_state.current_page == 'regulatory':
 
 # Page Navigation
 if "page" not in st.session_state:
-    st.session_state.page = "form"
+    st.session_state.page = "form1"
 if "api_response" not in st.session_state:
     st.session_state.api_response = None
 
 options = dict()
 
 # 📌 FORM PAGE
-if st.session_state.page == "form":
+if st.session_state.page == "form1":
     st.markdown('<div class="main-header"><h1>🧪 QAI Model AI-Powered Quality Assistance</h1><p> CREATED BY :- MEERA ACHARYA & RAJ PATEL</P><p>Enter details below to generate a comprehensive quality report</p></div>', unsafe_allow_html=True)
 
     # User Input Form in a card layout
@@ -1051,7 +1051,7 @@ elif st.session_state.page == "result":
     st.markdown('<div class="main-header"><h1>📑 Quality Analysis Report</h1></div>', unsafe_allow_html=True)
     
     if st.button("🔙 Return to Form", key="back_button"):
-        st.session_state.page = "form"
+        st.session_state.page = "form1"
         st.experimental_rerun()
 
     # st.markdown('<div class="card">', unsafe_allow_html=True)
