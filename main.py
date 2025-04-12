@@ -269,7 +269,7 @@ st.markdown("""
         background-color: white;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         padding: 0.8rem 2rem;
-        height: 70px;
+        height: 30px;
     }
     
     .header {
@@ -278,7 +278,7 @@ st.markdown("""
         align-items: center;
         max-width: 1400px;
         margin: 0 auto;
-        height: 100%;
+        height: 50%;
     }
     
     .logo {
@@ -720,7 +720,7 @@ elif st.session_state.current_page == 'about':
         st.markdown("""
         <div class="card" style="text-align: center;">
             <img src="meera.png" alt="Meera Acharya" style="width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom: 10px;">
-            <h3>Meera Acharya</h3>
+            <h3>Meera Rahul Acharya</h3>
             <p><em>Founder & Tech Lead</em></p>
             <p>Innovator and visionary behind QRx AI. Obsessed with AI and passionate about transforming pharmacy education. She ideates and designs all project implementations.</p>
         </div>
@@ -730,7 +730,7 @@ elif st.session_state.current_page == 'about':
         st.markdown("""
         <div class="card" style="text-align: center;">
             <img src="raj.png" alt="Raj H. Patel" style="width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom: 10px;">
-            <h3>Raj H. Patel</h3>
+            <h3>Raj H Patel</h3>
             <p><em>Co-Founder & Tech Lead</em></p>
             <p>Owner of Redocy Lifecare and co-founder of QRx AI. Raj handles all the coding and back-end development, turning Meera's ideas into working AI solutions.</p>
         </div>
