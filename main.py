@@ -632,7 +632,7 @@ elif st.session_state.current_page == 'contact':
         st.image('LOGO.png', width=200)
 
         # Footer
-        st.markdown("""
+    st.markdown("""
         <div class="footer">
             <p>© 2025 QRx Pharmaceutical Consultants. All rights reserved.</p>
         </div>
