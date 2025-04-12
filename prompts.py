@@ -87,7 +87,7 @@ Provide the **canonical SMILES notation** for the drug $product_name based on Pu
 
 # PATHWAY PROMPT (For starting a pharmaceutical manufacturing company)
 PATHWAY_PROMPT = Template("""
-You are to provide ONLY a clean HTML table showing the full pathway to starting a $product_type manufacturing company under $regulatory_authorities. Do NOT include explanations, introductions, disclaimers, or text outside the table. No apologies, no extra context.
+Provide ONLY a clean HTML table showing all steps to start a $product_type manufacturing company under $regulatory_authorities. Do NOT add any text or explanation. For official links, if exact URLs are not known, write “Refer to official $regulatory_authorities website”.
 
 <table border="1" style="border-collapse: collapse; text-align: center; width: 100%;">
     <thead>
@@ -107,9 +107,10 @@ You are to provide ONLY a clean HTML table showing the full pathway to starting 
 """)
 
 
+
 # LIST OF LICENSES PROMPT (To be added)
 LIST_OF_LICENSES_PROMPT = Template("""
-You are to provide ONLY a clean HTML table, without any explanations, introductions, or disclaimers. Do NOT provide any text outside the table. Do not say "I cannot provide...", "I'm sorry...", or any statements before or after.
+You must respond ONLY with a clean HTML table. Do NOT include explanations, disclaimers, or text outside the table. If exact application links are not known, leave the link cell blank or write “Refer to official $regulatory_authorities website”.
 
 <table border="1" style="border-collapse: collapse; text-align: center; width: 100%;">
     <thead>
@@ -127,6 +128,7 @@ You are to provide ONLY a clean HTML table, without any explanations, introducti
     </tbody>
 </table>
 """)
+
 
 
 
