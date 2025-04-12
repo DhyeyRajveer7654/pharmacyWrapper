@@ -94,34 +94,54 @@ If applicable, include any requirements or processes related to pharmacovigilanc
 The goal is to have a single, well-structured document that can guide a beginner pharmacist like me through the entire journey of starting a $product_type manufacturing company in full compliance with $regulatory_authorities standards.
 
 """)
-
 def getPromptForOptions(options):
-    jurisdiction = ""
-    if options['jurisdiction'] == "COMPARE WITH ALL OF THEM":
+    # Check for report_type based prompts
+    if options.get('report_type') == "Pathway":
+        return PATHWAY_PROMPT.substitute(
+            product_type=options.get('product_type', 'default_product'),
+            report_type=options.get('report_type', 'default_report'),
+            regulatory_authorities=options.get('regulatory', 'default_regulatory')
+        )
+
+    elif options.get('report_type') == "List of Licenses":
+        return LIST_OF_LICENSES_PROMPT.substitute(
+            product_type=options.get('product_type', 'default_product'),
+            report_type=options.get('report_type', 'default_report'),
+            regulatory_authorities=options.get('regulatory', 'default_regulatory')
+        )
+
+    # Default: Handle typeOfInfo prompts
+    jurisdiction = options.get('jurisdiction', '')
+    if jurisdiction == "COMPARE WITH ALL OF THEM":
         jurisdiction = "INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA, UNITED STATES PHARMACOPOEIA AND MARTINDALE-EXTRA PHARMACOPIEA"
-    prompt_template = Template("")
-    if options['typeOfInfo'] == "METHOD OF PREPARATION":
-        prompt_template = METHOD_OF_PREPARATION_PROMPT
-    elif options['typeOfInfo'] == "CHARACTARIZATION/EVALUATION":
-        prompt_template = CHARACTARIZATION_EVALUATION_PROMPT
-    elif options['typeOfInfo'] == "Both of above":
-        prompt_template = COMBINED_PROMPT
-    elif options['typeOfInfo'] == "CHECK RESULTS":
-        prompt_template = CHECK_RESULTS_PROMPT
-        final_prompt = prompt_template.substitute(product_name=options['product_name'], quanOfMed=options['quanOfMed'], powerOfDrug=options['powerOfDrug'], jurisdiction=jurisdiction, resultsToCheck=options['resultsToCheck'])
-        return CHECK_RESULTS_PROMPT.substitute(options)
-    elif options['typeOfInfo'] == "FTIR ANALYSIS":
-        return FTIR_PROMPT.substitute(options)
-    if options['jurisdiction'] == "COMPARE WITH ALL OF THEM":
-        jurisdiction = "COMAPRE IN TABLE ALL 4 INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA, UNITED STATES PHARMACOPOEIA AND MARTINDALE-EXTRA PHARMACOPIEA"
-    final_prompt = prompt_template.substitute(product_name=options['product_name'], quanOfMed=options['quanOfMed'], powerOfDrug=options['powerOfDrug'], jurisdiction=jurisdiction)
-    print("Options Dictionary:", options.keys())  # Debugging output
-    print(final_prompt)
-    return final_prompt
-def getPromptForOptions(options):
-      if options['report_type'] == "Pathway":
-        prompt_template = PATHYWAY_PROMPT
-      final_prompt = prompt_template.substitute(product_type=options['product_type'], report_type=options['report_type'], regulatory_authorities=options['regulatory'])
-      return final_prompt
 
-    
+    prompt_template = Template("")
+
+    if options.get('typeOfInfo') == "METHOD OF PREPARATION":
+        prompt_template = METHOD_OF_PREPARATION_PROMPT
+    elif options.get('typeOfInfo') == "CHARACTARIZATION/EVALUATION":
+        prompt_template = CHARACTERIZATION_EVALUATION_PROMPT
+    elif options.get('typeOfInfo') == "Both of above":
+        prompt_template = COMBINED_PROMPT
+    elif options.get('typeOfInfo') == "CHECK RESULTS":
+        return CHECK_RESULTS_PROMPT.substitute(
+            product_name=options.get('product_name', ''),
+            quanOfMed=options.get('quanOfMed', ''),
+            powerOfDrug=options.get('powerOfDrug', ''),
+            jurisdiction=jurisdiction,
+            resultsToCheck=options.get('resultsToCheck', '')
+        )
+    elif options.get('typeOfInfo') == "FTIR ANALYSIS":
+        return FTIR_PROMPT.substitute(options)
+    elif options.get('typeOfInfo') == "SMILES STRUCTURE":
+        return STRUCTURE_PROMPT.substitute(product_name=options.get('product_name', ''))
+
+    # Default return for typeOfInfo prompts
+    final_prompt = prompt_template.substitute(
+        product_name=options.get('product_name', ''),
+        quanOfMed=options.get('quanOfMed', ''),
+        powerOfDrug=options.get('powerOfDrug', ''),
+        jurisdiction=jurisdiction
+    )
+
+    return final_prompt
