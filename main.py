@@ -579,18 +579,31 @@ if st.session_state.current_page == 'home':
         if st.button("Learn More About us", key="home_About_us"):
             st.session_state.current_page = 'About us'
             st.rerun()
-    
+    col1, col_gap, col2 = st.columns([3, 1, 6])
     st.markdown("## 📄 ISO Certification")
 
-    # Display the embedded PDF
-    if os.path.exists("iso_preview.jpg"):
-        st.image("iso_preview.jpg", caption="ISO Certificate Preview", width=400)
-    else:
-        st.warning("ISO preview image not found.")
+    with col1:
+        if os.path.exists("iso_preview.jpg"):
+            st.image("iso_preview.jpg", caption="ISO Certificate Preview", width=400)
+        else:
+            st.warning("ISO preview image not found.")
+        with open("iso_certificate.pdf", "rb") as f:
+            st.download_button("📥 Download Full ISO Certificate", f, file_name="iso_certificate.pdf")
+        
+    with col2:
+        st.markdown("## 🏆 QAI Model Award")
+    
+    # Optional: check if image exists
+        if os.path.exists("ncip_award.jpg"):
+            st.image("ncip_award.jpg", caption="Award Ceremony – Nirma University, 2025", use_column_width=True)
+        else:
+            st.warning("Award image not found. Please upload 'ncip_award.jpg'.")
 
-
-    with open("iso_certificate.pdf", "rb") as f:
-        st.download_button("📥 Download Full ISO Certificate", f, file_name="iso_certificate.pdf")
+    # Professional award description
+    st.markdown("""
+    **QAI MODEL** proudly secured **2nd Prize** at the **National Conference of Institute of Pharmacy (NCIP 2025)**  
+    hosted by **Nirma University**. This recognition reflects the innovation, impact, and future potential of QRx AI in transforming pharmaceutical education and compliance.
+    """)
     # Footer
     st.markdown("""
     <div class="footer">
