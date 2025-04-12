@@ -87,47 +87,45 @@ Provide the **canonical SMILES notation** for the drug $product_name based on Pu
 
 # PATHWAY PROMPT (For starting a pharmaceutical manufacturing company)
 PATHWAY_PROMPT = Template("""
-I am a registered pharmacist in Australia who has completed a Bachelor's degree in Pharmacy. I am now planning to start my own pharmaceutical manufacturing company, specifically focused on the production of $product_type . I want a complete, step-by-step $report_type that outlines all the processes, legal requirements, licenses, documents, and compliance steps that I need to follow to start and operate a pharmaceutical company in accordance with $regulatory_authorities guidelines.
+You are to provide ONLY a clean HTML table showing the full pathway to starting a $product_type manufacturing company under $regulatory_authorities. Do NOT include explanations, introductions, disclaimers, or text outside the table. No apologies, no extra context.
 
-Please provide:
-
-Provide a detailed comprehensive well structured table of pathway outlining all the steps from company registration to manufacturing and marketing of pharmaceutical $product_type.
-
-A list of all required licenses and approvals at each stage, including but not limited to manufacturing license, product registration as per $regulatory_authorities guidelines.
-
-Direct links to each license application form and the relevant guidelines from $regulatory_authorities .
-
-A detailed breakdown of $regulatory_authorities requirements for $product_type manufacturing, including links to the official data pdfs.
-
-A dedicated section that covers the $regulatory_authorities Manufacturing License application process specifically:
-
-What is the process?
-
-Which documents are required?
-
-Who is eligible to apply?
-
-What technical and quality-related systems must be in place?
-
-A comprehensive table that lists all documents required to be submitted with the $regulatory_authorities Manufacturing License application, categorized appropriately (e.g., company info, premises, quality systems, personnel, validation, etc.).
-
-If applicable, include any requirements or processes related to pharmacovigilance, post-market surveillance, and export licensing or certification under $regulatory_authorities.
-
-The goal is to have a single, well-structured document that can guide a beginner pharmacist like me through the entire journey of starting a $product_type manufacturing company in full compliance with $regulatory_authorities standards. and only answer in table proper structure table do not reply anything other than table. nothing above and below table
-
+<table border="1" style="border-collapse: collapse; text-align: center; width: 100%;">
+    <thead>
+        <tr>
+            <th>Stage</th>
+            <th>Step</th>
+            <th>Description</th>
+            <th>Required Documents</th>
+            <th>Issuing Body</th>
+            <th>Official Link</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Fill table rows with each step from registration to marketing -->
+    </tbody>
+</table>
 """)
+
 
 # LIST OF LICENSES PROMPT (To be added)
 LIST_OF_LICENSES_PROMPT = Template("""
-Provide a detailed comprehensive well-structured table of licenses required for the pharmaceutical manufacturing of $product_type based on $regulatory_authorities standards. The response should include:
-1. A list of all the licenses and approvals required for manufacturing, marketing, and distribution of pharmaceutical $product_type.
-2. Specific details for each license, including:
-   - Application process
-   - Documents required
-   - Eligibility criteria
-   - Regulatory body issuing the license
-3. Direct links to each license application form and the relevant guidelines from $regulatory_authorities.
-4. ONLY output in HTML table format and if you canot provide links then just do not provide it but do not give response anyother than table.
+You are to provide ONLY a clean HTML table, without any explanations, introductions, or disclaimers. Do NOT provide any text outside the table. Do not say "I cannot provide...", "I'm sorry...", or any statements before or after.
+
+<table border="1" style="border-collapse: collapse; text-align: center; width: 100%;">
+    <thead>
+        <tr>
+            <th>License Name</th>
+            <th>Application Process</th>
+            <th>Documents Required</th>
+            <th>Eligibility Criteria</th>
+            <th>Issuing Authority</th>
+            <th>Application Link</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Fill table rows with licenses for $product_type under $regulatory_authorities -->
+    </tbody>
+</table>
 """)
 
 
