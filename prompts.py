@@ -65,6 +65,35 @@ How to Ensure FTIR Compliance with Pharmacopeial Standards
 STRUCTURE_PROMPT = Template("""
 Provide the **canonical SMILES notation** for the drug $product_name based on PubChem's database. Ensure that the SMILES code is accurate and matches PubChem's standard molecular structure for the drug. Return only the canonical SMILES code as provided by PubChem, and no other extra text. If the drug name is not valid, return only "NO DRUG FOUND".
 """)
+PATHYWAY_PROMPT = Template("""I am a registered pharmacist in Australia who has completed a Bachelor's degree in Pharmacy. I am now planning to start my own pharmaceutical manufacturing company, specifically focused on the production of $product_type . I want a complete, step-by-step $report_type that outlines all the processes, legal requirements, licenses, documents, and compliance steps that I need to follow to start and operate a pharmaceutical company in accordance with $regulatory_authorities guidelines.
+
+Please provide:
+
+A detailed $report_type in tabular form outlining all the steps from company registration to manufacturing and marketing of pharmaceutical $product_type.
+
+A list of all required licenses and approvals at each stage, including but not limited to manufacturing license, product registration as per $regulatory_authorities guidelines.
+
+Direct links to each license application form and the relevant guidelines from $regulatory_authorities .
+
+A detailed breakdown of $regulatory_authorities requirements for $product_type manufacturing, including links to the official data pdfs.
+
+A dedicated section that covers the $regulatory_authorities Manufacturing License application process specifically:
+
+What is the process?
+
+Which documents are required?
+
+Who is eligible to apply?
+
+What technical and quality-related systems must be in place?
+
+A comprehensive table that lists all documents required to be submitted with the $regulatory_authorities Manufacturing License application, categorized appropriately (e.g., company info, premises, quality systems, personnel, validation, etc.).
+
+If applicable, include any requirements or processes related to pharmacovigilance, post-market surveillance, and export licensing or certification under $regulatory_authorities.
+
+The goal is to have a single, well-structured document that can guide a beginner pharmacist like me through the entire journey of starting a $product_type manufacturing company in full compliance with $regulatory_authorities standards.
+
+""")
 
 def getPromptForOptions(options):
     jurisdiction = ""
@@ -83,10 +112,15 @@ def getPromptForOptions(options):
         return CHECK_RESULTS_PROMPT.substitute(options)
     elif options['typeOfInfo'] == "FTIR ANALYSIS":
         return FTIR_PROMPT.substitute(options)
-    
     if options['jurisdiction'] == "COMPARE WITH ALL OF THEM":
         jurisdiction = "COMAPRE IN TABLE ALL 4 INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA, UNITED STATES PHARMACOPOEIA AND MARTINDALE-EXTRA PHARMACOPIEA"
     final_prompt = prompt_template.substitute(product_name=options['product_name'], quanOfMed=options['quanOfMed'], powerOfDrug=options['powerOfDrug'], jurisdiction=jurisdiction)
     print("Options Dictionary:", options.keys())  # Debugging output
     print(final_prompt)
     return final_prompt
+def getPromptForOptions(options):
+    report_type = ""
+    if options[report_type] == "Pathway":
+      prompt_template = PATHYWAY_PROMPT
+      final_prompt = prompt_template.substitute(product_type=options['product_type'], report_type=options['report_type'], regulatory_authorities=options['regulatory'])
+
