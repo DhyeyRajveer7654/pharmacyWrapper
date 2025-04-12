@@ -84,17 +84,21 @@ Return only the canonical SMILES code and no other text.
 If the drug is not found, return "NO DRUG FOUND".
 """)
 
-PATHWAY_PROMPT = Template("""
-I am a registered pharmacist in Australia who has completed a Bachelor's degree in Pharmacy. I am now planning to start my own pharmaceutical manufacturing company, specifically focused on the production of $product_type. I want a complete, step-by-step $report_type that outlines all processes, legal requirements, licenses, documents, and compliance steps according to $regulatory_authorities guidelines.
 
-Please provide:
-- A comprehensive table of $report_type from registration to manufacturing and marketing.
-- List of all licenses and approvals at each stage with direct application links.
-- Detailed $regulatory_authorities requirements with source links.
-- Step-by-step table for the Manufacturing License process: eligibility, documents, technical systems.
-- Pharmacovigilance, post-market, and export license guidance (if applicable).
-""")
+PATHYWAY_PROMPT = Template("""
+You are a regulatory expert tasked with guiding a registered pharmacist in India who has completed a Bachelor's degree in Pharmacy and now plans to start a pharmaceutical manufacturing company focused on $product_type.
 
+Please provide a **strictly HTML table-only output** that outlines all necessary steps, licenses, documentation, and compliance requirements according to the $regulatory_authorities guidelines.
+
+Include the following columns in the HTML table:
+- Stage Number
+- Process/Activity
+- Description of Step
+- Required Licenses or Approvals
+- Responsible Authority
+- Relevant Links
+
+DO NOT include any text before or after the table. DO NOT add headings, explanations, or markdown formatting. RETURN ONLY THE TABLE STRICTLY IN HTML TABLE FORMAT WITH HEADINGS. """ + TABLE_STYLE)
 # Function to generate prompt
 def getPromptForOptions(options):
     print("Options received:", options)
