@@ -65,7 +65,7 @@ How to Ensure FTIR Compliance with Pharmacopeial Standards
 STRUCTURE_PROMPT = Template("""
 Provide the **canonical SMILES notation** for the drug $product_name based on PubChem's database. Ensure that the SMILES code is accurate and matches PubChem's standard molecular structure for the drug. Return only the canonical SMILES code as provided by PubChem, and no other extra text. If the drug name is not valid, return only "NO DRUG FOUND".
 """)
-PATHYWAY_PROMPT = Template("""I am a registered pharmacist in Australia who has completed a Bachelor's degree in Pharmacy. I am now planning to start my own pharmaceutical manufacturing company, specifically focused on the production of $product_type . I want a complete, step-by-step $report_type that outlines all the processes, legal requirements, licenses, documents, and compliance steps that I need to follow to start and operate a pharmaceutical company in accordance with $regulatory_authorities guidelines.
+PATHWAY_PROMPT = Template("""I am a registered pharmacist in Australia who has completed a Bachelor's degree in Pharmacy. I am now planning to start my own pharmaceutical manufacturing company, specifically focused on the production of $product_type . I want a complete, step-by-step $report_type that outlines all the processes, legal requirements, licenses, documents, and compliance steps that I need to follow to start and operate a pharmaceutical company in accordance with $regulatory_authorities guidelines.
 
 Please provide:
 
