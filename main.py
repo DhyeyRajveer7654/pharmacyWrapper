@@ -1032,7 +1032,7 @@ if st.session_state.page == "form":
     # Analysis Options in a separate card
     # st.markdown('<div class="card">', unsafe_allow_html=True)
    # Submit button with enhanced styling
-    submit_button = st.button("🚀 Generate Report")
+    submit_button = st.button("🚀 Generate Regulatory Report")
     if submit_button:
         if not all([options.get("prodct_type"), options.get("report_type"), options.get("regulatory")]):
             st.error("⚠️ Please fill in all required fields!")
@@ -1076,7 +1076,7 @@ elif st.session_state.current_page == 'quality':
     st.markdown('<h2 class="section-title">Quality Assurance Services</h2>', unsafe_allow_html=True)
     
     # Enhanced Professional UI Styling
-st.markdown("""
+    st.markdown("""
     <style>
         /* Global Styles */
         body {
