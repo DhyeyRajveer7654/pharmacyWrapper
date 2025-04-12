@@ -330,7 +330,7 @@ st.markdown("""
     }
     
     .hero h2 {
-        font-size: 1rem;
+        font-size: 2rem;
         margin-bottom: 1rem;
     }
     
