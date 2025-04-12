@@ -104,7 +104,7 @@ The output should ONLY be in a structured HTML table format. Each row should rep
 - Regulatory Body: The body responsible for that step.
 - Application Link: The direct application link (or official webpage link if the specific link is unavailable).
 
-If a step requires accessing a specific document or application form, provide a direct link to the official website (e.g., TGA or any relevant authority for $regulatory_authorities).
+If a step requires accessing a specific document or application form, provide a direct link to the official website of $regulatory_authorities or relevant data website or pdf links.
 
 <table border="1" style="border-collapse: collapse; text-align: center; width: 100%;">
     <thead>
@@ -128,7 +128,7 @@ Provide a detailed and comprehensive HTML table of licenses required for manufac
 
 1. A list of all required licenses.
 2. For each license:
-   - **Application process**: A description of how to apply for each license.
+   - **Application process**: A description of how to apply for each license all applicationi and manufacturing plant is to be Established in India so only give  data for manufacturing in India but as per &regulatory_authorities.
    - **Documents required**: List the exact documents necessary for the application.
    - **Eligibility criteria**: Describe who is eligible to apply for each license.
    - **Issuing authority**: The official body responsible for issuing the license.
