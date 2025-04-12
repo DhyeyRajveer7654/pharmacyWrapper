@@ -269,7 +269,7 @@ st.markdown("""
         background-color: white;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         padding: 0.8rem 2rem;
-        height: 30px;
+        height: 10px;
     }
     
     .header {
@@ -315,22 +315,22 @@ st.markdown("""
     
     /* Add margin to content to prevent overlap with fixed header */
     .main-content {
-        margin-top: 20px; /* Increased to ensure content doesn't hide under header */
-        padding-top: 1rem;
+        margin-top: 10px; /* Increased to ensure content doesn't hide under header */
+        padding-top: 0.5rem;
     }
     
     /* Hero section */
     .hero {
         background: linear-gradient(135deg, #e0f2fe, #bfdbfe);
         color: #1e40af;
-        padding: 3rem 2rem;
+        padding: 1rem 1rem;
         border-radius: 10px;
         text-align: center;
         margin-bottom: 2rem;
     }
     
     .hero h2 {
-        font-size: 2rem;
+        font-size: 1rem;
         margin-bottom: 1rem;
     }
     
@@ -344,7 +344,7 @@ st.markdown("""
     .card {
         background-color: white;
         border-radius: 10px;
-        padding: 1.5rem;
+        padding: 1rem;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         margin-bottom: 1.5rem;
     }
@@ -574,7 +574,7 @@ if st.session_state.current_page == 'home':
     # Footer
     st.markdown("""
     <div class="footer">
-        <p>© 2025 QRx Pharmaceutical Consultants. All rights reserved.</p>
+        <p>© 2025 QRx AI. All rights reserved. Built with passion by pharmacy minds.</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -912,7 +912,7 @@ elif st.session_state.current_page == 'regulatory':
     # Footer
     st.markdown("""
     <div class="footer">
-        <p>© 2025 QRx Pharmaceutical Consultants. All rights reserved.</p>
+        <p>© 2025 QRx AI. All rights reserved. Built with passion by pharmacy minds.</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -1211,7 +1211,7 @@ elif st.session_state.current_page == 'quality':
     # Footer
     st.markdown("""
     <div class="footer">
-        <p>© 2025 QRx Pharmaceutical Consultants. All rights reserved.</p>
+        <p>© 2025 QRx AI. All rights reserved. Built with passion by pharmacy minds.</p>
     </div>
     """, unsafe_allow_html=True)
 
