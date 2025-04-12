@@ -905,7 +905,7 @@ elif st.session_state.current_page == 'regulatory':
 
     # 📌 RESULT PAGE
     elif st.session_state.page == "result":
-        st.markdown('<div class="main-header"><h1>📑 Quality Analysis Report</h1></div>', unsafe_allow_html=True)
+        st.markdown('<div class="main-header"><h1>📑 Regulatory Report</h1></div>', unsafe_allow_html=True)
         
         if st.button("🔙 Return to Form", key="back_button"):
             st.session_state.page = "form"
