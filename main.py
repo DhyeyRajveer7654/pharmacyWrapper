@@ -497,7 +497,7 @@ st.markdown("""
 
     .main-header h1 {
         color: #000000;
-        font-size: 4rem;
+        font-size: 3rem;
         margin-bottom: 0.5rem;
     }
 
@@ -966,9 +966,6 @@ elif st.session_state.current_page == 'regulatory':
 
 # Quality Page - ONLY SHOWS QUALITY CONTENT
 elif st.session_state.current_page == 'quality':
-    st.markdown('<h2 class="section-title">Pharmaceutical Quality Services</h2>', unsafe_allow_html=True)
-    
-    # Introduction
     st.markdown("""
         <style>
             /* Global Styles */
