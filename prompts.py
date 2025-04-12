@@ -132,21 +132,28 @@ Provide a detailed comprehensive well-structured table of licenses required for 
 
 
 
-# Define the getPromptForOptions function here to avoid circular imports
 def getPromptForOptions(options):
-    # Check for report_type based prompts
-    if options.get('report_type') == "Pathway":
+    report_type = options.get('report_type', '').strip().lower()
+
+    if report_type == "pathway":
         return PATHWAY_PROMPT.substitute(
             product_type=options.get('product_type', 'default_product'),
             report_type=options.get('report_type', 'default_report'),
             regulatory_authorities=options.get('regulatory', 'default_regulatory')
         )
 
-    elif options.get('report_type') == "List of License":
+    elif report_type == "list of license":
         return LIST_OF_LICENSES_PROMPT.substitute(
             product_type=options.get('product_type', 'default_product'),
             regulatory_authorities=options.get('regulatory', 'default_regulatory')
         )
+
+    # Rest of typeOfInfo handling remains unchanged...
+
+    # Fallback for unrecognized input
+    print("⚠️ Unrecognized report_type or typeOfInfo:", options)
+    return "ERROR: Unrecognized report_type or typeOfInfo"
+
 
     # Default: Handle typeOfInfo prompts
     jurisdiction = options.get('jurisdiction', 'INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA, UNITED STATES PHARMACOPOEIA AND MARTINDALE-EXTRA PHARMACOPIEA')
