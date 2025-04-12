@@ -870,114 +870,198 @@ elif st.session_state.current_page == 'about':
 
 # Regulatory Page - ONLY SHOWS REGULATORY CONTENT
 elif st.session_state.current_page == 'regulatory':
-    st.markdown('<h2 class="section-title">Regulatory Compliance Services</h2>', unsafe_allow_html=True)
-    
-    # Introduction
     st.markdown("""
-    <div class="hero">
-        <h2>Navigate Complex Regulatory Frameworks</h2>
-        <p>QRx offers comprehensive regulatory compliance services to help pharmaceutical companies navigate complex regulatory landscapes across global markets. Our team of regulatory experts provides strategic guidance and practical support throughout the product lifecycle.</p>
-    </div>
+        <style>
+            /* Global Styles */
+            body {
+                background-color: #f0f2f6;
+                color: #1e293b;
+                font-family: 'Inter', 'sans serif';
+            }
+
+            /* Header Styling */
+            .main-header {
+                background: linear-gradient(135deg, #0052cc, #00a3bf);
+                color: white;
+                padding: 2rem;
+                border-radius: 10px;
+                margin-bottom: 2rem;
+                text-align: center;
+            }
+
+            /* Form Elements */
+            div[data-testid="stTextInput"] input,
+            div[data-testid="stTextArea"] textarea,
+            div[data-testid="stSelectbox"] > div[data-baseweb="select"] {
+                background-color: white;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                padding: 0.75rem;
+                font-size: 1rem;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            }
+
+            div[data-testid="stTextInput"] input:focus,
+            div[data-testid="stTextArea"] textarea:focus {
+                border-color: #0052cc;
+                box-shadow: 0 0 0 2px rgba(0,82,204,0.2);
+            }
+
+            /* Button Styling */
+            .stButton > button {
+                width: 100%;
+                background: linear-gradient(135deg, #0052cc, #00a3bf);
+                color: white;
+                border: none;
+                padding: 0.75rem 1.5rem;
+                border-radius: 8px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .stButton > button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,82,204,0.2);
+            }
+
+            /* Card Styling */
+            .card div[data-testid="stSelectbox"]{
+                background: white;
+                border-radius: 10px;
+                padding: 1.5rem;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                margin-bottom: 1.5rem;
+            }
+
+            /* Results Table */
+            .table-container {
+                background: white;
+                border-radius: 10px;
+                padding: 1rem;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                border-collapse: collapse;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                border-spacing: 0;
+                margin: 1rem 0;
+            }
+
+            th {
+                background: #0052cc;
+                color: white;
+                padding: 1rem;
+                text-align: left;
+                font-weight: 600;
+            }
+
+            td {
+                padding: 1rem;
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+            tr:hover {
+                background: #f8fafc;
+            }
+
+            /* Loading Spinner */
+            .stSpinner > div {
+                border-color: #0052cc !important;
+            }
+
+            /* Success Message */
+            .success-message {
+                background: #dcfce7;
+                color: #166534;
+                padding: 1rem;
+                border-radius: 8px;
+                margin: 1rem 0;
+            }
+
+            /* Error Message */
+            .error-message {
+                background: #fee2e2;
+                color: #991b1b;
+                padding: 1rem;
+                border-radius: 8px;
+                margin: 1rem 0;
+            }
+            
+        </style>
     """, unsafe_allow_html=True)
-    
-    # Regulatory services
-    st.markdown('<h3 class="section-title">Our Regulatory Services</h3>', unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown("""
-        <div class="card">
-            <h3>Regulatory Strategy</h3>
-            <p>We develop comprehensive regulatory strategies tailored to your specific products and target markets. Our approach helps you navigate complex regulatory pathways efficiently, saving time and resources while maximizing chances for approval.</p>
-            <ul>
-                <li>Global regulatory pathway assessment</li>
-                <li>Regulatory risk evaluation</li>
-                <li>Strategic planning for submissions</li>
-                <li>Regulatory intelligence and monitoring</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-    with col2:
-        st.markdown("""
-        <div class="card">
-            <h3>Submission Support</h3>
-            <p>Our experts assist with preparation, review, and management of regulatory submissions across multiple jurisdictions, ensuring compliance with all requirements and standards.</p>
-            <ul>
-                <li>IND/CTA preparation and submissions</li>
-                <li>NDA/MAA preparation and submissions</li>
-                <li>DMF preparation and maintenance</li>
-                <li>Responses to regulatory authority queries</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # REGULATORY FORM - ONLY SHOWN ON REGULATORY PAGE
-    st.markdown('<div class="main-header"><h1>📋 Regulatory Compliance Assistant</h1><p>Enter details below to generate comprehensive regulatory information</p></div>', unsafe_allow_html=True)
 
-    # User Input Form
+    # Page Navigation
+    if "page" not in st.session_state:
+        st.session_state.page = "form"
+    if "api_response" not in st.session_state:
+        st.session_state.api_response = None
+
     options = dict()
-    
-    col1, col2 = st.columns(2)
 
-    with col1:
-        options["prodct_type"] = st.selectbox("🌎 Select Product Type", 
-            ["API", "Tablets(com)", "Syrups", "Infusion", "Capsules", "Injectables","Other"])
+    # 📌 FORM PAGE
+    if st.session_state.page == "form":
+        st.markdown('<div class="main-header"><h1>🧪 QAI Model AI-Powered Quality Assistance</h1><p> CREATED BY :- MEERA ACHARYA & RAJ PATEL</P><p>Enter details below to generate a comprehensive quality report</p></div>', unsafe_allow_html=True)
+
+        # User Input Form in a card layout
+        # st.markdown('<div class="card">', unsafe_allow_html=True)
+        col1, col2 = st.columns(2)
+
+        with col1:
+            options["prodct_type"] = st.selectbox("🌎 Select Product Type", 
+                ["API", "Tablets(com)", "Syrups", "Infusion", "Capsules", "Injectables","Other"])
             
-    with col2:
-        options["report_type"] = st.selectbox("📝 Report Type", 
-            ["Regulatory Overview", "Detailed Information", "License Requirements", "Documentation Needed"])
+        with col2:
+            options["report_type"] = st.selectbox("🌎 Select Report Type", 
+                ["Pathway", "List of license", "Detailed Information"])
+            if options["report_type"] == "Detailed Information":
+                options["resultsToCheck"] = st.text_area("🔍 Enter Your Results:", height=200, placeholder="Provide Licence you need info about here...", key="checkResults")
+            options["regulatory"] = st.selectbox("🌎 Select Regulatory Authority", 
+                ["CDSCO", "United States (FDA)", "European Union (EMA)","Brazil (ANVISA)", "Australia (TGA)"])
             
-    if options["report_type"] == "Detailed Information":
-        options["resultsToCheck"] = st.text_area("🔍 Enter Your Results:", height=200, placeholder="Provide License you need info about here...", key="checkResults")
-    options["regulatory"] = st.selectbox("🌎 Select Regulatory Authority", 
-        ["CDSCO", "United States (FDA)", "European Union (EMA)","Brazil (ANVISA)", "Australia (TGA)"])
-    
-    # Submit button
-    submit_button = st.button("🚀 Generate Regulatory Report")
-    if submit_button:
-        if not all([options.get("prodct_type"), options.get("report_type"), options.get("regulatory")]):
-            st.error("⚠️ Please fill in all required fields!")
+        # st.markdown('</div>', unsafe_allow_html=True)
+
+        # Analysis Options in a separate card
+        # st.markdown('<div class="card">', unsafe_allow_html=True)
+    # Submit button with enhanced styling
+        submit_button = st.button("🚀 Generate Regulatory Report")
+        if submit_button:
+            if not all([options.get("prodct_type"), options.get("report_type"), options.get("regulatory")]):
+                st.error("⚠️ Please fill in all required fields!")
+            else:
+                prompt = prompts.getPromptForOptions(options)
+                with st.spinner("🛠️ Generating comprehensive report... Please wait"):
+                    api_response = chat_with_gpt.chatWithGpt(prompt)
+                    st.session_state.api_response = api_response
+
+                st.session_state.update(options)
+                st.session_state.page = "result"
+                st.experimental_rerun()
+
+    # 📌 RESULT PAGE
+    elif st.session_state.page == "result":
+        st.markdown('<div class="main-header"><h1>📑 Quality Analysis Report</h1></div>', unsafe_allow_html=True)
+        
+        if st.button("🔙 Return to Form", key="back_button"):
+            st.session_state.page = "form"
+            st.experimental_rerun()
+
+        # st.markdown('<div class="card">', unsafe_allow_html=True)
+        st.markdown("### 📋 Analysis Details")
+        st.markdown(f"**💊 Product Type:** {st.session_state.prodct_type}",)
+        st.markdown(f"**📦 Reoprt Type:** {st.session_state.report_type}")
+        st.markdown(f"**⚡ Regulatory Authority:** {st.session_state.regulatory}")
+        # st.markdown('</div>', unsafe_allow_ht ml=True)
+
+        
+        if st.session_state.api_response:
+            components.html("<div class='table-container'>"+st.session_state.api_response+"</div>",height=800,width=1000,scrolling=True)
         else:
-            # Display the results - simulating API response
-            st.markdown('<div class="main-header"><h1>📑 Regulatory Compliance Report</h1></div>', unsafe_allow_html=True)
-            
-            st.markdown("### 📋 Analysis Details")
-            st.markdown(f"**💊 Product Type:** {options.get('prodct_type')}",)
-            st.markdown(f"**📝 Report Type:** {options.get('report_type')}")
-            if options.get('resultsToCheck'):
-                st.markdown(f"**🔍 Results Analyzed:** Yes")
-            st.markdown(f"**🌎 Regulatory Authority:** {options.get('regulatory')}")
-            
-            st.markdown('<div class="result-header">🔬 Regulatory Analysis</div>', unsafe_allow_html=True)
-            
-            # Simulate response
-            api_response = """
-            <div style="background-color: white; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                <h3>Regulatory Requirements Summary</h3>
-                <p>For <strong>{}</strong> in <strong>{}</strong>:</p>
-                <ul>
-                    <li><strong>Marketing Authorization:</strong> Required - Standard submission pathway</li>
-                    <li><strong>GMP Certification:</strong> Required - On-site inspection typically conducted</li>
-                    <li><strong>Product Testing:</strong> Required - Local laboratory testing may be necessary</li>
-                    <li><strong>Labeling Requirements:</strong> Package insert and patient information must be in local language</li>
-                    <li><strong>Post-Market Surveillance:</strong> Active reporting of adverse events required</li>
-                </ul>
-                <h4>Key Documentation Required:</h4>
-                <ol>
-                    <li>Common Technical Document (CTD) or equivalent</li>
-                    <li>Quality Control Methods and Validation Reports</li>
-                    <li>Stability Data (Long-term and Accelerated)</li>
-                    <li>Process Validation Reports</li>
-                    <li>GMP Certificate</li>
-                </ol>
-                <p><strong>Estimated Timeline:</strong> 12-18 months for full approval process</p>
-                <p><strong>Key Challenges:</strong> Local language requirements, potential for additional testing, inspection scheduling can cause delays</p>
-            </div>
-            """.format(options.get('prodct_type'), options.get('regulatory'))
-            st.markdown(api_response, unsafe_allow_html=True)
-
+            st.warning("⚠️ No response received. Please try again.")
     # CTA section
     st.markdown("""
     <div style="text-align: center; margin: 3rem 0;">
