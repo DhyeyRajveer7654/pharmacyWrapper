@@ -275,7 +275,7 @@ st.markdown("""
     .header {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: justify;
         max-width: 1400px;
         margin: 0 auto;
         height: 50%;
@@ -292,7 +292,7 @@ st.markdown("""
     .nav-links {
         display: flex;
         gap: 1.5rem;
-        align-items: center;
+        align-items: justify;
         height: 100%;
     }
     
@@ -325,7 +325,7 @@ st.markdown("""
         color: #1e40af;
         padding: 3rem 2rem;
         border-radius: 10px;
-        text-align: center;
+        text-align: justify;
         margin-bottom: 2rem;
     }
     
@@ -358,7 +358,7 @@ st.markdown("""
     .section-title {
         color: #1e40af;
         margin: 2rem 0 1rem 0;
-        text-align: center;
+        text-align: justify;
         font-size: 1.8rem;
     }
     
@@ -377,7 +377,7 @@ st.markdown("""
     }
     
     .footer-bottom {
-        text-align: center;
+        text-align: justify;
         margin-top: 2rem;
         padding-top: 1rem;
         border-top: 1px solid #bfdbfe;
@@ -397,7 +397,7 @@ st.markdown("""
     
     .popup-container h3 {
         color: #1e40af;
-        text-align: center;
+        text-align: justify;
         margin-bottom: 1.5rem;
     }
     
@@ -491,7 +491,7 @@ st.markdown("""
     
     /* Main header styling */
     .main-header {
-        text-align: center;
+        text-align: justify;
         margin-bottom: 2rem;
     }
 
@@ -502,7 +502,7 @@ st.markdown("""
     }
 
     .main-header p {
-        color: #64748b;
+        color: #000000;
         font-size: 1.1rem;
     }
 
@@ -580,7 +580,7 @@ if st.session_state.current_page == 'home':
     
     # CTA section
     st.markdown("""
-    <div style="text-align: center; margin: 3rem 0;">
+    <div style="text-align: justify; margin: 3rem 0;">
         <h2>Ready to elevate your pharmaceutical quality and compliance?</h2>
     </div>
     """, unsafe_allow_html=True)
@@ -718,7 +718,7 @@ elif st.session_state.current_page == 'about':
 
     with col1:
         st.markdown("""
-        <div class="card" style="text-align: center;">
+        <div class="card" style="text-align: justify;">
             <img src="meera.png" alt="Meera Acharya" style="width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom: 10px;">
             <h3>Meera Rahul Acharya</h3>
             <p><em>Founder & Tech Lead</em></p>
@@ -728,7 +728,7 @@ elif st.session_state.current_page == 'about':
 
     with col2:
         st.markdown("""
-        <div class="card" style="text-align: center;">
+        <div class="card" style="text-align: justify;">
             <img src="raj.png" alt="Raj H. Patel" style="width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom: 10px;">
             <h3>Raj H Patel</h3>
             <p><em>Co-Founder & Tech Lead</em></p>
@@ -738,7 +738,7 @@ elif st.session_state.current_page == 'about':
 
     with col3:
         st.markdown("""
-        <div class="card" style="text-align: center;">
+        <div class="card" style="text-align: justify;">
             <img src="dhyey.png" alt="Dhyey Rajveer" style="width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom: 10px;">
             <h3>Dhyey Rajveer</h3>
             <p><em>Model Development Support</em></p>
@@ -771,7 +771,7 @@ elif st.session_state.current_page == 'regulatory':
                 padding: 2rem;
                 border-radius: 10px;
                 margin-bottom: 2rem;
-                text-align: center;
+                text-align: justify;
             }
 
             /* Form Elements */
@@ -949,7 +949,7 @@ elif st.session_state.current_page == 'regulatory':
             st.warning("⚠️ No response received. Please try again.")
     # CTA section
     st.markdown("""
-    <div style="text-align: center; margin: 3rem 0;">
+    <div style="text-align: justify; margin: 3rem 0;">
         <h2>Need personalized regulatory support?</h2>
     </div>
     """, unsafe_allow_html=True)
@@ -985,7 +985,7 @@ elif st.session_state.current_page == 'quality':
                 padding: 2rem;
                 border-radius: 10px;
                 margin-bottom: 2rem;
-                text-align: center;
+                text-align: justify;
             }
 
             /* Form Elements */
