@@ -669,41 +669,35 @@ elif st.session_state.current_page == 'about':
     col1, col2, col3 = st.columns(3)
 
     with col1:
+        st.image("meera.png", width=120)
         st.markdown("""
-        <div class="card" style="text-align: center;">
-            <img src="meera.png" alt="Meera Acharya" style="width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom: 10px;">
             <h3>Meera Rahul Acharya</h3>
             <p><em>Founder & Tech Lead</em></p>
             <p>Innovator and visionary behind QRx AI. Obsessed with AI and passionate about transforming pharmacy education. She ideates and designs all project implementations.</p>
-        </div>
         """, unsafe_allow_html=True)
 
     with col2:
+        st.image("raj.png", width=120)
         st.markdown("""
-        <div class="card" style="text-align: center;">
-            <img src="raj.png" alt="Raj H. Patel" style="width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom: 10px;">
             <h3>Raj H Patel</h3>
             <p><em>Co-Founder & Tech Lead</em></p>
             <p>Owner of Redocy Lifecare and co-founder of QRx AI. Raj handles all the coding and back-end development, turning Meera's ideas into working AI solutions.</p>
-        </div>
         """, unsafe_allow_html=True)
 
     with col3:
+        st.image("dhyey.png", width=120)
         st.markdown("""
-        <div class="card" style="text-align: center;">
-            <img src="dhyey.png" alt="Dhyey Rajveer" style="width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom: 10px;">
             <h3>Dhyey Rajveer</h3>
             <p><em>Model Development Support</em></p>
             <p>Key contributor in the creation and fine-tuning of the AI models. His technical insights have been instrumental in QRx AI’s early success.</p>
-        </div>
         """, unsafe_allow_html=True)
 
-    # Footer
-    st.markdown("""
-    <div class="footer">
-        <p>© 2025 QRx AI. All rights reserved. Built with passion by pharmacy minds.</p>
-    </div>
-    """, unsafe_allow_html=True)
+        # Footer
+        st.markdown("""
+        <div class="footer">
+            <p>© 2025 QRx AI. All rights reserved. Built with passion by pharmacy minds.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
 # Regulatory Page - ONLY SHOWS REGULATORY CONTENT
 elif st.session_state.current_page == 'regulatory':
