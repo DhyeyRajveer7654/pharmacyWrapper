@@ -723,7 +723,7 @@ elif st.session_state.current_page == 'about':
     with col1:
         st.markdown("""
         <div class="card" style="text-align: center;">
-            <img src="meera.jpg" alt="Meera Acharya" style="width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom: 10px;">
+            <img src="meera.png" alt="Meera Acharya" style="width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom: 10px;">
             <h3>Meera Acharya</h3>
             <p><em>Founder</em></p>
             <p>Innovator and visionary behind QRx AI. Obsessed with AI and passionate about transforming pharmacy education. She ideates and designs all project implementations.</p>
@@ -733,7 +733,7 @@ elif st.session_state.current_page == 'about':
     with col2:
         st.markdown("""
         <div class="card" style="text-align: center;">
-            <img src="raj.jpg" alt="Raj H. Patel" style="width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom: 10px;">
+            <img src="raj.png" alt="Raj H. Patel" style="width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom: 10px;">
             <h3>Raj H. Patel</h3>
             <p><em>Co-Founder & Tech Lead</em></p>
             <p>Owner of Redocy Lifecare and co-founder of QRx AI. Raj handles all the coding and back-end development, turning Meera's ideas into working AI solutions.</p>
@@ -743,7 +743,7 @@ elif st.session_state.current_page == 'about':
     with col3:
         st.markdown("""
         <div class="card" style="text-align: center;">
-            <img src="dhyey.jpg" alt="Dhyey Rajveer" style="width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom: 10px;">
+            <img src="dhyey.png" alt="Dhyey Rajveer" style="width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom: 10px;">
             <h3>Dhyey Rajveer</h3>
             <p><em>Model Development Support</em></p>
             <p>Key contributor in the creation and fine-tuning of the AI models. His technical insights have been instrumental in QRx AI’s early success.</p>
