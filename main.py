@@ -605,8 +605,6 @@ if st.session_state.current_page == 'home':
 
 # Contact Page
 elif st.session_state.current_page == 'contact':
-    st.markdown('<h2 class="section-title">Contact Us</h2>', unsafe_allow_html=True)
-    
     st.markdown("""
     <div class="hero">
         <h2>Get in Touch</h2>
@@ -614,47 +612,26 @@ elif st.session_state.current_page == 'contact':
     </div>
     """, unsafe_allow_html=True)
     
-    # Contact Form
+    col1, col2 = st.columns(2)
+
+with col1:
     st.markdown("""
     <div class="card">
-        <h3>Contact Form</h3>
-        <p>Fill out the form below and one of our experts will get back to you within 24 hours.</p>
+        <h3>Main Office</h3>
+        <h4>Redoxy Lifecare</h4>
+        <p>2,3 Medicare Complex,<br>
+        Old Housing Road,<br>
+        Surendranagar, 363001 <br>
+        Gujarat, India</p>
+        <p>Phone: +91-8849122744, +91-9723449306<br>
+        Email: redoxylifecare@gmail.com</p>
     </div>
     """, unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        name = st.text_input("Name")
-        email = st.text_input("Email")
-        phone = st.text_input("Phone Number")
-        
-    with col2:
-        company = st.text_input("Company")
-        topic = st.selectbox("Topic", ["Regulatory Services", "Quality Services", "General Inquiry", "Other"])
-        
-    message = st.text_area("Message", height=150)
-    
-    if st.button("Submit", key="contact_submit"):
-        # In a real implementation, this would send the form data
-        st.success("Thank you for contacting us! We'll get back to you shortly.")
-    
-    # Office Locations 
-    col1, = st.columns(1)
-    
-    with col1:
-        st.markdown("""
-        <div class="card">
-            <h3>Main Office</h3>
-            <h4>Redoxy lifecare<h4>
-            <p>2,3 medicare complex,<br>
-            old housing road,<br>
-            Surendranagar, 363001 <br>
-            Gujarat, India</p>
-            <p>Phone: +91-8849122744, +91-9723449306<br>
-            Email: redoxylifecare@gmail.com</p>
-        </div>
-        """, unsafe_allow_html=True)
+
+with col2:
+    # Show Logo in Column 2
+    st.image("path_to_logo/logo.png", width=200)
+
     # Footer
     st.markdown("""
     <div class="footer">
