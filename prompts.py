@@ -69,7 +69,7 @@ PATHYWAY_PROMPT = Template("""I am a registered pharmacist in Australia who has 
 
 Please provide:
 
-A detailed $report_type in tabular form outlining all the steps from company registration to manufacturing and marketing of pharmaceutical $product_type.
+Provide a detailed comprehensive well structured table of $report_type outlining all the steps from company registration to manufacturing and marketing of pharmaceutical $product_type.
 
 A list of all required licenses and approvals at each stage, including but not limited to manufacturing license, product registration as per $regulatory_authorities guidelines.
 
@@ -95,60 +95,33 @@ The goal is to have a single, well-structured document that can guide a beginner
 
 """)
 
-# This commented out function is replaced by the improved version below
-# def getPromptForOptions(options):
-#     jurisdiction = ""
-#     if options['jurisdiction'] == "COMPARE WITH ALL OF THEM":
-#         jurisdiction = "INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA, UNITED STATES PHARMACOPOEIA AND MARTINDALE-EXTRA PHARMACOPIEA"
-#     prompt_template = Template("")
-#     if options['typeOfInfo'] == "METHOD OF PREPARATION":
-#         prompt_template = METHOD_OF_PREPARATION_PROMPT
-#     elif options['typeOfInfo'] == "CHARACTARIZATION/EVALUATION":
-#         prompt_template = CHARACTARIZATION_EVALUATION_PROMPT
-#     elif options['typeOfInfo'] == "Both of above":
-#         prompt_template = COMBINED_PROMPT
-#     elif options['typeOfInfo'] == "CHECK RESULTS":
-#         prompt_template = CHECK_RESULTS_PROMPT
-#         final_prompt = prompt_template.substitute(product_name=options['product_name'], quanOfMed=options['quanOfMed'], powerOfDrug=options['powerOfDrug'], jurisdiction=jurisdiction, resultsToCheck=options['resultsToCheck'])
-#         return CHECK_RESULTS_PROMPT.substitute(options)
-#     elif options['typeOfInfo'] == "FTIR ANALYSIS":
-#         return FTIR_PROMPT.substitute(options)
-#     if options['jurisdiction'] == "COMPARE WITH ALL OF THEM":
-#         jurisdiction = "COMAPRE IN TABLE ALL 4 INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA, UNITED STATES PHARMACOPOEIA AND MARTINDALE-EXTRA PHARMACOPIEA"
-#     final_prompt = prompt_template.substitute(product_name=options['product_name'], quanOfMed=options['quanOfMed'], powerOfDrug=options['powerOfDrug'], jurisdiction=jurisdiction)
-#     print("Options Dictionary:", options.keys())  # Debugging output
-#     print(final_prompt)
-#     return final_prompt
 def getPromptForOptions(options):
-    if 'prodct_type' in options:
-        # This is for the regulatory page
+    jurisdiction = ""
+    if options['jurisdiction'] == "COMPARE WITH ALL OF THEM":
+        jurisdiction = "INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA, UNITED STATES PHARMACOPOEIA AND MARTINDALE-EXTRA PHARMACOPIEA"
+    prompt_template = Template("")
+    if options['typeOfInfo'] == "METHOD OF PREPARATION":
+        prompt_template = METHOD_OF_PREPARATION_PROMPT
+    elif options['typeOfInfo'] == "CHARACTARIZATION/EVALUATION":
+        prompt_template = CHARACTARIZATION_EVALUATION_PROMPT
+    elif options['typeOfInfo'] == "Both of above":
+        prompt_template = COMBINED_PROMPT
+    elif options['typeOfInfo'] == "CHECK RESULTS":
+        prompt_template = CHECK_RESULTS_PROMPT
+        final_prompt = prompt_template.substitute(product_name=options['product_name'], quanOfMed=options['quanOfMed'], powerOfDrug=options['powerOfDrug'], jurisdiction=jurisdiction, resultsToCheck=options['resultsToCheck'])
+        return CHECK_RESULTS_PROMPT.substitute(options)
+    elif options['typeOfInfo'] == "FTIR ANALYSIS":
+        return FTIR_PROMPT.substitute(options)
+    if options['jurisdiction'] == "COMPARE WITH ALL OF THEM":
+        jurisdiction = "COMAPRE IN TABLE ALL 4 INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA, UNITED STATES PHARMACOPOEIA AND MARTINDALE-EXTRA PHARMACOPIEA"
+    final_prompt = prompt_template.substitute(product_name=options['product_name'], quanOfMed=options['quanOfMed'], powerOfDrug=options['powerOfDrug'], jurisdiction=jurisdiction)
+    print("Options Dictionary:", options.keys())  # Debugging output
+    print(final_prompt)
+    return final_prompt
+def getPromptForOptions(options):
+      if options['report_type'] == "Pathway":
         prompt_template = PATHYWAY_PROMPT
-        final_prompt = prompt_template.substitute(product_type=options['prodct_type'], report_type=options.get('report_type', 'Overview'), regulatory_authorities=options['regulatory'])
-        return final_prompt
-    elif 'report_type' in options and options['report_type'] == "Pathway":
-        prompt_template = PATHYWAY_PROMPT
-        final_prompt = prompt_template.substitute(product_type=options.get('product_type', 'Pharmaceutical'), report_type=options['report_type'], regulatory_authorities=options['regulatory'])
-        return final_prompt
-    else:
-        # For quality prompts
-        jurisdiction = ""
-        if 'jurisdiction' in options and options['jurisdiction'] == "COMPARE WITH ALL OF THEM":
-            jurisdiction = "INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA, UNITED STATES PHARMACOPOEIA AND MARTINDALE-EXTRA PHARMACOPIEA"
-        prompt_template = Template("")
-        if 'typeOfInfo' in options:
-            if options['typeOfInfo'] == "METHOD OF PREPARATION":
-                prompt_template = METHOD_OF_PREPARATION_PROMPT
-            elif options['typeOfInfo'] == "CHARACTARIZATION/EVALUATION":
-                prompt_template = CHARACTARIZATION_EVALUATION_PROMPT
-            elif options['typeOfInfo'] == "Both of above":
-                prompt_template = COMBINED_PROMPT
-            elif options['typeOfInfo'] == "CHECK RESULTS":
-                prompt_template = CHECK_RESULTS_PROMPT
-                final_prompt = prompt_template.substitute(product_name=options['product_name'], quanOfMed=options['quanOfMed'], powerOfDrug=options['powerOfDrug'], jurisdiction=jurisdiction, resultsToCheck=options['resultsToCheck'])
-                return final_prompt
-            elif options['typeOfInfo'] == "FTIR ANALYSIS":
-                return FTIR_PROMPT.substitute(options)
-        if 'jurisdiction' in options and options['jurisdiction'] == "COMPARE WITH ALL OF THEM":
-            jurisdiction = "COMAPRE IN TABLE ALL 4 INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA, UNITED STATES PHARMACOPOEIA AND MARTINDALE-EXTRA PHARMACOPIEA"
-        final_prompt = prompt_template.substitute(product_name=options.get('product_name', ''), quanOfMed=options.get('quanOfMed', ''), powerOfDrug=options.get('powerOfDrug', ''), jurisdiction=jurisdiction)
-        return final_prompt
+      final_prompt = prompt_template.substitute(product_type=options['product_type'], report_type=options['report_type'], regulatory_authorities=options['regulatory'])
+      return final_prompt
+
+    
