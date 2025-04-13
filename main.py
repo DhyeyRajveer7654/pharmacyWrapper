@@ -220,7 +220,7 @@ st.markdown("""
 st.markdown('<div style="background-color: white; padding: 1rem 0; border-bottom: 1px solid #e0e0e0; margin-bottom: 1rem;">', unsafe_allow_html=True)
 col1, col2, col3, col4, col5, col6 = st.columns(6)
 with col1:
-    st.image("qrxai.png", width=100)
+    st.image("qrxai.png", width=200)
     
 with col2:
     if st.button("HOME", key="nav_home", use_container_width=True, type="secondary", help="Go to home page"):
