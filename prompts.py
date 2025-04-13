@@ -162,19 +162,51 @@ If you can't find the exact link, provide the **best possible link** to the rela
 </table>
 """)
 DETAILED_INFORMATION_PROMPT = Template("""
-Provide detailed and professional information on the document titled "$detailed_information", which is required for manufacturing "$product_type" in India, according to the guidelines of "$regulatory_authorities". 
+Provide detailed and professional information on the **$detailed_information** document, which is required for manufacturing "$product_type" in India as per the guidelines of "$regulatory_authorities". 
 
-The response should be **focused** only on this specific document "$detailed_information" , offering comprehensive details in HTML format. Structure the output as follows:
+This response should provide **only detailed information** for the "$detailed_information" document, and it should be structured in HTML format. Structure the output as follows:
 
-1. Use <h3> for the document title.
-2. Use <h4> for section headers or subheaders.
-3. Use <ul>, <li> for listing items in a bullet-point format.
-4. Use <p> for paragraphs explaining each section.
-5. Use <a href="URL">link</a> for referencing related links or documents.
-6. Do **NOT** use Markdown or plain text formatting. 
-7. **ONLY** return valid HTML content.
+1. **Document Overview**:
+   - Describe the purpose and importance of the **$detailed_information** in pharmaceutical manufacturing.
+   - Explain its role in compliance with regulations set by "$regulatory_authorities".
 
-Ensure the content is **well-organized, systematic, and detailed** with all necessary information specific to this document.
+2. **Key Components**:
+   - List and explain the essential sections of the **$detailed_information**:
+     - Facility Information
+     - Personnel and Organizational Structure
+     - Manufacturing Processes
+     - Equipment and Facilities
+     - Quality Control Systems
+     - Safety and Environmental Controls
+     - Documentation and Record Keeping
+
+3. **Regulatory Compliance**:
+   - Provide details on how the **$detailed_information** helps ensure compliance with industry standards, such as GMP (Good Manufacturing Practices) and other relevant regulations.
+   
+4. **Submission and Updates**:
+   - Detail the process for submitting the **$detailed_information** to regulatory authorities.
+   - Explain the frequency and conditions under which the **$detailed_information** must be updated.
+
+5. **Application for the Document**:
+   - **How to Apply**: Explain the step-by-step process for applying for the **$detailed_information** document.
+   - **Application Time**: Mention how much time it typically takes to apply for and get approval for the **$detailed_information** document.
+   - **Cost**: Provide the cost of applying for the **$detailed_information** (if applicable).
+   - **Necessary Documents**: List the documents required to apply for the **$detailed_information** (e.g., facility approval, manufacturing licenses, etc.).
+   - **Application Link**: Provide a direct link or guidance on where to apply for the **$detailed_information**. Include the link to the official application page, if available.
+   - **PDF of Document**: If the **$detailed_information** has an official PDF or downloadable document, provide a link to that document.
+
+6. **Additional Resources**:
+   - Provide **<a href="URL">links</a>** to any relevant official resources or documents for reference.
+   
+7. **Formatting**:
+   - Use **<h3>** for document title and section headers, and **<h4>** for subheaders.
+   - Use **<ul>** and **<li>** to list items and explanations.
+   - Use **<p>** for detailed paragraphs and explanations.
+   - Include **<a href="URL">link</a>** to any external references or related documents (if applicable).
+   - Avoid using Markdown or plain text formatting. 
+   - **Only return valid HTML content**.
+
+Ensure the content is **detailed**, **professional**, and focused specifically on the **$detailed_information**, providing comprehensive regulatory and process-oriented information.
 """)
 def getPromptForOptions(options):
     report_type = options.get('report_type', '').strip().lower()
