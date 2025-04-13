@@ -162,7 +162,7 @@ If you can't find the exact link, provide the **best possible link** to the rela
 </table>
 """)
 DETAILED_INFORMATION_PROMPT = Template("""
-Provide detailed and professional information on "$detailed_information" required for manufacturing "$product_type" in India as per "$regulatory_authorities" guidelines. Format the response strictly using HTML. Structure the output as follows:
+Provide detailed and professional information on "$detailed_information" document only which is required for manufacturing "$product_type" in India as per "$regulatory_authorities" guidelines. Format the response strictly using HTML. Structure the output as follows:
 
 1. Use <h3> and <h4> for section headers and subheaders.
 2. Use <ul>, <li> for listing items.
