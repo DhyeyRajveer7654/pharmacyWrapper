@@ -206,7 +206,7 @@ This response should provide **only detailed information** for the "$detailed_in
    - Avoid using Markdown or plain text formatting. 
    - **Only return valid HTML content**.
 
-Ensure the content is **detailed**, **professional**, and focused specifically on the "$detailed_information", providing comprehensive regulatory and process-oriented information.
+ Ensure the content is **detailed**, **professional**, and focused specifically on the "$detailed_information", providing comprehensive regulatory and process-oriented information and also note that all information should be from relevant dcoument or offical websites or articles no hypothetical answers and all links should be openable no error links.
 """)
 def getPromptForOptions(options):
     report_type = options.get('report_type', '').strip().lower()
