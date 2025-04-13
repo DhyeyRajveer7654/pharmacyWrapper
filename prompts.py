@@ -162,18 +162,20 @@ If you can't find the exact link, provide the **best possible link** to the rela
 </table>
 """)
 DETAILED_INFORMATION_PROMPT = Template("""
-Provide detailed and professional information on "$detailed_information" document only which is required for manufacturing "$product_type" in India as per "$regulatory_authorities" guidelines. Format the response strictly using HTML. Structure the output as follows:
+Provide detailed and professional information on the document titled "$detailed_information", which is required for manufacturing "$product_type" in India, according to the guidelines of "$regulatory_authorities". 
 
-1. Use <h3> and <h4> for section headers and subheaders.
-2. Use <ul>, <li> for listing items.
-3. Use <p> for paragraphs.
-4. Use <a href="URL">link</a> for links.
-5. Do NOT use Markdown or plain text formatting.
-6. ONLY return valid HTML content.
+The response should be **focused** only on this specific document "$detailed_information" , offering comprehensive details in HTML format. Structure the output as follows:
 
-Ensure the information is well-organized, professional, and rich in regulatory detail.
+1. Use <h3> for the document title.
+2. Use <h4> for section headers or subheaders.
+3. Use <ul>, <li> for listing items in a bullet-point format.
+4. Use <p> for paragraphs explaining each section.
+5. Use <a href="URL">link</a> for referencing related links or documents.
+6. Do **NOT** use Markdown or plain text formatting. 
+7. **ONLY** return valid HTML content.
+
+Ensure the content is **well-organized, systematic, and detailed** with all necessary information specific to this document.
 """)
-
 def getPromptForOptions(options):
     report_type = options.get('report_type', '').strip().lower()
     type_of_info = options.get('typeOfInfo', '').strip().upper()
