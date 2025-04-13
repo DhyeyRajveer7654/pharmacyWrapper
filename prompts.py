@@ -162,15 +162,17 @@ If you can't find the exact link, provide the **best possible link** to the rela
 </table>
 """)
 DETAILED_INFORMATION_PROMPT = Template("""
-Provide detailed information on $detailed_information required for manufacturing $product_type in India as per the guidelines of $regulatory_authorities. Ensure the response is:
+Provide detailed and professional information on "$detailed_information" required for manufacturing "$product_type" in India as per "$regulatory_authorities" guidelines. Format the response strictly using HTML. Structure the output as follows:
 
-- As comprehensive and detailed as possible.
-- Presented in a clear, professional, and point-wise format.
-- Structured systematically for clarity and usability.
+1. Use <h3> and <h4> for section headers and subheaders.
+2. Use <ul>, <li> for listing items.
+3. Use <p> for paragraphs.
+4. Use <a href="URL">link</a> for links.
+5. Do NOT use Markdown or plain text formatting.
+6. ONLY return valid HTML content.
 
-If available, include links to official documents, webpages, or application forms relevant to $detailed_information.
+Ensure the information is well-organized, professional, and rich in regulatory detail.
 """)
-
 
 def getPromptForOptions(options):
     report_type = options.get('report_type', '').strip().lower()
