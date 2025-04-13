@@ -161,7 +161,7 @@ If you can't find the exact link, provide the **best possible link** to the rela
     </tbody>
 </table>
 """)
-
+DETAILED_INFORMATION_PROMPT = Template("""Give Deatiled information on $detailed_information which is required for manfucturing $product_type in India as per $regulatory_authorities and make sure the result or $detailed_information should be as deatiled as possible and if possible provide link of that $deatiled_information and make the infomration look professional and point wise in systemic way  """)
 def getPromptForOptions(options):
     report_type = options.get('report_type', '').strip().lower()
 
@@ -177,8 +177,13 @@ def getPromptForOptions(options):
             product_type=options.get('product_type', 'default_product'),
             regulatory_authorities=options.get('regulatory', 'default_regulatory')
         )
-
-    # Rest of typeOfInfo handling remains unchanged...
+    elif report_type == "Detailed Information":
+        return DETAILED_INFORMATION_PROMPT.substitute(
+            product_type=options.get('product_type', 'default_product'),
+            report_type=options.get('report_type', 'default_report'),
+            regulatory_authorities=options.get('regulatory', 'default_regulatory'),
+            detailed_information=options.get('detailed_information',''))
+    # Rest of typeOfInfo handling remains unchanged... 
 
     # Fallback for unrecognized input
     print("⚠️ Unrecognized report_type or typeOfInfo:", options)
