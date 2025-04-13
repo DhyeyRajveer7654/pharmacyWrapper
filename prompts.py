@@ -230,7 +230,7 @@ def getPromptForOptions(options):
             regulatory_authorities=options.get('regulatory', '')
         )
 
-    elif report_type == "detailed information":
+    elif report_type == "Detailed Information":
         return DETAILED_INFORMATION_PROMPT.substitute(
             product_type=options.get('product_type', ''),
             report_type=report_type,
