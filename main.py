@@ -220,7 +220,13 @@ st.markdown("""
 st.markdown('<div style="background-color: white; padding: 1rem 0; border-bottom: 1px solid #e0e0e0; margin-bottom: 1rem;">', unsafe_allow_html=True)
 col1, col2, col3, col4, col5, col6 = st.columns(6)
 with col1:
-    st.markdown('<h1 style="color:#1e40af; margin:0; padding:0; font-size:2.5rem; font-weight:700;">QRx</h1>', unsafe_allow_html=True)
+    st.markdown(
+    """
+    <div style="text-align: center;">
+        <img src="QRxAI.png" alt="QRx AI Logo" style="height: 80px; width: auto;">
+    </div>
+    """,
+    unsafe_allow_html=True)
 with col2:
     if st.button("HOME", key="nav_home", use_container_width=True, type="secondary", help="Go to home page"):
         st.session_state.current_page = 'home'
@@ -663,7 +669,7 @@ elif st.session_state.current_page == 'about':
     <div class="card">
         <h3>Who We Are</h3>
         <p>QRx AI is a startup focused on empowering pharmacy students by simplifying regulatory compliance and enabling them to perform dosage form manufacturing as per pharmacopoeial standards in laboratory settings.</p>
-        <p>Registered under Redocy Lifecare, QRx AI is co-founded by Raj H. Patel, with Meera Acharya as the founder. Our tools provide easy-to-use solutions and educational resources tailored for pharma students.</p>
+        <p>Registered under Redoxy Lifecare, QRx AI is co-founded by Raj H. Patel, with Meera Acharya as the founder. Our tools provide easy-to-use solutions and educational resources tailored for pharma students.</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -711,7 +717,7 @@ elif st.session_state.current_page == 'about':
         st.markdown("""
             <h3>Raj H Patel</h3>
             <p><em>Co-Founder & Tech Lead</em></p>
-            <p>Owner of Redocy Lifecare and co-founder of QRx AI. Raj handles all the coding and back-end development, turning Meera's ideas into working AI solutions.</p>
+            <p>Owner of Redoxy Lifecare and co-founder of QRx AI. Raj handles all the coding and back-end development, turning Meera's ideas into working AI solutions.</p>
         """, unsafe_allow_html=True)
 
     with col3:
