@@ -185,22 +185,22 @@ def getPromptForOptions(options):
     # --- Handle report_type-based prompts ---
     if report_type == "pathway":
         return PATHWAY_PROMPT.substitute(
-            product_type=options.get('product_type', 'default_product'),
+            product_type=options.get('product_type', ''),
             report_type=report_type,
-            regulatory_authorities=options.get('regulatory', 'default_regulatory')
+            regulatory_authorities=options.get('regulatory', '')
         )
 
     elif report_type == "list of license":
         return LIST_OF_LICENSES_PROMPT.substitute(
-            product_type=options.get('product_type', 'default_product'),
-            regulatory_authorities=options.get('regulatory', 'default_regulatory')
+            product_type=options.get('product_type', ''),
+            regulatory_authorities=options.get('regulatory', '')
         )
 
     elif report_type == "detailed information":
         return DETAILED_INFORMATION_PROMPT.substitute(
-            product_type=options.get('product_type', 'default_product'),
+            product_type=options.get('product_type', ''),
             report_type=report_type,
-            regulatory_authorities=options.get('regulatory', 'default_regulatory'),
+            regulatory_authorities=options.get('regulatory', ''),
             detailed_information=options.get('detailed_information', '')
         )
 
