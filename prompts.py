@@ -162,69 +162,51 @@ If you can't find the exact link, provide the **best possible link** to the rela
 </table>
 """)
 DETAILED_INFORMATION_PROMPT = Template("""
-Provide detailed and professional information on the **$detailed_information** document, which is required for manufacturing "$product_type" in India as per the guidelines of "$regulatory_authorities". 
+Provide detailed and professional information on the "$detailed_information" document, which is required for manufacturing "$product_type" in India as per the guidelines of "$regulatory_authorities". 
 
 This response should provide **only detailed information** for the "$detailed_information" document, and it should be structured in HTML format. Structure the output as follows:
 
 1. **Document Overview**:
-   <p>The **$detailed_information** document is a critical requirement for pharmaceutical manufacturing in India, ensuring that manufacturing facilities comply with the standards and regulations set forth by **$regulatory_authorities**. This document serves as a testament to the facility's adherence to quality control processes, safety measures, and environmental regulations, thereby ensuring product safety and efficacy. It plays a pivotal role in aligning the operations with the stringent norms stipulated by **$regulatory_authorities**.</p>
+   - Describe the purpose and importance of the "$detailed_information" in pharmaceutical manufacturing.
+   - Explain its role in compliance with regulations set by "$regulatory_authorities".
 
 2. **Key Components**:
-   <h4>Facility Information</h4>
-   <p>This section provides detailed descriptions of the manufacturing facility, including its location, design, and infrastructure. It highlights the facility's capacity to manufacture pharmaceuticals in compliance with standard guidelines.</p>
-   
-   <h4>Personnel and Organizational Structure</h4>
-   <p>Details about the personnel involved in the manufacturing process, including their qualifications and roles. The organizational hierarchy ensures efficient management and oversight of production activities.</p>
-
-   <h4>Manufacturing Processes</h4>
-   <p>This section outlines the specific processes involved in production, including raw material handling, manufacturing steps, and quality checks to ensure product integrity.</p>
-
-   <h4>Equipment and Facilities</h4>
-   <p>Information on the equipment used in manufacturing, their maintenance protocols, and how these comply with the operational standards required by **$regulatory_authorities**.</p>
-
-   <h4>Quality Control Systems</h4>
-   <p>Describes the quality assurance systems in place, testing procedures, and methods used to ensure the final product meets required standards.</p>
-
-   <h4>Safety and Environmental Controls</h4>
-   <p>Measures taken to ensure the safety of personnel and the environment, including waste management and compliance with environmental regulations.</p>
-
-   <h4>Documentation and Record Keeping</h4>
-   <p>The protocols for maintaining records of manufacturing processes, quality control tests, and other critical documentation necessary for regulatory compliance.</p>
+    - List and explain the essential sections of the "$detailed_information":
+     - Facility Information
+     - Personnel and Organizational Structure
+     - Manufacturing Processes
+     - Equipment and Facilities
+     - Quality Control Systems
+     - Safety and Environmental Controls
+     - Documentation and Record Keeping
 
 3. **Regulatory Compliance**:
-   <p>The **$detailed_information** document plays an essential role in maintaining compliance with GMP (Good Manufacturing Practices) and other related standards. It ensures that all manufacturing activities align with legal and industry-specific requirements, helping to avoid potential legal and regulatory penalties. It demonstrates a commitment to maintaining high standards in pharmaceutical manufacturing.</p>
-
+   - Provide details on how the "$detailed_information" helps ensure compliance with industry standards, such as GMP (Good Manufacturing Practices) and other relevant regulations.
+   
 4. **Submission and Updates**:
-   <p>The submission of the **$detailed_information** document to regulatory authorities involves a detailed evaluation process to ensure compliance with all **$regulatory_authorities** regulations. Updates to the document are needed under conditions such as changes in manufacturing processes, facility upgrades, or amendments to existing regulations. The frequency of updates depends on these factors and regulatory guidelines.</p>
+   - Detail the process for submitting the "$detailed_information" to regulatory authorities.
+   - Explain the frequency and conditions under which the "$detailed_information" must be updated.
 
 5. **Application for the Document**:
-   <h4>How to Apply</h4>
-   <p>The application process for the **$detailed_information** document involves several steps: preparing necessary documentation, filling out the application form as per **$regulatory_authorities** guidelines, and submitting it through the relevant online portal.</p>
-   
-   <h4>Application Time</h4>
-   <p>Typically, the application process for the **$detailed_information** document takes approximately 4-6 weeks, depending on the complexity of the application and the responsiveness of the regulatory body.</p>
-
-   <h4>Cost</h4>
-   <p>The cost of applying for the **$detailed_information** document can vary based on specific facility and manufacturing details. Applicants should refer to **$regulatory_authorities**' fee structures for precise information.</p>
-
-   <h4>Necessary Documents</h4>
-   <ul>
-       <li>Facility approval certificates</li>
-       <li>Manufacturing licenses</li>
-       <li>Any other relevant certifications required by **$regulatory_authorities**</li>
-   </ul>
-
-   <h4>Application Link</h4>
-   <p>Visit the <a href="**$regulatory_authorities_website**">**$regulatory_authorities** Application Portal</a> to apply for the **$detailed_information** document.</p>
-
-   <h4>PDF of Document</h4>
-   <p>If available, the official PDF of the **$detailed_information** can be downloaded here: <a href="**$regulatory_authorities_website_pdf**">Download **$detailed_information** Form (PDF)</a>.</p>
+   - **How to Apply**: Explain the step-by-step process for applying for the "$detailed_information" document.
+   - **Application Time**: Mention how much time it typically takes to apply for and get approval for the "$detailed_information" document.
+   - **Cost**: Provide the cost of applying for the "$detailed_information" (if applicable).
+   - **Necessary Documents**: List the documents required to apply for the "$detailed_information" (e.g., facility approval, manufacturing licenses, etc.).
+   - **Application Link**: Provide a direct link or guidance on where to apply for the "$detailed_information". Include the link to the official application page, if available.
+   - **PDF of Document**: If the "$detailed_information" has an official PDF or downloadable document, provide a link to that document.
 
 6. **Additional Resources**:
-   <ul>
-       <li><a href="**$regulatory_authorities_website_gmp**">**$regulatory_authorities** GMP Standards</a></li>
-       <li><a href="**$regulatory_authorities_website_faq**">**$regulatory_authorities** FAQ</a></li>
-   </ul>
+   - Provide **<a href="URL">links</a>** to any relevant official resources or documents for reference.
+   
+7. **Formatting**:
+   - Use **<h3>** for document title and section headers, and **<h4>** for subheaders.
+   - Use **<ul>** and **<li>** to list items and explanations.
+   - Use **<p>** for detailed paragraphs and explanations.
+   - Include **<a href="URL">link</a>** to any external references or related documents (if applicable).
+   - Avoid using Markdown or plain text formatting. 
+   - **Only return valid HTML content**.
+
+Ensure the content is **detailed**, **professional**, and focused specifically on the "$detailed_information", providing comprehensive regulatory and process-oriented information.
 """)
 def getPromptForOptions(options):
     report_type = options.get('report_type', '').strip().lower()
