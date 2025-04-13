@@ -720,7 +720,7 @@ elif st.session_state.current_page == 'about':
 
     # Meera's Profile
     with col1:
-        display_circular_image("meera.png", size=180)
+        display_circular_image("meera.PNG", size=180)
         st.markdown("""
             <h3 style="text-align: center;">Meera Rahul Acharya</h3>
             <p style="text-align: center;"><em>Founder & Tech Lead</em></p>
@@ -729,7 +729,7 @@ elif st.session_state.current_page == 'about':
 
     # Raj's Profile
     with col2:
-        display_circular_image("raj.png", size=180)
+        display_circular_image("raj.PNG", size=180)
         st.markdown("""
             <h3 style="text-align: center;">Raj H Patel</h3>
             <p style="text-align: center;"><em>Co-Founder & Tech Lead</em></p>
@@ -738,7 +738,7 @@ elif st.session_state.current_page == 'about':
 
     # Dhyey's Profile
     with col3:
-        display_circular_image("dhyey.png", size=180)
+        display_circular_image("dhyey.PNG", size=180)
         st.markdown("""
             <h3 style="text-align: center;">Dhyey Rajveer</h3>
             <p style="text-align: center;"><em>Model Development Support</em></p>
