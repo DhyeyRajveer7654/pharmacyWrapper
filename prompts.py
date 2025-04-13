@@ -184,7 +184,7 @@ def getPromptForOptions(options):
     print("⚠️ Unrecognized report_type or typeOfInfo:", options)
     return "ERROR: Unrecognized report_type or typeOfInfo"
 
-
+def getPromptForOptions(options):
     # Default: Handle typeOfInfo prompts
     jurisdiction = options.get('jurisdiction', 'INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA, UNITED STATES PHARMACOPOEIA AND MARTINDALE-EXTRA PHARMACOPIEA')
 
