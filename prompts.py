@@ -191,7 +191,7 @@ This response should provide **only detailed information** for the "$detailed_in
    - **How to Apply**: Explain the step-by-step process for applying for the "$detailed_information" document.
    - **Application Time**: Mention how much time it typically takes to apply for and get approval for the "$detailed_information" document.
    - **Cost**: Provide the cost of applying for the "$detailed_information" (if applicable).
-   - **Necessary Documents**: List the documents required to apply for the "$detailed_information" (e.g., facility approval, manufacturing licenses, etc.).
+   - **Necessary Documents**: List the documents required to apply for the "$detailed_information" and also provide link of that documents which can give good infomration about neccessary documents.
    - **Application Link**: Provide a direct link or guidance on where to apply for the "$detailed_information". Include the link to the official application page, if available.
    - **PDF of Document**: If the "$detailed_information" has an official PDF or downloadable document, provide a link to that document.
 
