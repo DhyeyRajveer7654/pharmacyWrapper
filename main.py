@@ -903,7 +903,7 @@ elif st.session_state.current_page == 'regulatory':
             options["report_type"] = st.selectbox("📝 Select Report Type", 
                 ["Pathway", "List of license", "Detailed Information"])
             if options["report_type"] == "Detailed Information":
-                options["resultsToCheck"] = st.text_area("📝 Enter Your Results:", height=200, placeholder="Provide Licence you need info about here...", key="checkResults")
+                options["detailed_information"] = st.text_area("📝 Enter Your Results:", height=200, placeholder="Provide Licence you need info about here...", key="checkResults")
             options["regulatory"] = st.selectbox("🌎 Select Regulatory Authority", 
                 ["CDSCO", "United States (FDA)", "European Union (EMA)","Brazil (ANVISA)", "Australia (TGA)"])
             
