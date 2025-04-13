@@ -165,61 +165,77 @@ DETAILED_INFORMATION_PROMPT = Template("""Give Deatiled information on $detailed
 
 
 def getPromptForOptions(options):
-    if options.get('report_type') == "pathway":
+    report_type = options.get('report_type', '').strip().lower()
+    type_of_info = options.get('typeOfInfo', '').strip().upper()
+    jurisdiction = options.get(
+        'jurisdiction', 
+        'INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA, UNITED STATES PHARMACOPOEIA AND MARTINDALE-EXTRA PHARMACOPIEA'
+    )
+
+    # --- Handle report_type-based prompts ---
+    if report_type == "pathway":
         return PATHWAY_PROMPT.substitute(
             product_type=options.get('product_type', 'default_product'),
-            report_type=options.get('report_type', 'default_report'),
+            report_type=report_type,
             regulatory_authorities=options.get('regulatory', 'default_regulatory')
         )
 
-    elif options.get('report_type') == "list of license":
+    elif report_type == "list of license":
         return LIST_OF_LICENSES_PROMPT.substitute(
             product_type=options.get('product_type', 'default_product'),
             regulatory_authorities=options.get('regulatory', 'default_regulatory')
         )
-    elif options.get('report_type') == "Detailed Information":
+
+    elif report_type == "detailed information":
         return DETAILED_INFORMATION_PROMPT.substitute(
             product_type=options.get('product_type', 'default_product'),
-            report_type=options.get('report_type', 'default_report'),
+            report_type=report_type,
             regulatory_authorities=options.get('regulatory', 'default_regulatory'),
-            detailed_information=options.get('detailed_information',''))
-    # Rest of typeOfInfo handling remains unchanged... 
+            detailed_information=options.get('detailed_information', '')
+        )
 
-    # Fallback for unrecognized input
-    print("⚠️ Unrecognized report_type or typeOfInfo:", options)
-    return "ERROR: Unrecognized report_type or typeOfInfo"
+    # --- Handle typeOfInfo-based prompts ---
+    if type_of_info == "METHOD OF PREPARATION":
+        return METHOD_OF_PREPARATION_PROMPT.substitute(
+            product_name=options.get('product_name', ''),
+            quanOfMed=options.get('quanOfMed', ''),
+            powerOfDrug=options.get('powerOfDrug', ''),
+            jurisdiction=jurisdiction
+        )
 
-def getPromptForOptions(options):
-    # Default: Handle typeOfInfo prompts
-    jurisdiction = options.get('jurisdiction', 'INDIAN PHARMACOPIEA, BRITISH PHARMACOPIEA, UNITED STATES PHARMACOPOEIA AND MARTINDALE-EXTRA PHARMACOPIEA')
+    elif type_of_info == "CHARACTARIZATION/EVALUATION":
+        return CHARACTARIZATION_EVALUATION_PROMPT.substitute(
+            product_name=options.get('product_name', ''),
+            quanOfMed=options.get('quanOfMed', ''),
+            powerOfDrug=options.get('powerOfDrug', ''),
+            jurisdiction=jurisdiction
+        )
 
-    prompt_template = Template("")
+    elif type_of_info == "BOTH OF ABOVE":
+        return COMBINED_PROMPT.substitute(
+            product_name=options.get('product_name', ''),
+            quanOfMed=options.get('quanOfMed', ''),
+            powerOfDrug=options.get('powerOfDrug', ''),
+            jurisdiction=jurisdiction
+        )
 
-    if options.get('typeOfInfo') == "METHOD OF PREPARATION":
-        prompt_template = METHOD_OF_PREPARATION_PROMPT
-    elif options.get('typeOfInfo') == "CHARACTARIZATION/EVALUATION":
-        prompt_template = CHARACTARIZATION_EVALUATION_PROMPT
-    elif options.get('typeOfInfo') == "Both of above":
-        prompt_template = COMBINED_PROMPT
-    elif options.get('typeOfInfo') == "CHECK RESULTS":
+    elif type_of_info == "CHECK RESULTS":
         return CHECK_RESULTS_PROMPT.substitute(
             product_name=options.get('product_name', ''),
             quanOfMed=options.get('quanOfMed', ''),
             powerOfDrug=options.get('powerOfDrug', ''),
             jurisdiction=jurisdiction,
-            resultsToCheck=options.get('resultsToCheck', '')
+            content=options.get('resultsToCheck', '')
         )
-    elif options.get('typeOfInfo') == "FTIR ANALYSIS":
+
+    elif type_of_info == "FTIR ANALYSIS":
         return FTIR_PROMPT.substitute(options)
-    elif options.get('typeOfInfo') == "SMILES STRUCTURE":
-        return STRUCTURE_PROMPT.substitute(product_name=options.get('product_name', ''))
 
-    # Default return for typeOfInfo prompts
-    final_prompt = prompt_template.substitute(
-        product_name=options.get('product_name', ''),
-        quanOfMed=options.get('quanOfMed', ''),
-        powerOfDrug=options.get('powerOfDrug', ''),
-        jurisdiction=jurisdiction
-    )
+    elif type_of_info == "SMILES STRUCTURE":
+        return STRUCTURE_PROMPT.substitute(
+            product_name=options.get('product_name', '')
+        )
 
-    return final_prompt
+    # --- If neither matched ---
+    print("⚠️ Unrecognized report_type or typeOfInfo:", options)
+    return "ERROR: Unrecognized report_type or typeOfInfo"
