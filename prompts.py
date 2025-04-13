@@ -161,7 +161,15 @@ If you can't find the exact link, provide the **best possible link** to the rela
     </tbody>
 </table>
 """)
-DETAILED_INFORMATION_PROMPT = Template("""Give Deatiled information on $detailed_information which is required for manfucturing $product_type in India as per $regulatory_authorities and make sure the result or $detailed_information should be as deatiled as possible and if possible provide link of that $deatiled_information and make the infomration look professional and point wise in systemic way  """)
+DETAILED_INFORMATION_PROMPT = Template("""
+Provide detailed information on $detailed_information required for manufacturing $product_type in India as per the guidelines of $regulatory_authorities. Ensure the response is:
+
+- As comprehensive and detailed as possible.
+- Presented in a clear, professional, and point-wise format.
+- Structured systematically for clarity and usability.
+
+If available, include links to official documents, webpages, or application forms relevant to $detailed_information.
+""")
 
 
 def getPromptForOptions(options):
