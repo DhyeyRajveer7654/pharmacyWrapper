@@ -700,27 +700,27 @@ elif st.session_state.current_page == 'about':
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.image("meera.png", width=120)
         st.markdown("""
-            <h3>Meera Rahul Acharya</h3>
-            <p><em>Founder & Tech Lead</em></p>
-            <p>Innovator and visionary behind QRx AI. Obsessed with AI and passionate about transforming pharmacy education. She ideates and designs all project implementations.</p>
+            <img src="meera.png" style="width:180px; height:180px; object-fit:cover; border-radius:50%; display:block; margin-left:auto; margin-right:auto;">
+            <h3 style="text-align: center;">Meera Rahul Acharya</h3>
+            <p style="text-align: center;"><em>Founder & Tech Lead</em></p>
+            <p style="text-align: center;">Innovator and visionary behind QRx AI. Obsessed with AI and passionate about transforming pharmacy education. She ideates and designs all project implementations.</p>
         """, unsafe_allow_html=True)
 
     with col2:
-        st.image("raj.png", width=120)
         st.markdown("""
-            <h3>Raj H Patel</h3>
-            <p><em>Co-Founder & Tech Lead</em></p>
-            <p>Owner of Redoxy Lifecare and co-founder of QRx AI. Raj handles all the coding and back-end development, turning Meera's ideas into working AI solutions.</p>
+            <img src="raj.png" style="width:180px; height:180px; object-fit:cover; border-radius:50%; display:block; margin-left:auto; margin-right:auto;">
+            <h3 style="text-align: center;">Raj H Patel</h3>
+            <p style="text-align: center;"><em>Co-Founder & Tech Lead</em></p>
+            <p style="text-align: center;">Owner of Redoxy Lifecare and co-founder of QRx AI. Raj handles all the coding and back-end development, turning Meera's ideas into working AI solutions.</p>
         """, unsafe_allow_html=True)
 
     with col3:
-        st.image("dhyey.png", width=120)
         st.markdown("""
-            <h3>Dhyey Rajveer</h3>
-            <p><em>Model Development Support</em></p>
-            <p>Key contributor in the creation and fine-tuning of the AI models. His technical insights have been instrumental in QRx AI’s early success.</p>
+            <img src="dhyey.png" style="width:180px; height:180px; object-fit:cover; border-radius:50%; display:block; margin-left:auto; margin-right:auto;">
+            <h3 style="text-align: center;">Dhyey Rajveer</h3>
+            <p style="text-align: center;"><em>Model Development Support</em></p>
+            <p style="text-align: center;">Key contributor in the creation and fine-tuning of the AI models. His technical insights have been instrumental in QRx AI’s early success.</p>
         """, unsafe_allow_html=True)
 
         # Footer
