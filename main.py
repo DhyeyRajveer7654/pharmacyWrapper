@@ -695,29 +695,51 @@ elif st.session_state.current_page == 'about':
         """, unsafe_allow_html=True)
 
     # Team Section
+    import base64
+
+# Function to convert image to base64
+    def get_base64_image(image_path):
+        with open(image_path, "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode()
+
+    # Function to display circular image
+    def display_circular_image(image_path, size=180):
+        img_base64 = get_base64_image(image_path)
+        st.markdown(f"""
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <img src="data:image/png;base64,{img_base64}"
+                    style="width: {size}px; height: {size}px; object-fit: cover; border-radius: 50%;">
+            </div>
+        """, unsafe_allow_html=True)
+
+    # Section Title
     st.markdown('<h3 class="section-title">Our Leadership</h3>', unsafe_allow_html=True)
 
+# Layout columns
     col1, col2, col3 = st.columns(3)
 
+    # Meera's Profile
     with col1:
+        display_circular_image("meera.png", size=180)
         st.markdown("""
-            <img src="meera.png" style="width:180px; height:180px; object-fit:cover; border-radius:50%; display:block; margin-left:auto; margin-right:auto;">
             <h3 style="text-align: center;">Meera Rahul Acharya</h3>
             <p style="text-align: center;"><em>Founder & Tech Lead</em></p>
             <p style="text-align: center;">Innovator and visionary behind QRx AI. Obsessed with AI and passionate about transforming pharmacy education. She ideates and designs all project implementations.</p>
         """, unsafe_allow_html=True)
 
+    # Raj's Profile
     with col2:
+        display_circular_image("raj.png", size=180)
         st.markdown("""
-            <img src="raj.png" style="width:180px; height:180px; object-fit:cover; border-radius:50%; display:block; margin-left:auto; margin-right:auto;">
             <h3 style="text-align: center;">Raj H Patel</h3>
             <p style="text-align: center;"><em>Co-Founder & Tech Lead</em></p>
             <p style="text-align: center;">Owner of Redoxy Lifecare and co-founder of QRx AI. Raj handles all the coding and back-end development, turning Meera's ideas into working AI solutions.</p>
         """, unsafe_allow_html=True)
 
+    # Dhyey's Profile
     with col3:
+        display_circular_image("dhyey.png", size=180)
         st.markdown("""
-            <img src="dhyey.png" style="width:180px; height:180px; object-fit:cover; border-radius:50%; display:block; margin-left:auto; margin-right:auto;">
             <h3 style="text-align: center;">Dhyey Rajveer</h3>
             <p style="text-align: center;"><em>Model Development Support</em></p>
             <p style="text-align: center;">Key contributor in the creation and fine-tuning of the AI models. His technical insights have been instrumental in QRx AI’s early success.</p>
