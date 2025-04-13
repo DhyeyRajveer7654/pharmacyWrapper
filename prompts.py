@@ -162,22 +162,22 @@ If you can't find the exact link, provide the **best possible link** to the rela
 </table>
 """)
 DETAILED_INFORMATION_PROMPT = Template("""Give Deatiled information on $detailed_information which is required for manfucturing $product_type in India as per $regulatory_authorities and make sure the result or $detailed_information should be as deatiled as possible and if possible provide link of that $deatiled_information and make the infomration look professional and point wise in systemic way  """)
-def getPromptForOptions(options):
-    report_type = options.get('report_type', '').strip().lower()
 
-    if report_type == "pathway":
+
+def getPromptForOptions(options):
+    if options.get('report_type') == "pathway":
         return PATHWAY_PROMPT.substitute(
             product_type=options.get('product_type', 'default_product'),
             report_type=options.get('report_type', 'default_report'),
             regulatory_authorities=options.get('regulatory', 'default_regulatory')
         )
 
-    elif report_type == "list of license":
+    elif options.get('report_type') == "list of license":
         return LIST_OF_LICENSES_PROMPT.substitute(
             product_type=options.get('product_type', 'default_product'),
             regulatory_authorities=options.get('regulatory', 'default_regulatory')
         )
-    elif report_type == "Detailed Information":
+    elif options.get('report_type') == "Detailed Information":
         return DETAILED_INFORMATION_PROMPT.substitute(
             product_type=options.get('product_type', 'default_product'),
             report_type=options.get('report_type', 'default_report'),
