@@ -6,273 +6,109 @@ from string import Template
 from rdkit import Chem
 from rdkit.Chem import Draw
 import requests
+import os
+import base64
 
-size = (250, 250)
+def display_pdf(file_path):
+    with open(file_path, "rb") as f:
+        base64_pdf = base64.b64encode(f.read()).decode("utf-8")
+    pdf_display = f'''
+        <iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="600" type="application/pdf">
+        </iframe>
+    '''
+    return pdf_display
+# Set flag for RDKit availability
+RDKIT_AVAILABLE = True
 
+###############################################################################
+# UTILITY FUNCTIONS
+###############################################################################
 
-# Set Page Configuration
-st.set_page_config(page_title="QAI Model", layout="wide", page_icon="🧪")
+def chatWithGpt(prompt):
+    """Simulate a GPT API call with a deterministic response"""
+    # In a real implementation, this would call an API
+    # For demo purposes, return a formatted HTML response
+    html_response = f"""
+    <h3>Quality Analysis Report</h3>
+    <table style="width:100%; border-collapse: collapse;">
+        <tr style="background-color: #1e40af; color: white;">
+            <th style="padding: 8px; text-align: left;">Parameter</th>
+            <th style="padding: 8px; text-align: left;">Specification</th>
+            <th style="padding: 8px; text-align: left;">Result</th>
+        </tr>
+        <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Description</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">White to off-white crystalline powder</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Complies</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Identification</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">IR spectrum matches reference standard</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Complies</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Assay</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">98.0% - 102.0%</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">99.7%</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Dissolution</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">NLT 80% in 30 minutes</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">92% in 30 minutes</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Related Substances</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Any individual impurity: NMT 0.5%</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Maximum individual impurity: 0.3%</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Water Content</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">NMT 0.5%</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">0.3%</td>
+        </tr>
+    </table>
+    """
+    return html_response
 
+def get_ftir_from_gpt(product_name):
+    """Generate FTIR analysis data for a product"""
+    ftir_html = f"""
+    <h3>FTIR Analysis for {product_name}</h3>
+    <p>Key peaks identified:</p>
+    <ul>
+        <li>3400-3200 cm<sup>-1</sup>: O-H stretching</li>
+        <li>2960-2850 cm<sup>-1</sup>: C-H stretching</li>
+        <li>1700-1680 cm<sup>-1</sup>: C=O stretching</li>
+        <li>1600-1450 cm<sup>-1</sup>: Aromatic ring vibrations</li>
+        <li>1300-1000 cm<sup>-1</sup>: C-O stretching</li>
+    </ul>
+    <p>All characteristic peaks match the reference standard for {product_name}.</p>
+    """
+    return ftir_html
 
-# ---------------------------------------------------------------------------
-# Design system
-# ---------------------------------------------------------------------------
-st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
-:root{
---ink:#0a0f14;
---panel:#111a22;
---panel-2:#16212b;
---line:rgba(148,178,196,.16);
---line-strong:rgba(148,178,196,.30);
---text:#e7eef4;
---muted:#8ea3b3;
---accent:#2ed3c4;
---accent-deep:#12867f;
---warn:#f0b429;
---danger:#ef6461;
---radius:14px;
---radius-sm:10px;
-}
-.stApp{
-background:radial-gradient(1100px 600px at 12% -10%, rgba(46,211,196,.10), transparent 60%),radial-gradient(900px 500px at 100% 0%, rgba(59,130,246,.08), transparent 55%),var(--ink);
-color:var(--text);
-font-family:'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
-}
-.block-container{
-padding-top:1.6rem !important;
-padding-bottom:3.5rem !important;
-max-width:1180px;
-}
-header[data-testid="stHeader"]{background:transparent;}
-#MainMenu, footer{visibility:hidden;}
-h1,h2,h3,h4{font-family:'IBM Plex Sans', sans-serif; color:var(--text); letter-spacing:-.01em;}
-.qai-mast{
-display:flex;
-align-items:center;
-gap:16px;
-padding:20px 24px;
-border:1px solid var(--line);
-border-radius:var(--radius);
-background:linear-gradient(180deg, rgba(46,211,196,.07), rgba(255,255,255,0)), var(--panel);
-margin-bottom:22px;
-}
-.qai-mast .mark{
-flex:0 0 auto;
-width:46px;
-height:46px;
-border-radius:12px;
-display:grid;
-place-items:center;
-font-size:22px;
-background:linear-gradient(145deg, var(--accent-deep), rgba(46,211,196,.25));
-border:1px solid rgba(46,211,196,.45);
-}
-.qai-mast h1{font-size:1.5rem; font-weight:600; margin:0 0 2px 0;}
-.qai-mast p{margin:0; color:var(--muted); font-size:.92rem; line-height:1.45;}
-.qai-mast .stamp{
-margin-left:auto;
-text-align:right;
-color:var(--muted);
-font-family:'IBM Plex Mono', monospace;
-font-size:.74rem;
-line-height:1.5;
-border-left:1px solid var(--line);
-padding-left:16px;
-}
-.qai-mast .stamp b{color:var(--accent); font-weight:500;}
-.qai-panel{
-border:1px solid var(--line);
-border-radius:var(--radius);
-background:var(--panel);
-padding:22px 24px 8px 24px;
-margin-bottom:20px;
-}
-.qai-panel-head{
-display:flex;
-align-items:baseline;
-gap:10px;
-padding-bottom:14px;
-margin-bottom:18px;
-border-bottom:1px solid var(--line);
-}
-.qai-panel-head .t{font-size:1rem; font-weight:600;}
-.qai-panel-head .s{font-size:.82rem; color:var(--muted);}
-div[data-testid="stWidgetLabel"] label p,
-div[data-testid="stWidgetLabel"] label{
-color:var(--text) !important;
-font-size:.88rem !important;
-font-weight:500 !important;
-}
-div[data-testid="stTextInput"] input,
-div[data-testid="stNumberInput"] input,
-div[data-testid="stTextArea"] textarea,
-div[data-testid="stSelectbox"] div[data-baseweb="select"] > div{
-background-color:var(--panel-2) !important;
-color:var(--text) !important;
-border:1px solid var(--line-strong) !important;
-border-radius:var(--radius-sm) !important;
-box-shadow:none !important;
-font-size:.92rem !important;
-}
-div[data-testid="stTextInput"] input,
-div[data-testid="stNumberInput"] input{padding:11px 13px !important;}
-div[data-testid="stTextArea"] textarea{
-padding:12px 13px !important;
-font-family:'IBM Plex Mono', monospace !important;
-font-size:.86rem !important;
-line-height:1.6 !important;
-}
-input::placeholder, textarea::placeholder{color:#6b8090 !important;}
-div[data-testid="stTextInput"] input:hover,
-div[data-testid="stNumberInput"] input:hover,
-div[data-testid="stTextArea"] textarea:hover,
-div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:hover{
-border-color:rgba(46,211,196,.55) !important;
-}
-div[data-testid="stTextInput"] input:focus,
-div[data-testid="stNumberInput"] input:focus,
-div[data-testid="stTextArea"] textarea:focus,
-div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:focus-within{
-border-color:var(--accent) !important;
-box-shadow:0 0 0 3px rgba(46,211,196,.18) !important;
-outline:none !important;
-}
-div[data-baseweb="popover"] ul{background:var(--panel-2) !important; border:1px solid var(--line-strong) !important;}
-div[data-baseweb="popover"] li{color:var(--text) !important; font-size:.9rem !important;}
-div[data-baseweb="popover"] li:hover{background:rgba(46,211,196,.14) !important;}
-div[data-testid="stCheckbox"] label{color:var(--text) !important; font-size:.9rem !important;}
-div[data-testid="stCheckbox"] label span[data-baseweb="checkbox"] div:first-child{
-background:var(--panel-2) !important;
-border-color:var(--line-strong) !important;
-}
-.stButton > button{
-width:100%;
-border-radius:var(--radius-sm);
-border:1px solid var(--line-strong);
-background:var(--panel-2);
-color:var(--text);
-font-family:'IBM Plex Sans', sans-serif;
-font-weight:500;
-font-size:.92rem;
-padding:.62rem 1.1rem;
-transition:border-color .16s ease, background .16s ease, color .16s ease;
-}
-.stButton > button:hover{
-border-color:var(--accent);
-background:rgba(46,211,196,.10);
-color:#ffffff;
-}
-.stButton > button:focus-visible{
-outline:2px solid var(--accent);
-outline-offset:2px;
-}
-.stButton > button[kind="primary"]{
-background:linear-gradient(100deg, var(--accent-deep), var(--accent));
-border:1px solid rgba(46,211,196,.7);
-color:#04201e;
-font-weight:600;
-}
-.stButton > button[kind="primary"]:hover{
-filter:brightness(1.08);
-color:#04201e;
-}
-.qai-viewer{
-border:1px dashed var(--line-strong);
-border-radius:var(--radius-sm);
-background:var(--panel-2);
-padding:18px;
-text-align:center;
-color:var(--muted);
-font-size:.85rem;
-line-height:1.55;
-}
-div[data-testid="stImage"] img{
-background:#ffffff;
-border-radius:var(--radius-sm);
-border:1px solid var(--line-strong);
-padding:8px;
-}
-div[data-testid="stImage"] div[data-testid="caption"] p{
-color:var(--muted) !important;
-font-family:'IBM Plex Mono', monospace;
-font-size:.78rem !important;
-}
-.qai-spec{
-display:grid;
-gap:1px;
-background:var(--line);
-border:1px solid var(--line);
-border-radius:var(--radius);
-overflow:hidden;
-}
-.qai-spec .row{display:flex; justify-content:space-between; gap:18px; padding:14px 18px; background:var(--panel);}
-.qai-spec .k{color:var(--muted); font-size:.86rem;}
-.qai-spec .v{color:var(--text); font-family:'IBM Plex Mono', monospace; font-size:.88rem; text-align:right; word-break:break-word;}
-.qai-report{
-border:1px solid var(--line);
-border-radius:var(--radius);
-background:var(--panel);
-padding:14px 28px 18px 28px;
-}
-.qai-report p, .qai-report li{color:#d5e2ec; font-size:.95rem; line-height:1.72;}
-.qai-report h1{font-size:1.32rem;}
-.qai-report h2{font-size:1.14rem;}
-.qai-report h3{font-size:1rem;}
-.qai-report h1,.qai-report h2,.qai-report h3{margin-top:1.5rem;}
-.qai-report table{width:100%; border-collapse:collapse; margin:1rem 0; font-size:.88rem;}
-.qai-report th{background:var(--panel-2); color:var(--text); text-align:left; padding:10px 12px; border:1px solid var(--line);}
-.qai-report td{padding:10px 12px; border:1px solid var(--line); color:#d5e2ec;}
-.qai-report code{background:rgba(46,211,196,.10); color:var(--accent); padding:.12em .4em; border-radius:5px; font-family:'IBM Plex Mono', monospace;}
-div[data-testid="stAlert"]{border-radius:var(--radius-sm); border:1px solid var(--line-strong);}
-div[data-testid="stSpinner"] p{color:var(--muted) !important; font-size:.88rem !important;}
-hr{border-color:var(--line) !important;}
-@media (max-width:900px){
-.block-container{padding-left:1rem !important; padding-right:1rem !important;}
-.qai-mast{flex-wrap:wrap; gap:12px; padding:18px;}
-.qai-mast .stamp{margin-left:0; border-left:none; padding-left:0; text-align:left; width:100%;}
-.qai-panel{padding:18px 16px 6px 16px;}
-.qai-report{padding:12px 16px 14px 16px;}
-.qai-spec .row{flex-direction:column; gap:4px;}
-.qai-spec .v{text-align:left;}
-}
-@media (prefers-reduced-motion:reduce){
-*{transition:none !important; animation:none !important;}
-}
-</style>
-""", unsafe_allow_html=True)
+# Template for drug structure prompt
+STRUCTURE_PROMPT = Template("What is the SMILES notation for $product_name?")
 
+def getPromptForOptions(options):
+    """Generate a prompt based on the provided options"""
+    prompt = f"Generate a quality analysis report for {options.get('product_name', 'Unknown')} "
+    prompt += f"with strength {options.get('powerOfDrug', 'Unknown')} "
+    prompt += f"in quantity {options.get('quanOfMed', 'Unknown')} "
+    prompt += f"according to {options.get('jurisdiction', 'Unknown')} standards."
+    
+    if options.get('typeOfInfo') == "METHOD OF PREPARATION":
+        prompt += " Focus on method of preparation."
+    elif options.get('typeOfInfo') == "CHARACTARIZATION/EVALUATION":
+        prompt += " Focus on characterization and evaluation."
+    elif options.get('typeOfInfo') == "Both of above":
+        prompt += " Include both method of preparation and characterization/evaluation."
+    elif options.get('typeOfInfo') == "CHECK RESULTS":
+        prompt += f" Evaluate the following results: {options.get('resultsToCheck', '')}."
+    
+    return prompt
 
-# ---------------------------------------------------------------------------
-# Session state
-# ---------------------------------------------------------------------------
-if "page" not in st.session_state:
-    st.session_state.page = "form"
-if "api_response" not in st.session_state:
-    st.session_state.api_response = None
-if "structure_fig" not in st.session_state:
-    st.session_state.structure_fig = None
-if "structure_label" not in st.session_state:
-    st.session_state.structure_label = ""
-if "structure_error" not in st.session_state:
-    st.session_state.structure_error = ""
-
-options = dict()
-
-
-def rerun():
-    """Rerun on both current and legacy Streamlit versions."""
-    if hasattr(st, "rerun"):
-        st.rerun()
-    else:
-        st.experimental_rerun()
-
-
-# ---------------------------------------------------------------------------
-# Data helpers (unchanged behaviour)
-# ---------------------------------------------------------------------------
 def get_cid_from_name(drug_name):
+    """Get compound ID from PubChem by compound name"""
     url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{drug_name}/cids/JSON"
     response = requests.get(url)
 
@@ -284,9 +120,9 @@ def get_cid_from_name(drug_name):
             return None
     else:
         return None
-
-
+        
 def get_pubchem_product_code(product_name):
+    """Get SMILES notation for a compound from PubChem"""
     product_code_from_pubchem = ""
     url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{product_name}/property/CanonicalSMILES/JSON"
     response = requests.get(url)
@@ -302,280 +138,1123 @@ def get_pubchem_product_code(product_name):
         return ""
     else:
         return product_code_from_pubchem
-
-
+        
 def showStructure(product_name):
+    """Generate molecular structure image from compound name"""
     product_code = ""
     product_code_from_pubchem = get_pubchem_product_code(product_name)
     if product_code_from_pubchem == "":
-        product_code_prompt = prompts.STRUCTURE_PROMPT.substitute(product_name=product_name)
+        product_code_prompt = STRUCTURE_PROMPT.substitute(product_name=product_name)
         print("Prompt is: " + product_code_prompt)
-        product_code = chat_with_gpt.chatWithGpt(product_code_prompt)
+        product_code = chatWithGpt(product_code_prompt)
         if product_code == "NO DRUG FOUND":
-            return "", ""
+            return ""
     else:
         product_code = product_code_from_pubchem
 
     print("product code is: " + product_code)
     print("product code from pubchem: " + product_code_from_pubchem)
-
-    product_code = (product_code or "").strip()
     m = Chem.MolFromSmiles(product_code)
-    if m is None:
-        return "", product_code
-    fig = Draw.MolToImage(m, size=size)
-    return fig, product_code
+    if m:
+        return Draw.MolToImage(m, size=(400, 400))
+    return None
 
+# Directory where FTIR images are stored
+FTIR_IMAGE_DIR = "./"
 
-# ---------------------------------------------------------------------------
-# Masthead
-# ---------------------------------------------------------------------------
-JURISDICTIONS = [
-    "INDIAN PHARMACOPIEA",
-    "BRITISH PHARMACOPIEA",
-    "UNITED STATES PHARMACOPOEIA",
-    "MARTINDALE-EXTRA PHARMACOPIEA",
-    "COMPARE WITH ALL",
-]
+def get_ftir_image(product_name):
+    """Fetches the corresponding FTIR image for the given product name."""
+    image_filename = f"{product_name.lower()}.png"
+    image_path = os.path.join(FTIR_IMAGE_DIR, image_filename)
+    if os.path.exists(image_path):
+        return image_path
+    return None
 
-INFO_TYPES = [
-    "METHOD OF PREPARATION",
-    "CHARACTARIZATION/EVALUATION",
-    "Both of above",
-    "CHECK RESULTS",
-]
+###############################################################################
+# MAIN APPLICATION
+###############################################################################
 
-st.markdown(
-"""
-<div class="qai-mast">
-<div class="mark">🧪</div>
-<div>
-<h1>QAI Model</h1>
-<p>Generate pharmaceutical quality reports from monograph references and your own lab results.</p>
-</div>
-<div class="stamp">
-Reference sources<br>
-<b>PubChem</b> · <b>Pharmacopoeia</b>
-</div>
-</div>
-""",
-unsafe_allow_html=True,
+# Configure the page
+st.set_page_config(
+    page_title="QRx - Pharmaceutical Quality & Regulatory Experts",
+    page_icon="💊",
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
+# Initialize session state for page tracking
+if 'current_page' not in st.session_state:
+    st.session_state.current_page = 'home'
+# Not showing popup by default
+if 'show_popup' not in st.session_state:
+    st.session_state.show_popup = False
 
-# ---------------------------------------------------------------------------
-# FORM PAGE
-# ---------------------------------------------------------------------------
-if st.session_state.page == "form":
+# Custom CSS for the navigation buttons
+st.markdown("""
+<style>
+.nav-button {
+    background-color: transparent !important;
+    color: #1e40af !important;
+    border: none !important;
+    font-weight: 600 !important;
+    padding: 8px 16px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    border-radius: 4px !important;
+    transition: all 0.3s ease !important;
+}
 
-    left, right = st.columns([1.25, 1], gap="large")
+.nav-button:hover {
+    background-color: #e0f2fe !important;
+    color: #1e3a8a !important;
+    transform: translateY(-2px) !important;
+}
 
-    # ----- Product details -----
-    with left:
-        st.markdown(
-"""
-<div class="qai-panel-head">
-<span class="t">Product details</span>
-<span class="s">All three fields are required</span>
-</div>
-""",
-unsafe_allow_html=True,
-)
+/* Make sure the active page button looks different */
+.stButton button[data-testid="BaseButton"] {
+    width: 100%;
+}
+</style>
+""", unsafe_allow_html=True)
 
-        options["product_name"] = st.text_input(
-            "💊 Product name",
-            placeholder="e.g., Paracetamol",
-            key="in_product_name",
-        )
+st.markdown('<div style="background-color: white; padding: 1rem 0; border-bottom: 1px solid #e0e0e0; margin-bottom: 1rem;">', unsafe_allow_html=True)
+col1, col2, col3, col4, col5, col6 = st.columns(6)
+with col1:
+    st.image("qrxai.png", width=200)
+    
+with col2:
+    if st.button("HOME", key="nav_home", use_container_width=True, type="secondary", help="Go to home page"):
+        st.session_state.current_page = 'home'
+        st.rerun()
+with col3:
+    if st.button("CONTACT", key="nav_contact", use_container_width=True, type="secondary", help="Contact us"):
+        st.session_state.current_page = 'contact'
+        st.rerun()
+with col4:
+    if st.button("ABOUT", key="nav_about", use_container_width=True, type="secondary", help="About QRx"):
+        st.session_state.current_page = 'about'
+        st.rerun()
+with col5:
+    if st.button("REGULATORY", key="nav_regulatory", use_container_width=True, type="secondary", help="Regulatory Info"):
+        st.session_state.current_page = 'regulatory'
+        st.rerun()
+with col6:
+    if st.button("QUALITY", key="nav_quality", use_container_width=True, type="secondary", help="Quality Info"):
+        st.session_state.current_page = 'quality'
+        st.rerun()
+st.markdown('</div>', unsafe_allow_html=True)
 
-        c1, c2 = st.columns(2)
-        with c1:
-            options["quanOfMed"] = st.text_input(
-                "📦 Quantity of medicine",
-                placeholder="e.g., 1000 tablets",
-                key="in_quan",
-            )
-        with c2:
-            options["powerOfDrug"] = st.text_input(
-                "⚡ Power of drug",
-                placeholder="e.g., 500 mg",
-                key="in_power",
-            )
+# Define navigation functions
+def close_popup():
+    st.session_state.show_popup = False
+    st.rerun()
 
-        options["jurisdiction"] = st.selectbox(
-            "🌎 Jurisdiction",
-            JURISDICTIONS,
-            key="in_jurisdiction",
-        )
+def change_page(page):
+    st.session_state.current_page = page
+    st.session_state.show_popup = False
+    st.rerun()
 
-        options["typeOfInfo"] = st.selectbox(
-            "📊 Information required",
-            INFO_TYPES,
-            key="in_type_of_info",
-        )
+def handle_js_close():
+    # This will be called after the JS close action to update session state
+    st.session_state.show_popup = False
+    st.rerun()
+
+# Custom CSS styling
+st.markdown("""
+<style>
+    /* Global styles */
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        color: #333;
+        background-color: #ffffff;
+    }
+    
+    /* Header styling */
+    .header-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        background-color: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 0.8rem 2rem;
+        height: 10px;
+    }
+    
+    .header {
+        display: flex;
+        center-content: space-between;
+        align-items: center;
+        max-width: 1400px;
+        margin: 0 auto;
+        height: 50%;
+    }
+    
+    .logo {
+        color: #1e40af;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0;
+        letter-spacing: -1px;
+    }
+    
+    .nav-links {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+        height: 100%;
+    }
+    
+    .nav-link {
+        color: #1e40af;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+    
+    .nav-link:hover {
+        background-color: #e0f2fe;
+        color: #1e3a8a;
+    }
+    
+    /* Add margin to content to prevent overlap with fixed header */
+    .main-content {
+        margin-top: 10px; /* Increased to ensure content doesn't hide under header */
+        padding-top: 0.5rem;
+    }
+    
+    /* Hero section */
+    .hero {
+        background: linear-gradient(135deg, #e0f2fe, #bfdbfe);
+        color: #1e40af;
+        padding: 1rem 1rem;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .hero h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .hero p {
+        font-size: 1.1rem;
+        margin: 0 auto;
+        max-width: 800px;
+    }
+    
+    /* Card styling */
+    .card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 1rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        margin-bottom: 1.5rem;
+    }
+    
+    .card h3 {
+        color: #1e40af;
+        margin-bottom: 1rem;
+    }
+    
+    /* Section titles */
+    .section-title {
+        color: #1e40af;
+        margin: 2rem 0 1rem 0;
+        text-align: center;
+        font-size: 1.8rem;
+    }
+    
+    /* Footer */
+    .footer {
+        background-color: #fffff;
+        color: #1e3a8a;
+        padding: 1rem;
+        border-radius: 5px 5px 0 0;
+        margin-top: 1rem;
+    }
+    
+    .footer h3 {
+        color: #ffffff;
+        margin-bottom: 1rem;
+    }
+    
+    .footer-bottom {
+        text-align: center;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #ffffff;
+        color: #ffffff;
+    }
+    
+    /* Popup styling */
+    .popup-container {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        padding: 2rem;
+        max-width: 500px;
+        margin: 0 auto 2rem auto;
+        position: relative;
+    }
+    
+    .popup-container h3 {
+        color: #1e40af;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .popup-close {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        cursor: pointer;
+        font-size: 1.5rem;
+        color: #94a3b8;
+    }
+    
+    /* Override Streamlit elements */
+    .stButton > button {
+        background-color: #1e40af;
+        color: white;
+        font-weight: 600;
+        border: none;
+        width: 100%;
+    }
+        
+    /* Enhanced Form Elements from OLD AI.py */
+    div[data-testid="stTextInput"] input,
+    div[data-testid="stTextArea"] textarea,
+    div[data-testid="stSelectbox"] > div[data-baseweb="select"] {
+        background-color: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 0.75rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    div[data-testid="stTextInput"] input:focus,
+    div[data-testid="stTextArea"] textarea:focus {
+        border-color: #0052cc;
+        box-shadow: 0 0 0 2px rgba(0,82,204,0.2);
+    }
+    
+    /* Results Table */
+    .table-container {
+        background: white;
+        border-radius: 10px;
+        padding: 1rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border-collapse: collapse;
+    }
+
+    /* Success Message */
+    .success-message {
+        background: #dcfce7;
+        color: #166534;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+    }
+
+    /* Error Message */
+    .error-message {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+    }
+    
+    /* Main header styling */
+    .main-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .main-header h1 {
+        color: #000000;
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .main-header p {
+        color: #000000;
+        font-size: 1.1rem;
+    }
+
+    /* Results styling */
+    .result-section {
+        margin-top: 2rem;
+    }
+
+    .result-header {
+        color: #000000;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #e2e8f0;
+        padding-bottom: 0.5rem;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# Also handle direct page changes via URLs or buttons
+if 'direct_nav' in st.session_state and st.session_state.direct_nav:
+    page = st.session_state.direct_nav
+    st.session_state.direct_nav = None
+    change_page(page)
+
+# Main content wrapper
+st.markdown('<div class="main-content">', unsafe_allow_html=True)
+
+###############################################################################
+# PAGE CONTENT BASED ON CURRENT PAGE
+###############################################################################
+
+# Home Page
+if st.session_state.current_page == 'home':
+    # Hero section
+    st.markdown("""
+    <div class="hero">
+        <h2>Pharmaceutical Quality & Regulatory Excellence</h2>
+        <p>QRx AI provides comprehensive quality assurance and regulatory compliance solutions for the pharmaceutical students. 
+        With our models and advanced AI-powered tools, we ensure your products meet the highest standards at every stage.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Services section
+    st.markdown('<h2 class="section-title">Our Services</h2>', unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("""
+        <div class="card">
+            <h3>QRx AI powered Regulatory Complaince</h3>
+            <p>Navigate complex regulatory requirements with our comprehensive compliance model:</p>
+            <ul>
+                <li>Pathway for beginners</li>
+                <li>Liciense check list</li>
+                <li>Detailed Information on Particular forms</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+        
+    with col2:
+        st.markdown("""
+        <div class="card">
+            <h3>QAI AI Powered Quality Assurance</h3>
+            <p>Ensure product safety, efficacy, and compliance with our quality assurance services:</p>
+            <ul>
+                <li>Pharmacopieal Complaince</li>
+                <li>Deatiled Method of Preparation</li>
+                <li>All the Evaluation Checklist</li>
+                <li>Check your results with pharmacopiea</li>
+                <li>FTIR Graphs of Anti-Cancer Drugs (IP)</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # CTA section
+    st.markdown("""
+    <div style="text-align: center; margin: 3rem 0;">
+        <h2>Ready to elevate your pharmaceutical quality and compliance?</h2>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("Contact Us", key="home_contact"):
+            st.session_state.current_page = 'contact'
+            st.rerun()
+    with col2:
+        if st.button("Learn More About us", key="home_About_us"):
+            st.session_state.current_page = 'About us'
+            st.rerun()
+    col1, col_gap, col2 = st.columns([3, 0.5, 4])
+    with col1:
+        st.markdown("## 📄 ISO Certification")
+        if os.path.exists("iso_preview.jpg"):
+            st.image("iso_preview.jpg", caption="ISO Certificate Preview", width=400)
+        else:
+            st.warning("ISO preview image not found.")
+        with open("iso_certificate.pdf", "rb") as f:
+            st.download_button("📥 Download Full ISO Certificate", f, file_name="iso_certificate.pdf")
+        
+    with col2:
+        st.markdown("## 🏆 QAI Model Award")
+    
+    # Optional: check if image exists
+        if os.path.exists("ncip_award.jpg"):
+            st.image("ncip_award.jpg", caption="Award Ceremony – Nirma University, 2025", use_column_width=True)
+        else:
+            st.warning("Award image not found. Please upload 'ncip_award.jpg'.")
+
+    # Professional award description
+        st.markdown("""
+    **QAI MODEL** proudly secured **2nd Prize** at the **National Conference of Institute of Pharmacy (NCIP 2025)**  
+    hosted by **Nirma University**. This recognition reflects the innovation, impact, and future potential of QRx AI in transforming pharmaceutical education and compliance.
+    """)
+    # Footer
+    st.markdown("""
+    <div class="footer">
+        <p>© 2025 QRx AI. All rights reserved. Built with passion by pharmacy minds.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+# Contact Page
+elif st.session_state.current_page == 'contact':
+    st.markdown("""
+    <div class="hero">
+        <h2>Get in Touch</h2>
+        <p>Have questions about our services? Need expert assistance with your pharmaceutical quality and regulatory challenges? Contact our team and get the help you need.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown("""
+        <div class="card">
+            <h3>Main Office</h3>
+            <h4>Redoxy Lifecare</h4>
+            <p>2,3 Medicare Complex,<br>
+            Old Housing Road,<br>
+            Surendranagar, 363001 <br>
+            Gujarat, India</p>
+            <p>Phone: +91-8849122744, +91-9723449306<br>
+            Email: redoxylifecare@gmail.com</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col2:
+        st.image('LOGO.png', width=200)
+
+        # Footer
+    st.markdown("""
+        <div class="footer">
+            <p>© 2025 QRx Pharmaceutical Consultants. All rights reserved.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+# About Page
+elif st.session_state.current_page == 'about':
+   
+    st.markdown("""
+    <div class="hero">
+        <h2>Our Story</h2>
+        <p>QRx AI was founded in 2024 by Meera Acharya, a passionate pharmacy student at A.P.M.C. College of Pharmacy and Research, with a dream to blend artificial intelligence and pharmaceutical science. 
+        Her journey began in the 6th semester of her B.Pharm at C.U. Shah College of Pharmacy and Research, where she fell in love with AI. 
+        Meera never hesitates to take up an opportunity in this field — her dedication led her to win 2nd prize for the same AI model at NCIP 2025.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Company Profile
+    st.markdown("""
+    <div class="card">
+        <h3>Who We Are</h3>
+        <p>QRx AI is a startup focused on empowering pharmacy students by simplifying regulatory compliance and enabling them to perform dosage form manufacturing as per pharmacopoeial standards in laboratory settings.</p>
+        <p>Registered under Redoxy Lifecare, QRx AI is co-founded by Raj H. Patel, with Meera Acharya as the founder. Our tools provide easy-to-use solutions and educational resources tailored for pharma students.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Mission and Values
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown("""
+        <div class="card">
+            <h3>Our Mission</h3>
+            <p>To create something unique in the field of pharmacy by integrating artificial intelligence into pharmaceutical processes.</p>
+            <p>We aim to bridge the gap between AI and the pharma industry while educating students and professionals alike.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col2:
+        st.markdown("""
+        <div class="card">
+            <h3>Our Values</h3>
+            <ul>
+                <li><strong>Passion:</strong> Driven by curiosity and love for AI</li>
+                <li><strong>Education:</strong> Focused on making learning easy and practical</li>
+                <li><strong>Innovation:</strong> Building smart, student-focused tools</li>
+                <li><strong>Teamwork:</strong> Collaborating across disciplines</li>
+                <li><strong>Impact:</strong> Making real-world lab experiences more accessible</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # Team Section
+    import base64
+
+# Function to convert image to base64
+    def get_base64_image(image_path):
+        with open(image_path, "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode()
+
+    # Function to display circular image
+    def display_circular_image(image_path, size=180):
+        img_base64 = get_base64_image(image_path)
+        st.markdown(f"""
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <img src="data:image/png;base64,{img_base64}"
+                    style="width: {size}px; height: {size}px; object-fit: cover; border-radius: 50%;">
+            </div>
+        """, unsafe_allow_html=True)
+
+    # Section Title
+    st.markdown('<h3 class="section-title">Our Leadership</h3>', unsafe_allow_html=True)
+
+# Layout columns
+    col1, col2, col3 = st.columns(3)
+
+    # Meera's Profile
+    with col1:
+        display_circular_image("meera.PNG", size=180)
+        st.markdown("""
+            <h3 style="text-align: center;">Meera Rahul Acharya</h3>
+            <p style="text-align: center;"><em>Founder & Tech Lead</em></p>
+            <p style="text-align: center;">Innovator and visionary behind QRx AI. Obsessed with AI and passionate about transforming pharmacy education. She ideates and designs all project implementations.</p>
+        """, unsafe_allow_html=True)
+
+    # Raj's Profile
+    with col2:
+        display_circular_image("raj.PNG", size=180)
+        st.markdown("""
+            <h3 style="text-align: center;">Raj H Patel</h3>
+            <p style="text-align: center;"><em>Co-Founder & Tech Lead</em></p>
+            <p style="text-align: center;">Owner of Redoxy Lifecare and co-founder of QRx AI. Raj handles all the coding and back-end development, turning Meera's ideas into working AI solutions.</p>
+        """, unsafe_allow_html=True)
+
+    # Dhyey's Profile
+    with col3:
+        display_circular_image("dhyey.PNG", size=180)
+        st.markdown("""
+            <h3 style="text-align: center;">Dhyey Rajveer</h3>
+            <p style="text-align: center;"><em>Model Development Support</em></p>
+            <p style="text-align: center;">Key contributor in the creation and fine-tuning of the AI models. His technical insights have been instrumental in QRx AI’s early success.</p>
+        """, unsafe_allow_html=True)
+
+        # Footer
+    st.markdown("""
+        <div class="footer">
+            <p>© 2025 QRx AI. All rights reserved. Built with passion by pharmacy minds.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+# Regulatory Page - ONLY SHOWS REGULATORY CONTENT
+elif st.session_state.current_page == 'regulatory':
+    st.markdown("""
+        <style>
+            /* Global Styles */
+            body {
+                background-color: #f0f2f6;
+                color: #1e293b;
+                font-family: 'Inter', 'sans serif';
+            }
+
+            /* Header Styling */
+            .main-header {
+                background: linear-gradient(135deg, #0052cc, #00a3bf);
+                color: white;
+                padding: 2rem;
+                border-radius: 10px;
+                margin-bottom: 2rem;
+                text-align: center;
+            }
+
+            /* Form Elements */
+            div[data-testid="stTextInput"] input,
+            div[data-testid="stTextArea"] textarea,
+            div[data-testid="stSelectbox"] > div[data-baseweb="select"] {
+                background-color: white;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                padding: 0.75rem;
+                font-size: 1rem;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            }
+
+            div[data-testid="stTextInput"] input:focus,
+            div[data-testid="stTextArea"] textarea:focus {
+                border-color: #0052cc;
+                box-shadow: 0 0 0 2px rgba(0,82,204,0.2);
+            }
+
+            /* Button Styling */
+            .stButton > button {
+                width: 100%;
+                background: linear-gradient(135deg, #0052cc, #00a3bf);
+                color: white;
+                border: none;
+                padding: 0.75rem 1.5rem;
+                border-radius: 8px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .stButton > button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,82,204,0.2);
+            }
+
+            /* Card Styling */
+            .card div[data-testid="stSelectbox"]{
+                background: white;
+                border-radius: 10px;
+                padding: 1.5rem;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                margin-bottom: 1.5rem;
+            }
+
+            /* Results Table */
+            .table-container {
+                background: white;
+                border-radius: 10px;
+                padding: 1rem;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                border-collapse: collapse;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                border-spacing: 0;
+                margin: 1rem 0;
+            }
+
+            th {
+                background: #0052cc;
+                color: white;
+                padding: 1rem;
+                text-align: left;
+                font-weight: 600;
+            }
+
+            td {
+                padding: 1rem;
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+            tr:hover {
+                background: #f8fafc;
+            }
+
+            /* Loading Spinner */
+            .stSpinner > div {
+                border-color: #0052cc !important;
+            }
+
+            /* Success Message */
+            .success-message {
+                background: #dcfce7;
+                color: #166534;
+                padding: 1rem;
+                border-radius: 8px;
+                margin: 1rem 0;
+            }
+
+            /* Error Message */
+            .error-message {
+                background: #fee2e2;
+                color: #991b1b;
+                padding: 1rem;
+                border-radius: 8px;
+                margin: 1rem 0;
+            }
+            
+        </style>
+    """, unsafe_allow_html=True)
+
+    # Page Navigation
+    if "page" not in st.session_state:
+        st.session_state.page = "form"
+    if "api_response" not in st.session_state:
+        st.session_state.api_response = None
+
+    options = dict()
+
+    # 📌 FORM PAGE
+    if st.session_state.page == "form":
+        st.markdown('<div class="main-header"><h1>🧪 QRx AI-Powered Regulatory Complaince</h1><p> CREATED BY :- MEERA ACHARYA & RAJ PATEL</P><p>Enter details below to generate a comprehensive regulatory report</p></div>', unsafe_allow_html=True)
+
+        # User Input Form in a card layout
+        # st.markdown('<div class="card">', unsafe_allow_html=True)
+        col1, col2 = st.columns(2)
+
+        with col1:
+            options["prodct_type"] = st.selectbox("💊 Select Product Type", 
+                ["Active Pharmaceutical Ingredient (API)", "Tablets(regular)", "Syrups", "Infusion", "Capsules", "Injectables","Other"])
+            
+        with col2:
+            options["report_type"] = st.selectbox("📝 Select Report Type", 
+                ["Pathway", "List of license", "Detailed Information"])
+            if options["report_type"] == "Detailed Information":
+                options["detailed_information"] = st.text_area("📝 Enter Your Results:", height=200, placeholder="Provide Licence you need info about here...", key="checkResults")
+            options["regulatory"] = st.selectbox("🌎 Select Regulatory Authority", 
+                ["CDSCO", "United States (FDA)", "European Union (EMA)","Brazil (ANVISA)", "Australia (TGA)"])
+            
+        # st.markdown('</div>', unsafe_allow_html=True)
+
+        # Analysis Options in a separate card
+        # st.markdown('<div class="card">', unsafe_allow_html=True)
+    # Submit button with enhanced styling
+        submit_button = st.button("🚀 Generate Regulatory Report")
+        if submit_button:
+            if not all([options.get("prodct_type"), options.get("report_type"), options.get("regulatory")]):
+                st.error("⚠️ Please fill in all required fields!")
+            else:
+                prompt = prompts.getPromptForOptions(options)
+                with st.spinner("🛠️ Generating comprehensive report... Please wait"):
+                    api_response = chat_with_gpt.chatWithGpt(prompt)
+                    st.session_state.api_response = api_response
+
+                st.session_state.update(options)
+                st.session_state.page = "result"
+                st.experimental_rerun()
+
+    # 📌 RESULT PAGE
+    elif st.session_state.page == "result":
+        st.markdown('<div class="main-header"><h1>📑 Regulatory Report</h1></div>', unsafe_allow_html=True)
+        
+        if st.button("🔙 Return to Form", key="back_button"):
+            st.session_state.page = "form"
+            st.experimental_rerun()
+
+        # st.markdown('<div class="card">', unsafe_allow_html=True)
+        st.markdown("### 📋 Analysis Details")
+        st.markdown(f"**💊 Product Type:** {st.session_state.prodct_type}",)
+        st.markdown(f"**📦 Reoprt Type:** {st.session_state.report_type}")
+        st.markdown(f"**⚡ Regulatory Authority:** {st.session_state.regulatory}")
+        # st.markdown('</div>', unsafe_allow_ht ml=True)
+
+        
+        if st.session_state.api_response:
+            components.html("<div class='table-container'>"+st.session_state.api_response+"</div>",height=800,width=1000,scrolling=True)
+        else:
+            st.warning("⚠️ No response received. Please try again.")
+    
+    if st.button("Contact Our Regulatory Team", key="contact_reg_btn"):
+        change_page('contact')
+        
+    # Footer
+    st.markdown("""
+    <div class="footer">
+        <p>© 2025 QRx AI. All rights reserved. Built with passion by pharmacy minds.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Quality Page - ONLY SHOWS QUALITY CONTENT
+elif st.session_state.current_page == 'quality':
+    st.markdown("""
+        <style>
+            /* Global Styles */
+            body {
+                background-color: #f0f2f6;
+                color: #1e293b;
+                font-family: 'Inter', 'sans serif';
+            }
+
+            /* Header Styling */
+            .main-header {
+                background: linear-gradient(135deg, #0052cc, #00a3bf);
+                color: white;
+                padding: 2rem;
+                border-radius: 10px;
+                margin-bottom: 2rem;
+                text-align: center;
+            }
+
+            /* Form Elements */
+            div[data-testid="stTextInput"] input,
+            div[data-testid="stTextArea"] textarea,
+            div[data-testid="stSelectbox"] > div[data-baseweb="select"] {
+                background-color: white;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                padding: 0.75rem;
+                font-size: 1rem;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            }
+
+            div[data-testid="stTextInput"] input:focus,
+            div[data-testid="stTextArea"] textarea:focus {
+                border-color: #0052cc;
+                box-shadow: 0 0 0 2px rgba(0,82,204,0.2);
+            }
+
+            /* Button Styling */
+            .stButton > button {
+                width: 100%;
+                background: linear-gradient(135deg, #0052cc, #00a3bf);
+                color: white;
+                border: none;
+                padding: 0.75rem 1.5rem;
+                border-radius: 8px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .stButton > button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,82,204,0.2);
+            }
+
+            /* Card Styling */
+            .card div[data-testid="stSelectbox"]{
+                background: white;
+                border-radius: 10px;
+                padding: 1.5rem;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                margin-bottom: 1.5rem;
+            }
+
+            /* Results Table */
+            .table-container {
+                background: white;
+                border-radius: 10px;
+                padding: 1rem;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                border-collapse: collapse;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                border-spacing: 0;
+                margin: 1rem 0;
+            }
+
+            th {
+                background: #0052cc;
+                color: white;
+                padding: 1rem;
+                text-align: left;
+                font-weight: 600;
+            }
+
+            td {
+                padding: 1rem;
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+            tr:hover {
+                background: #f8fafc;
+            }
+
+            /* Loading Spinner */
+            .stSpinner > div {
+                border-color: #0052cc !important;
+            }
+
+            /* Success Message */
+            .success-message {
+                background: #dcfce7;
+                color: #166534;
+                padding: 1rem;
+                border-radius: 8px;
+                margin: 1rem 0;
+            }
+
+            /* Error Message */
+            .error-message {
+                background: #fee2e2;
+                color: #991b1b;
+                padding: 1rem;
+                border-radius: 8px;
+                margin: 1rem 0;
+            }
+            
+        </style>
+    """, unsafe_allow_html=True)
+
+    # Page Navigation
+    if "page" not in st.session_state:
+        st.session_state.page = "form"
+    if "api_response" not in st.session_state:
+        st.session_state.api_response = None
+
+    options = dict()
+
+    def get_cid_from_name(drug_name):
+        url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{drug_name}/cids/JSON"
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            try:
+                cids = response.json()["IdentifierList"]["CID"]
+                return cids[0]  # Return the first matching CID
+            except (KeyError, IndexError):
+                return None
+        else:
+            return None
+
+    def get_pubchem_product_code(product_name):
+        product_code_from_pubchem = ""
+        url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{product_name}/property/CanonicalSMILES/JSON"
+        response = requests.get(url)
+        if response.status_code == 200:
+            try:
+                smiles = response.json()["PropertyTable"]["Properties"][0]["CanonicalSMILES"]
+                product_code_from_pubchem=smiles
+            except (KeyError, IndexError):
+                product_code_from_pubchem = "NO DRUG FOUND"
+        else:
+            product_code_from_pubchem="NO DRUG FOUND"
+        if product_code_from_pubchem=="NO DRUG FOUND":
+            return ""
+        else:
+            return product_code_from_pubchem
+
+    def showStructure(product_name):
+        product_code = ""
+        product_code_from_pubchem = get_pubchem_product_code(product_name)
+        if product_code_from_pubchem=="":
+            product_code_prompt = prompts.STRUCTURE_PROMPT.substitute(product_name=product_name)
+            print("Prompt is: "+product_code_prompt)
+            product_code = chat_with_gpt.chatWithGpt(product_code_prompt)
+            if product_code == "NO DRUG FOUND":
+                return ""
+        else:
+            product_code = product_code_from_pubchem
+
+        print("product code is: "+product_code)
+        print("product code from pubchem: "+product_code_from_pubchem)
+        m = Chem.MolFromSmiles(product_code)
+        if m:
+            return Draw.MolToImage(m, size=(400, 400))
+        return None
+
+    # Directory where FTIR images are stored
+    FTIR_IMAGE_DIR = "./"
+
+    def get_ftir_image(product_name):
+        """Fetches the corresponding FTIR image for the given product name."""
+        image_filename = f"{product_name.lower()}.png"
+        image_path = os.path.join(FTIR_IMAGE_DIR, image_filename)
+        if os.path.exists(image_path):
+            return image_path
+        return None
+
+    # 📌 FORM PAGE
+    if st.session_state.page == "form":
+        st.markdown('<div class="main-header"><h1>🧪 QAI Model AI-Powered Quality Assistance</h1><p> CREATED BY :- MEERA ACHARYA & RAJ PATEL</P><p>Enter details below to generate a comprehensive quality report</p></div>', unsafe_allow_html=True)
+
+        # User Input Form in a card layout
+        # st.markdown('<div class="card">', unsafe_allow_html=True)
+        col1, col2 = st.columns(2)
+
+        with col1:
+            options["product_name"] = st.text_input("💊 Product Name", placeholder="e.g., Paracetamol")
+            if st.button("🔬 Get Structure"):
+                if not options["product_name"]:
+                    st.error("⚠️ Please write product name!")
+                else:
+                    with st.spinner("🛠️ Processing... Please wait"):
+                        fig = showStructure(options["product_name"])
+                    if fig == "":
+                        st.error("⚠️ Drug not found, please input a valid drug name")
+                    else:
+                        st.image(fig, caption=f"{options['product_name']} Molecule")
+
+            if st.button("📊 Show FTIR Graph"):
+                if options.get("product_name"):  # Ensure product name exists
+                    ftir_image = get_ftir_image(options["product_name"])
+                    if ftir_image:
+                        st.image(ftir_image, caption=f"FTIR Graph for {options['product_name']}", use_column_width=True)
+                    else:
+                        st.error(f"⚠️ No FTIR data available for {options['product_name']}.")
+                else:
+                    st.error("⚠️ Please enter a product name.")            
+
+        with col2:
+            options["quanOfMed"] = st.text_input("📦 Quantity of Medicine", placeholder="e.g., 1000 tablets")
+            options["jurisdiction"] = st.selectbox("🌎 Select Jurisdiction", 
+                ["INDIAN PHARMACOPIEA", "BRITISH PHARMACOPIEA", "UNITED STATES PHARMACOPOEIA", "MARTINDALE-EXTRA PHARMACOPIEA", "COMPARE WITH ALL"])
+            options["powerOfDrug"] = st.text_input("⚡ Power of Drug", placeholder="e.g., 500 mg")
+
+        # st.markdown('</div>', unsafe_allow_html=True)
+
+        # Analysis Options in a separate card
+        # st.markdown('<div class="card">', unsafe_allow_html=True)
+        options["typeOfInfo"] = st.selectbox("📊 Select Analysis Type:", 
+                ["METHOD OF PREPARATION", "CHARACTARIZATION/EVALUATION", "Both of above", "CHECK RESULTS"])
 
         if options["typeOfInfo"] == "CHECK RESULTS":
-            options["resultsToCheck"] = st.text_area(
-                "🔍 Your results",
-                height=200,
-                placeholder="Paste lab results here...",
-                key="checkResults",
-            )
+            options["resultsToCheck"] = st.text_area("🔍 Enter Your Results:", height=200, placeholder="Paste lab results here...", key="checkResults")
 
-        options["ftir_required"] = st.checkbox(
-            "📡 Retrieve FTIR data with the report",
-            key="in_ftir",
-        )
+        options["ftir_required"] = st.checkbox("📡 Include FTIR Analysis")
+        # st.markdown('</div>', unsafe_allow_html=True)
 
-        st.markdown("<div style='height:6px'></div>", unsafe_allow_html=True)
-
-        submit_button = st.button(
-            "🚀 Submit & Generate Report",
-            type="primary",
-            key="btn_submit",
-        )
-
-        st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
-
-    # ----- Structure preview -----
-    with right:
-        st.markdown(
-"""
-<div class="qai-panel-head">
-<span class="t">Molecular structure</span>
-<span class="s">Optional</span>
-</div>
-""",
-unsafe_allow_html=True,
-)
-
-        structure_button = st.button("🔬 Get structure", key="btn_structure")
-
-        if structure_button:
-            st.session_state.structure_fig = None
-            st.session_state.structure_error = ""
-            st.session_state.structure_label = ""
-            if ("product_name" not in options) or ("product_name" in options and options["product_name"] == ""):
-                st.session_state.structure_error = "Enter a product name first, then get the structure."
+        # Submit button with enhanced styling
+        submit_button = st.button("🚀 Generate Report")
+        if submit_button:
+            if not all([options.get("product_name"), options.get("quanOfMed"), options.get("powerOfDrug")]):
+                st.error("⚠️ Please fill in all required fields!")
             else:
-                with st.spinner("🛠️ Looking up the structure..."):
-                    fig, code = showStructure(options["product_name"])
-                if fig == "":
-                    st.session_state.structure_error = (
-                        "No structure found for that name. Check the spelling or try the generic name."
-                    )
-                else:
-                    st.session_state.structure_fig = fig
-                    st.session_state.structure_label = f"{options['product_name']} — {code}"
+                prompt = prompts.getPromptForOptions(options)
+                with st.spinner("🛠️ Generating comprehensive report... Please wait"):
+                    api_response = chat_with_gpt.chatWithGpt(prompt)
+                    st.session_state.api_response = api_response
 
-        if st.session_state.structure_error:
-            st.error(f"⚠️ {st.session_state.structure_error}")
-        elif st.session_state.structure_fig is not None:
-            st.image(st.session_state.structure_fig, caption=st.session_state.structure_label)
-        else:
-            st.markdown(
-"""
-<div class="qai-viewer">
-The 2D structure appears here.<br>
-Looked up on PubChem first, with the model as a fallback.
-</div>
-""",
-unsafe_allow_html=True,
-)
+                st.session_state.update(options)
+                st.session_state.page = "result"
+                st.experimental_rerun()
 
-    # ----- Submit handling -----
-    if submit_button:
-        if not all([options["product_name"], options["quanOfMed"], options["powerOfDrug"]]):
-            st.error("⚠️ Product name, quantity and power are all needed before generating a report.")
-        else:
-            prompt = prompts.getPromptForOptions(options)
-            with st.spinner("🛠️ Processing... Please wait"):
-                api_response = chat_with_gpt.chatWithGpt(prompt)
-                st.session_state.api_response = api_response
-
-            st.session_state.update(options)
-            st.session_state.page = "result"
-            rerun()
-
-
-# ---------------------------------------------------------------------------
-# RESULT PAGE
-# ---------------------------------------------------------------------------
-elif st.session_state.page == "result":
-
-    nav_left, nav_right = st.columns([1, 3])
-    with nav_left:
-        if st.button("🔙 Go Back to Form", key="btn_back"):
+    # 📌 RESULT PAGE
+    elif st.session_state.page == "result":
+        st.markdown('<div class="main-header"><h1>📑 Quality Analysis Report</h1></div>', unsafe_allow_html=True)
+        
+        if st.button("🔙 Return to Form", key="back_button"):
             st.session_state.page = "form"
-            rerun()
+            st.experimental_rerun()
 
-    st.markdown("<div style='height:18px'></div>", unsafe_allow_html=True)
-
-    summary_col, report_col = st.columns([1, 2.1], gap="large")
-
-    with summary_col:
-        st.markdown(
-"""
-<div class="qai-panel-head">
-<span class="t">📑 Submission summary</span>
-</div>
-""",
-unsafe_allow_html=True,
-)
-        spec_rows = [
-            ("💊 Product name", st.session_state.product_name),
-            ("📦 Quantity of medicine", st.session_state.quanOfMed),
-            ("⚡ Power of drug", st.session_state.powerOfDrug),
-            ("🌎 Jurisdiction", st.session_state.get("jurisdiction", "—")),
-            ("📊 Information required", st.session_state.get("typeOfInfo", "—")),
-        ]
-        spec_html = '<div class="qai-spec">'
-        for k, v in spec_rows:
-            spec_html += f'<div class="row"><span class="k">{k}</span><span class="v">{v}</span></div>'
-        spec_html += "</div>"
-        st.markdown(spec_html, unsafe_allow_html=True)
-
-        if st.session_state.structure_fig is not None:
-            st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
-            st.image(st.session_state.structure_fig, caption=st.session_state.structure_label)
-
-    with report_col:
-        st.markdown(
-"""
-<div class="qai-panel-head">
-<span class="t">📋 Generated report</span>
-</div>
-""",
-unsafe_allow_html=True,
-)
-
-        if st.session_state.api_response:
-            st.markdown(
-                '<div class="qai-report">\n\n'
-                + str(st.session_state.api_response)
-                + '\n\n</div>',
-                unsafe_allow_html=True,
-            )
-            # components.html(st.session_state.api_response, height=1000, width=1000, scrolling=True)
-        else:
-            st.warning("⚠️ No response received from API.")
+        # st.markdown('<div class="card">', unsafe_allow_html=True)
+        st.markdown("### 📋 Analysis Details")
+        st.markdown(f"**💊 Product:** {st.session_state.product_name}",)
+        st.markdown(f"**📦 Quantity:** {st.session_state.quanOfMed}")
+        st.markdown(f"**⚡ Strength:** {st.session_state.powerOfDrug}")
+        # st.markdown('</div>', unsafe_allow_ht ml=True)
 
         if st.session_state.get("ftir_required"):
-            st.markdown("<div style='height:18px'></div>", unsafe_allow_html=True)
-            st.markdown(
-"""
-<div class="qai-panel-head">
-<span class="t">🔬 FTIR data</span>
-</div>
-""",
-unsafe_allow_html=True,
-)
-            with st.spinner("📡 Fetching FTIR Data..."):
+            with st.spinner("📡 Analyzing FTIR Data..."):
                 ftir_data = chat_with_gpt.get_ftir_from_gpt(st.session_state.product_name)
-            if isinstance(ftir_data, str):
-                st.markdown(
-                    '<div class="qai-report">\n\n' + ftir_data + '\n\n</div>',
-                    unsafe_allow_html=True,
-                )
-            else:
-                st.write(ftir_data)
+                components.html("### 🔬 FTIR Analysis")
+                st.markdown(ftir_data, unsafe_allow_html=True)
+                # components.html(ftir_data)
+
+        if st.session_state.api_response:
+            components.html("<div class='table-container'>"+st.session_state.api_response+"</div>",height=800,width=1000,scrolling=True)
+        else:
+            st.warning("⚠️ No response received. Please try again.")
+
+    
+    if st.button("Contact Our Quality Experts", key="quality_contact_button"):
+        st.session_state.current_page = 'contact'
+        st.rerun()
+        
+    # Footer
+    st.markdown("""
+    <div class="footer">
+        <p>© 2025 QRx AI. All rights reserved. Built with passion by pharmacy minds.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Close the main content div
+st.markdown('</div>', unsafe_allow_html=True)
