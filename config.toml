@@ -1,0 +1,14 @@
+# Save this as .streamlit/config.toml in your project root.
+# It makes Streamlit's own widget chrome match the app's dark palette,
+# so there is no flash of light theme before the custom CSS loads.
+
+[theme]
+base = "dark"
+primaryColor = "#2ED3C4"
+backgroundColor = "#0A0F14"
+secondaryBackgroundColor = "#111A22"
+textColor = "#E7EEF4"
+font = "sans serif"
+
+[client]
+toolbarMode = "minimal"
