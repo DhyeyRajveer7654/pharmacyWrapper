@@ -190,346 +190,60 @@ if 'show_popup' not in st.session_state:
     st.session_state.show_popup = False
 
 # Custom CSS for the navigation buttons
-
 st.markdown("""
 <style>
-
-/* ===============================
-   MAIN NAVIGATION CONTAINER
-   =============================== */
-
-.nav-container {
-    background-color: white;
-    padding: 22px 18px 25px 18px;
-    border-bottom: 1px solid #e0e0e0;
-    margin-bottom: 20px;
-}
-
-
-/* ===============================
-   CENTER LOGO
-   =============================== */
-
-.logo-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    width: 100%;
-
-    padding-bottom: 20px;
-    margin-bottom: 18px;
-
-    border-bottom: 1px solid #eeeeee;
-}
-
-
-/* ===============================
-   NAVIGATION ROW
-   =============================== */
-
-.nav-row {
-    width: 100%;
-}
-
-
-/* Equal column spacing */
-.nav-row [data-testid="column"] {
-    padding-left: 6px !important;
-    padding-right: 6px !important;
-}
-
-
-/* ===============================
-   BUTTON
-   SAME STYLE AS ORIGINAL
-   =============================== */
-
-.nav-row .stButton {
-    width: 100% !important;
-}
-
-.nav-row .stButton button {
-
-    width: 100% !important;
-
-    /* EXACT SAME BASIC COLOR STYLE */
+.nav-button {
     background-color: transparent !important;
-
     color: #1e40af !important;
-
-    border: 1px solid #d1d5db !important;
-
+    border: none !important;
     font-weight: 600 !important;
-
     padding: 8px 16px !important;
-
     text-transform: uppercase !important;
-
     letter-spacing: 0.5px !important;
-
-    border-radius: 6px !important;
-
-    /* Equal size */
-    height: 44px !important;
-    min-height: 44px !important;
-    max-height: 44px !important;
-
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-
+    border-radius: 4px !important;
     transition: all 0.3s ease !important;
-
-    box-shadow: none !important;
 }
 
-
-/* ===============================
-   ORIGINAL HOVER COLOR
-   =============================== */
-
-.nav-row .stButton button:hover {
-
+.nav-button:hover {
     background-color: #e0f2fe !important;
-
     color: #1e3a8a !important;
-
-    border-color: #93c5fd !important;
-
     transform: translateY(-2px) !important;
-
-    box-shadow: none !important;
 }
 
-
-/* ===============================
-   CLICK
-   =============================== */
-
-.nav-row .stButton button:active {
-
-    transform: translateY(0px) !important;
-
+/* Make sure the active page button looks different */
+.stButton button[data-testid="BaseButton"] {
+    width: 100%;
 }
-
-
-/* ===============================
-   ROW SPACING
-   =============================== */
-
-.nav-row-top {
-    margin-bottom: 12px;
-}
-
-
-/* ===============================
-   MOBILE
-   =============================== */
-
-@media (max-width: 900px) {
-
-    .nav-container {
-        padding: 15px 8px 20px 8px;
-    }
-
-    .nav-row [data-testid="column"] {
-        padding-left: 3px !important;
-        padding-right: 3px !important;
-    }
-
-    .nav-row .stButton button {
-        font-size: 11px !important;
-        padding: 6px 4px !important;
-        height: 42px !important;
-        min-height: 42px !important;
-    }
-}
-
 </style>
 """, unsafe_allow_html=True)
 
-
-# ============================================================
-# START NAVIGATION
-# ============================================================
-
-st.markdown('<div class="nav-container">', unsafe_allow_html=True)
-
-
-# ============================================================
-# CENTER QRX AI LOGO
-# ============================================================
-
-st.markdown('<div class="logo-container">', unsafe_allow_html=True)
-
-logo_left, logo_center, logo_right = st.columns([1, 1, 1])
-
-with logo_center:
-    st.image("qrxai.png", width=150)
-
-st.markdown('</div>', unsafe_allow_html=True)
-
-
-# ============================================================
-# ROW 1 — 6 BOXES
-# ============================================================
-
-st.markdown('<div class="nav-row nav-row-top">', unsafe_allow_html=True)
-
+st.markdown('<div style="background-color: white; padding: 1rem 0; border-bottom: 1px solid #e0e0e0; margin-bottom: 1rem;">', unsafe_allow_html=True)
 col1, col2, col3, col4, col5, col6 = st.columns(6)
-
 with col1:
-    if st.button(
-        "HOME",
-        key="nav_home",
-        use_container_width=True,
-        type="secondary",
-        help="Go to home page"
-    ):
-        st.session_state.current_page = "home"
-        st.rerun()
-
+    st.image("qrxai.png", width=200)
+    
 with col2:
-    if st.button(
-        "CONTACT",
-        key="nav_contact",
-        use_container_width=True,
-        type="secondary",
-        help="Contact us"
-    ):
-        st.session_state.current_page = "contact"
+    if st.button("HOME", key="nav_home", use_container_width=True, type="secondary", help="Go to home page"):
+        st.session_state.current_page = 'home'
         st.rerun()
-
 with col3:
-    if st.button(
-        "ABOUT",
-        key="nav_about",
-        use_container_width=True,
-        type="secondary",
-        help="About QRx"
-    ):
-        st.session_state.current_page = "about"
+    if st.button("CONTACT", key="nav_contact", use_container_width=True, type="secondary", help="Contact us"):
+        st.session_state.current_page = 'contact'
         st.rerun()
-
 with col4:
-    if st.button(
-        "REGULATORY",
-        key="nav_regulatory",
-        use_container_width=True,
-        type="secondary",
-        help="Regulatory information"
-    ):
-        st.session_state.current_page = "regulatory"
+    if st.button("ABOUT", key="nav_about", use_container_width=True, type="secondary", help="About QRx"):
+        st.session_state.current_page = 'about'
         st.rerun()
-
 with col5:
-    if st.button(
-        "QUALITY",
-        key="nav_quality",
-        use_container_width=True,
-        type="secondary",
-        help="Quality information"
-    ):
-        st.session_state.current_page = "quality"
+    if st.button("REGULATORY", key="nav_regulatory", use_container_width=True, type="secondary", help="Regulatory Info"):
+        st.session_state.current_page = 'regulatory'
         st.rerun()
-
 with col6:
-    if st.button(
-        "SERVICES",
-        key="nav_services",
-        use_container_width=True,
-        type="secondary",
-        help="Services"
-    ):
-        st.session_state.current_page = "services"
+    if st.button("QUALITY", key="nav_quality", use_container_width=True, type="secondary", help="Quality Info"):
+        st.session_state.current_page = 'quality'
         st.rerun()
-
 st.markdown('</div>', unsafe_allow_html=True)
 
-
-# ============================================================
-# ROW 2 — 6 BOXES
-# ============================================================
-
-st.markdown('<div class="nav-row">', unsafe_allow_html=True)
-
-col7, col8, col9, col10, col11, col12 = st.columns(6)
-
-with col7:
-    if st.button(
-        "PRODUCTS",
-        key="nav_products",
-        use_container_width=True,
-        type="secondary",
-        help="Products"
-    ):
-        st.session_state.current_page = "products"
-        st.rerun()
-
-with col8:
-    if st.button(
-        "RESOURCES",
-        key="nav_resources",
-        use_container_width=True,
-        type="secondary",
-        help="Resources"
-    ):
-        st.session_state.current_page = "resources"
-        st.rerun()
-
-with col9:
-    if st.button(
-        "FAQ",
-        key="nav_faq",
-        use_container_width=True,
-        type="secondary",
-        help="Frequently asked questions"
-    ):
-        st.session_state.current_page = "faq"
-        st.rerun()
-
-with col10:
-    if st.button(
-        "SUPPORT",
-        key="nav_support",
-        use_container_width=True,
-        type="secondary",
-        help="Support"
-    ):
-        st.session_state.current_page = "support"
-        st.rerun()
-
-with col11:
-    if st.button(
-        "DOCUMENTS",
-        key="nav_documents",
-        use_container_width=True,
-        type="secondary",
-        help="Documents"
-    ):
-        st.session_state.current_page = "documents"
-        st.rerun()
-
-with col12:
-    if st.button(
-        "LOGIN",
-        key="nav_login",
-        use_container_width=True,
-        type="secondary",
-        help="Login"
-    ):
-        st.session_state.current_page = "login"
-        st.rerun()
-
-st.markdown('</div>', unsafe_allow_html=True)
-
-
-# ============================================================
-# END NAVIGATION
-# ============================================================
-
-st.markdown('</div>', unsafe_allow_html=True)
 # Define navigation functions
 def close_popup():
     st.session_state.show_popup = False
