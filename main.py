@@ -193,77 +193,207 @@ if 'show_popup' not in st.session_state:
 st.markdown("""
 <style>
 
-/* Main navigation container */
+/* ===============================
+   MAIN NAVIGATION CONTAINER
+   =============================== */
+
 .nav-container {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
-    padding: 18px 20px 22px 20px;
-    border-radius: 16px;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 4px 18px rgba(30, 64, 175, 0.08);
-    margin-bottom: 22px;
+    width: 100%;
+    background: linear-gradient(
+        135deg,
+        #ffffff 0%,
+        #f8fafc 50%,
+        #f1f5f9 100%
+    );
+
+    padding: 28px 24px 30px 24px;
+
+    border-radius: 18px;
+
+    border: 1px solid #e2e8f0;
+
+    box-shadow:
+        0 8px 25px rgba(15, 23, 42, 0.08),
+        0 2px 6px rgba(15, 23, 42, 0.04);
+
+    margin-bottom: 25px;
+
+    box-sizing: border-box;
 }
 
-/* Logo area */
-.logo-area {
+
+/* ===============================
+   CENTER LOGO
+   =============================== */
+
+.logo-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-bottom: 15px;
-    margin-bottom: 12px;
-    border-bottom: 1px solid #e5e7eb;
+
+    width: 100%;
+
+    padding-bottom: 22px;
+    margin-bottom: 22px;
+
+    border-bottom: 1px solid #e2e8f0;
 }
 
-/* Navigation buttons */
-.nav-button {
-    background: linear-gradient(135deg, #ffffff, #f8fafc) !important;
-    color: #1e40af !important;
-    border: 1px solid #dbeafe !important;
-    font-weight: 650 !important;
-    padding: 11px 8px !important;
-    min-height: 48px !important;
-    border-radius: 10px !important;
-    transition: all 0.25s ease !important;
-    box-shadow: 0 2px 6px rgba(30, 64, 175, 0.06) !important;
-    letter-spacing: 0.4px !important;
-}
 
-/* Hover effect */
-.nav-button:hover {
-    background: linear-gradient(135deg, #eff6ff, #dbeafe) !important;
-    color: #1e3a8a !important;
-    border-color: #93c5fd !important;
-    transform: translateY(-3px) !important;
-    box-shadow: 0 6px 14px rgba(30, 64, 175, 0.15) !important;
-}
+/* ===============================
+   NAVIGATION BUTTON AREA
+   =============================== */
 
-/* Click effect */
-.nav-button:active {
-    transform: translateY(-1px) !important;
-}
-
-/* Make Streamlit buttons fill their column */
-.stButton {
-    width: 100% !important;
-}
-
-.stButton button {
-    width: 100% !important;
-}
-
-/* Space between rows */
 .nav-row {
-    margin-bottom: 10px;
+    width: 100%;
 }
 
-/* Mobile responsiveness */
-@media (max-width: 768px) {
+
+/* ===============================
+   STREAMLIT COLUMN FIX
+   =============================== */
+
+.nav-row [data-testid="column"] {
+    padding-left: 7px !important;
+    padding-right: 7px !important;
+}
+
+
+/* ===============================
+   BUTTON CONTAINER
+   =============================== */
+
+.nav-row .stButton {
+    width: 100% !important;
+}
+
+
+/* ===============================
+   ALL 12 BUTTONS
+   =============================== */
+
+.nav-row .stButton > button {
+
+    width: 100% !important;
+
+    height: 52px !important;
+
+    min-height: 52px !important;
+
+    max-height: 52px !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+
+    justify-content: center !important;
+
+    background: #ffffff !important;
+
+    color: #1e3a8a !important;
+
+    border: 1px solid #dbe3ef !important;
+
+    border-radius: 11px !important;
+
+    font-size: 13px !important;
+
+    font-weight: 650 !important;
+
+    letter-spacing: 0.5px !important;
+
+    padding: 0px 8px !important;
+
+    box-shadow:
+        0 2px 5px rgba(15, 23, 42, 0.05);
+
+    transition:
+        all 0.25s ease !important;
+
+    white-space: nowrap !important;
+}
+
+
+/* ===============================
+   HOVER EFFECT
+   =============================== */
+
+.nav-row .stButton > button:hover {
+
+    background: linear-gradient(
+        135deg,
+        #eff6ff,
+        #dbeafe
+    ) !important;
+
+    color: #1d4ed8 !important;
+
+    border-color: #93c5fd !important;
+
+    transform: translateY(-3px) !important;
+
+    box-shadow:
+        0 7px 16px rgba(37, 99, 235, 0.15) !important;
+}
+
+
+/* ===============================
+   CLICK EFFECT
+   =============================== */
+
+.nav-row .stButton > button:active {
+
+    transform: translateY(-1px) !important;
+
+    box-shadow:
+        0 3px 8px rgba(37, 99, 235, 0.12) !important;
+}
+
+
+/* ===============================
+   FOCUS EFFECT
+   =============================== */
+
+.nav-row .stButton > button:focus {
+
+    outline: none !important;
+
+    border-color: #60a5fa !important;
+
+    box-shadow:
+        0 0 0 3px rgba(96, 165, 250, 0.15) !important;
+}
+
+
+/* ===============================
+   SPACE BETWEEN ROWS
+   =============================== */
+
+.nav-row-top {
+    margin-bottom: 14px;
+}
+
+
+/* ===============================
+   MOBILE
+   =============================== */
+
+@media (max-width: 900px) {
+
     .nav-container {
-        padding: 12px 10px;
+        padding: 20px 10px 22px 10px;
     }
 
-    .nav-button {
+    .nav-row [data-testid="column"] {
+        padding-left: 4px !important;
+        padding-right: 4px !important;
+    }
+
+    .nav-row .stButton > button {
         font-size: 11px !important;
-        padding: 8px 4px !important;
+        height: 48px !important;
+        min-height: 48px !important;
+        max-height: 48px !important;
     }
 }
 
@@ -272,35 +402,43 @@ st.markdown("""
 
 
 # ============================================================
-# NAVIGATION CONTAINER
+# START NAVIGATION
 # ============================================================
 
 st.markdown('<div class="nav-container">', unsafe_allow_html=True)
 
 
 # ============================================================
-# LOGO
+# CENTER LOGO
 # ============================================================
 
-logo_col = st.columns([1, 2, 1])[1]
+st.markdown('<div class="logo-container">', unsafe_allow_html=True)
 
-with logo_col:
-    st.image("qrxai.png", width=180)
+logo_left, logo_center, logo_right = st.columns([1, 1, 1])
+
+with logo_center:
+    st.image("qrxai.png", width=150)
+
+st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ============================================================
-# ROW 1 — FIRST 6 BOXES
+# ROW 1 — 6 EQUAL BOXES
 # ============================================================
 
-col1, col2, col3, col4, col5, col6 = st.columns(6)
+st.markdown('<div class="nav-row nav-row-top">', unsafe_allow_html=True)
+
+col1, col2, col3, col4, col5, col6 = st.columns(
+    6,
+    gap="small"
+)
 
 with col1:
     if st.button(
         "HOME",
         key="nav_home",
         use_container_width=True,
-        type="secondary",
-        help="Go to home page"
+        type="secondary"
     ):
         st.session_state.current_page = "home"
         st.rerun()
@@ -310,8 +448,7 @@ with col2:
         "CONTACT",
         key="nav_contact",
         use_container_width=True,
-        type="secondary",
-        help="Contact us"
+        type="secondary"
     ):
         st.session_state.current_page = "contact"
         st.rerun()
@@ -321,8 +458,7 @@ with col3:
         "ABOUT",
         key="nav_about",
         use_container_width=True,
-        type="secondary",
-        help="About QRx"
+        type="secondary"
     ):
         st.session_state.current_page = "about"
         st.rerun()
@@ -332,8 +468,7 @@ with col4:
         "REGULATORY",
         key="nav_regulatory",
         use_container_width=True,
-        type="secondary",
-        help="Regulatory information"
+        type="secondary"
     ):
         st.session_state.current_page = "regulatory"
         st.rerun()
@@ -343,8 +478,7 @@ with col5:
         "QUALITY",
         key="nav_quality",
         use_container_width=True,
-        type="secondary",
-        help="Quality information"
+        type="secondary"
     ):
         st.session_state.current_page = "quality"
         st.rerun()
@@ -354,33 +488,31 @@ with col6:
         "SERVICES",
         key="nav_services",
         use_container_width=True,
-        type="secondary",
-        help="Our services"
+        type="secondary"
     ):
         st.session_state.current_page = "services"
         st.rerun()
 
-
-# ============================================================
-# SPACE BETWEEN ROWS
-# ============================================================
-
-st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ============================================================
-# ROW 2 — NEXT 6 BOXES
+# ROW 2 — 6 EQUAL BOXES
 # ============================================================
 
-col7, col8, col9, col10, col11, col12 = st.columns(6)
+st.markdown('<div class="nav-row">', unsafe_allow_html=True)
+
+col7, col8, col9, col10, col11, col12 = st.columns(
+    6,
+    gap="small"
+)
 
 with col7:
     if st.button(
         "PRODUCTS",
         key="nav_products",
         use_container_width=True,
-        type="secondary",
-        help="View products"
+        type="secondary"
     ):
         st.session_state.current_page = "products"
         st.rerun()
@@ -390,8 +522,7 @@ with col8:
         "RESOURCES",
         key="nav_resources",
         use_container_width=True,
-        type="secondary",
-        help="View resources"
+        type="secondary"
     ):
         st.session_state.current_page = "resources"
         st.rerun()
@@ -401,8 +532,7 @@ with col9:
         "FAQ",
         key="nav_faq",
         use_container_width=True,
-        type="secondary",
-        help="Frequently asked questions"
+        type="secondary"
     ):
         st.session_state.current_page = "faq"
         st.rerun()
@@ -412,8 +542,7 @@ with col10:
         "SUPPORT",
         key="nav_support",
         use_container_width=True,
-        type="secondary",
-        help="Get support"
+        type="secondary"
     ):
         st.session_state.current_page = "support"
         st.rerun()
@@ -423,8 +552,7 @@ with col11:
         "DOCUMENTS",
         key="nav_documents",
         use_container_width=True,
-        type="secondary",
-        help="View documents"
+        type="secondary"
     ):
         st.session_state.current_page = "documents"
         st.rerun()
@@ -434,15 +562,16 @@ with col12:
         "LOGIN",
         key="nav_login",
         use_container_width=True,
-        type="secondary",
-        help="Login"
+        type="secondary"
     ):
         st.session_state.current_page = "login"
         st.rerun()
 
+st.markdown('</div>', unsafe_allow_html=True)
+
 
 # ============================================================
-# CLOSE NAVIGATION CONTAINER
+# END NAVIGATION
 # ============================================================
 
 st.markdown('</div>', unsafe_allow_html=True)
