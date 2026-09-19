@@ -190,6 +190,7 @@ if 'show_popup' not in st.session_state:
     st.session_state.show_popup = False
 
 # Custom CSS for the navigation buttons
+
 st.markdown("""
 <style>
 
@@ -198,27 +199,10 @@ st.markdown("""
    =============================== */
 
 .nav-container {
-    width: 100%;
-    background: linear-gradient(
-        135deg,
-        #ffffff 0%,
-        #f8fafc 50%,
-        #f1f5f9 100%
-    );
-
-    padding: 28px 24px 30px 24px;
-
-    border-radius: 18px;
-
-    border: 1px solid #e2e8f0;
-
-    box-shadow:
-        0 8px 25px rgba(15, 23, 42, 0.08),
-        0 2px 6px rgba(15, 23, 42, 0.04);
-
-    margin-bottom: 25px;
-
-    box-sizing: border-box;
+    background-color: white;
+    padding: 22px 18px 25px 18px;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 20px;
 }
 
 
@@ -233,15 +217,15 @@ st.markdown("""
 
     width: 100%;
 
-    padding-bottom: 22px;
-    margin-bottom: 22px;
+    padding-bottom: 20px;
+    margin-bottom: 18px;
 
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid #eeeeee;
 }
 
 
 /* ===============================
-   NAVIGATION BUTTON AREA
+   NAVIGATION ROW
    =============================== */
 
 .nav-row {
@@ -249,128 +233,93 @@ st.markdown("""
 }
 
 
-/* ===============================
-   STREAMLIT COLUMN FIX
-   =============================== */
-
+/* Equal column spacing */
 .nav-row [data-testid="column"] {
-    padding-left: 7px !important;
-    padding-right: 7px !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
 }
 
 
 /* ===============================
-   BUTTON CONTAINER
+   BUTTON
+   SAME STYLE AS ORIGINAL
    =============================== */
 
 .nav-row .stButton {
     width: 100% !important;
 }
 
-
-/* ===============================
-   ALL 12 BUTTONS
-   =============================== */
-
-.nav-row .stButton > button {
+.nav-row .stButton button {
 
     width: 100% !important;
 
-    height: 52px !important;
+    /* EXACT SAME BASIC COLOR STYLE */
+    background-color: transparent !important;
 
-    min-height: 52px !important;
+    color: #1e40af !important;
 
-    max-height: 52px !important;
+    border: 1px solid #d1d5db !important;
 
-    display: flex !important;
+    font-weight: 600 !important;
 
-    align-items: center !important;
+    padding: 8px 16px !important;
 
-    justify-content: center !important;
-
-    background: #ffffff !important;
-
-    color: #1e3a8a !important;
-
-    border: 1px solid #dbe3ef !important;
-
-    border-radius: 11px !important;
-
-    font-size: 13px !important;
-
-    font-weight: 650 !important;
+    text-transform: uppercase !important;
 
     letter-spacing: 0.5px !important;
 
-    padding: 0px 8px !important;
+    border-radius: 6px !important;
 
-    box-shadow:
-        0 2px 5px rgba(15, 23, 42, 0.05);
+    /* Equal size */
+    height: 44px !important;
+    min-height: 44px !important;
+    max-height: 44px !important;
 
-    transition:
-        all 0.25s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 
-    white-space: nowrap !important;
+    transition: all 0.3s ease !important;
+
+    box-shadow: none !important;
 }
 
 
 /* ===============================
-   HOVER EFFECT
+   ORIGINAL HOVER COLOR
    =============================== */
 
-.nav-row .stButton > button:hover {
+.nav-row .stButton button:hover {
 
-    background: linear-gradient(
-        135deg,
-        #eff6ff,
-        #dbeafe
-    ) !important;
+    background-color: #e0f2fe !important;
 
-    color: #1d4ed8 !important;
+    color: #1e3a8a !important;
 
     border-color: #93c5fd !important;
 
-    transform: translateY(-3px) !important;
+    transform: translateY(-2px) !important;
 
-    box-shadow:
-        0 7px 16px rgba(37, 99, 235, 0.15) !important;
+    box-shadow: none !important;
 }
 
 
 /* ===============================
-   CLICK EFFECT
+   CLICK
    =============================== */
 
-.nav-row .stButton > button:active {
+.nav-row .stButton button:active {
 
-    transform: translateY(-1px) !important;
+    transform: translateY(0px) !important;
 
-    box-shadow:
-        0 3px 8px rgba(37, 99, 235, 0.12) !important;
 }
 
 
 /* ===============================
-   FOCUS EFFECT
-   =============================== */
-
-.nav-row .stButton > button:focus {
-
-    outline: none !important;
-
-    border-color: #60a5fa !important;
-
-    box-shadow:
-        0 0 0 3px rgba(96, 165, 250, 0.15) !important;
-}
-
-
-/* ===============================
-   SPACE BETWEEN ROWS
+   ROW SPACING
    =============================== */
 
 .nav-row-top {
-    margin-bottom: 14px;
+    margin-bottom: 12px;
 }
 
 
@@ -381,19 +330,19 @@ st.markdown("""
 @media (max-width: 900px) {
 
     .nav-container {
-        padding: 20px 10px 22px 10px;
+        padding: 15px 8px 20px 8px;
     }
 
     .nav-row [data-testid="column"] {
-        padding-left: 4px !important;
-        padding-right: 4px !important;
+        padding-left: 3px !important;
+        padding-right: 3px !important;
     }
 
-    .nav-row .stButton > button {
+    .nav-row .stButton button {
         font-size: 11px !important;
-        height: 48px !important;
-        min-height: 48px !important;
-        max-height: 48px !important;
+        padding: 6px 4px !important;
+        height: 42px !important;
+        min-height: 42px !important;
     }
 }
 
@@ -409,7 +358,7 @@ st.markdown('<div class="nav-container">', unsafe_allow_html=True)
 
 
 # ============================================================
-# CENTER LOGO
+# CENTER QRX AI LOGO
 # ============================================================
 
 st.markdown('<div class="logo-container">', unsafe_allow_html=True)
@@ -423,22 +372,20 @@ st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ============================================================
-# ROW 1 — 6 EQUAL BOXES
+# ROW 1 — 6 BOXES
 # ============================================================
 
 st.markdown('<div class="nav-row nav-row-top">', unsafe_allow_html=True)
 
-col1, col2, col3, col4, col5, col6 = st.columns(
-    6,
-    gap="small"
-)
+col1, col2, col3, col4, col5, col6 = st.columns(6)
 
 with col1:
     if st.button(
         "HOME",
         key="nav_home",
         use_container_width=True,
-        type="secondary"
+        type="secondary",
+        help="Go to home page"
     ):
         st.session_state.current_page = "home"
         st.rerun()
@@ -448,7 +395,8 @@ with col2:
         "CONTACT",
         key="nav_contact",
         use_container_width=True,
-        type="secondary"
+        type="secondary",
+        help="Contact us"
     ):
         st.session_state.current_page = "contact"
         st.rerun()
@@ -458,7 +406,8 @@ with col3:
         "ABOUT",
         key="nav_about",
         use_container_width=True,
-        type="secondary"
+        type="secondary",
+        help="About QRx"
     ):
         st.session_state.current_page = "about"
         st.rerun()
@@ -468,7 +417,8 @@ with col4:
         "REGULATORY",
         key="nav_regulatory",
         use_container_width=True,
-        type="secondary"
+        type="secondary",
+        help="Regulatory information"
     ):
         st.session_state.current_page = "regulatory"
         st.rerun()
@@ -478,7 +428,8 @@ with col5:
         "QUALITY",
         key="nav_quality",
         use_container_width=True,
-        type="secondary"
+        type="secondary",
+        help="Quality information"
     ):
         st.session_state.current_page = "quality"
         st.rerun()
@@ -488,7 +439,8 @@ with col6:
         "SERVICES",
         key="nav_services",
         use_container_width=True,
-        type="secondary"
+        type="secondary",
+        help="Services"
     ):
         st.session_state.current_page = "services"
         st.rerun()
@@ -497,22 +449,20 @@ st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ============================================================
-# ROW 2 — 6 EQUAL BOXES
+# ROW 2 — 6 BOXES
 # ============================================================
 
 st.markdown('<div class="nav-row">', unsafe_allow_html=True)
 
-col7, col8, col9, col10, col11, col12 = st.columns(
-    6,
-    gap="small"
-)
+col7, col8, col9, col10, col11, col12 = st.columns(6)
 
 with col7:
     if st.button(
         "PRODUCTS",
         key="nav_products",
         use_container_width=True,
-        type="secondary"
+        type="secondary",
+        help="Products"
     ):
         st.session_state.current_page = "products"
         st.rerun()
@@ -522,7 +472,8 @@ with col8:
         "RESOURCES",
         key="nav_resources",
         use_container_width=True,
-        type="secondary"
+        type="secondary",
+        help="Resources"
     ):
         st.session_state.current_page = "resources"
         st.rerun()
@@ -532,7 +483,8 @@ with col9:
         "FAQ",
         key="nav_faq",
         use_container_width=True,
-        type="secondary"
+        type="secondary",
+        help="Frequently asked questions"
     ):
         st.session_state.current_page = "faq"
         st.rerun()
@@ -542,7 +494,8 @@ with col10:
         "SUPPORT",
         key="nav_support",
         use_container_width=True,
-        type="secondary"
+        type="secondary",
+        help="Support"
     ):
         st.session_state.current_page = "support"
         st.rerun()
@@ -552,7 +505,8 @@ with col11:
         "DOCUMENTS",
         key="nav_documents",
         use_container_width=True,
-        type="secondary"
+        type="secondary",
+        help="Documents"
     ):
         st.session_state.current_page = "documents"
         st.rerun()
@@ -562,7 +516,8 @@ with col12:
         "LOGIN",
         key="nav_login",
         use_container_width=True,
-        type="secondary"
+        type="secondary",
+        help="Login"
     ):
         st.session_state.current_page = "login"
         st.rerun()
@@ -575,7 +530,6 @@ st.markdown('</div>', unsafe_allow_html=True)
 # ============================================================
 
 st.markdown('</div>', unsafe_allow_html=True)
-
 # Define navigation functions
 def close_popup():
     st.session_state.show_popup = False
