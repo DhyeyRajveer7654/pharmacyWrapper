@@ -192,56 +192,259 @@ if 'show_popup' not in st.session_state:
 # Custom CSS for the navigation buttons
 st.markdown("""
 <style>
+
+/* Main navigation container */
+.nav-container {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+    padding: 18px 20px 22px 20px;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 18px rgba(30, 64, 175, 0.08);
+    margin-bottom: 22px;
+}
+
+/* Logo area */
+.logo-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 15px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+/* Navigation buttons */
 .nav-button {
-    background-color: transparent !important;
+    background: linear-gradient(135deg, #ffffff, #f8fafc) !important;
     color: #1e40af !important;
-    border: none !important;
-    font-weight: 600 !important;
-    padding: 8px 16px !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
-    border-radius: 4px !important;
-    transition: all 0.3s ease !important;
+    border: 1px solid #dbeafe !important;
+    font-weight: 650 !important;
+    padding: 11px 8px !important;
+    min-height: 48px !important;
+    border-radius: 10px !important;
+    transition: all 0.25s ease !important;
+    box-shadow: 0 2px 6px rgba(30, 64, 175, 0.06) !important;
+    letter-spacing: 0.4px !important;
 }
 
+/* Hover effect */
 .nav-button:hover {
-    background-color: #e0f2fe !important;
+    background: linear-gradient(135deg, #eff6ff, #dbeafe) !important;
     color: #1e3a8a !important;
-    transform: translateY(-2px) !important;
+    border-color: #93c5fd !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 6px 14px rgba(30, 64, 175, 0.15) !important;
 }
 
-/* Make sure the active page button looks different */
-.stButton button[data-testid="BaseButton"] {
-    width: 100%;
+/* Click effect */
+.nav-button:active {
+    transform: translateY(-1px) !important;
 }
+
+/* Make Streamlit buttons fill their column */
+.stButton {
+    width: 100% !important;
+}
+
+.stButton button {
+    width: 100% !important;
+}
+
+/* Space between rows */
+.nav-row {
+    margin-bottom: 10px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .nav-container {
+        padding: 12px 10px;
+    }
+
+    .nav-button {
+        font-size: 11px !important;
+        padding: 8px 4px !important;
+    }
+}
+
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div style="background-color: white; padding: 1rem 0; border-bottom: 1px solid #e0e0e0; margin-bottom: 1rem;">', unsafe_allow_html=True)
+
+# ============================================================
+# NAVIGATION CONTAINER
+# ============================================================
+
+st.markdown('<div class="nav-container">', unsafe_allow_html=True)
+
+
+# ============================================================
+# LOGO
+# ============================================================
+
+logo_col = st.columns([1, 2, 1])[1]
+
+with logo_col:
+    st.image("qrxai.png", width=180)
+
+
+# ============================================================
+# ROW 1 — FIRST 6 BOXES
+# ============================================================
+
 col1, col2, col3, col4, col5, col6 = st.columns(6)
+
 with col1:
-    st.image("qrxai.png", width=200)
-    
+    if st.button(
+        "HOME",
+        key="nav_home",
+        use_container_width=True,
+        type="secondary",
+        help="Go to home page"
+    ):
+        st.session_state.current_page = "home"
+        st.rerun()
+
 with col2:
-    if st.button("HOME", key="nav_home", use_container_width=True, type="secondary", help="Go to home page"):
-        st.session_state.current_page = 'home'
+    if st.button(
+        "CONTACT",
+        key="nav_contact",
+        use_container_width=True,
+        type="secondary",
+        help="Contact us"
+    ):
+        st.session_state.current_page = "contact"
         st.rerun()
+
 with col3:
-    if st.button("CONTACT", key="nav_contact", use_container_width=True, type="secondary", help="Contact us"):
-        st.session_state.current_page = 'contact'
+    if st.button(
+        "ABOUT",
+        key="nav_about",
+        use_container_width=True,
+        type="secondary",
+        help="About QRx"
+    ):
+        st.session_state.current_page = "about"
         st.rerun()
+
 with col4:
-    if st.button("ABOUT", key="nav_about", use_container_width=True, type="secondary", help="About QRx"):
-        st.session_state.current_page = 'about'
+    if st.button(
+        "REGULATORY",
+        key="nav_regulatory",
+        use_container_width=True,
+        type="secondary",
+        help="Regulatory information"
+    ):
+        st.session_state.current_page = "regulatory"
         st.rerun()
+
 with col5:
-    if st.button("REGULATORY", key="nav_regulatory", use_container_width=True, type="secondary", help="Regulatory Info"):
-        st.session_state.current_page = 'regulatory'
+    if st.button(
+        "QUALITY",
+        key="nav_quality",
+        use_container_width=True,
+        type="secondary",
+        help="Quality information"
+    ):
+        st.session_state.current_page = "quality"
         st.rerun()
+
 with col6:
-    if st.button("QUALITY", key="nav_quality", use_container_width=True, type="secondary", help="Quality Info"):
-        st.session_state.current_page = 'quality'
+    if st.button(
+        "SERVICES",
+        key="nav_services",
+        use_container_width=True,
+        type="secondary",
+        help="Our services"
+    ):
+        st.session_state.current_page = "services"
         st.rerun()
+
+
+# ============================================================
+# SPACE BETWEEN ROWS
+# ============================================================
+
+st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
+
+
+# ============================================================
+# ROW 2 — NEXT 6 BOXES
+# ============================================================
+
+col7, col8, col9, col10, col11, col12 = st.columns(6)
+
+with col7:
+    if st.button(
+        "PRODUCTS",
+        key="nav_products",
+        use_container_width=True,
+        type="secondary",
+        help="View products"
+    ):
+        st.session_state.current_page = "products"
+        st.rerun()
+
+with col8:
+    if st.button(
+        "RESOURCES",
+        key="nav_resources",
+        use_container_width=True,
+        type="secondary",
+        help="View resources"
+    ):
+        st.session_state.current_page = "resources"
+        st.rerun()
+
+with col9:
+    if st.button(
+        "FAQ",
+        key="nav_faq",
+        use_container_width=True,
+        type="secondary",
+        help="Frequently asked questions"
+    ):
+        st.session_state.current_page = "faq"
+        st.rerun()
+
+with col10:
+    if st.button(
+        "SUPPORT",
+        key="nav_support",
+        use_container_width=True,
+        type="secondary",
+        help="Get support"
+    ):
+        st.session_state.current_page = "support"
+        st.rerun()
+
+with col11:
+    if st.button(
+        "DOCUMENTS",
+        key="nav_documents",
+        use_container_width=True,
+        type="secondary",
+        help="View documents"
+    ):
+        st.session_state.current_page = "documents"
+        st.rerun()
+
+with col12:
+    if st.button(
+        "LOGIN",
+        key="nav_login",
+        use_container_width=True,
+        type="secondary",
+        help="Login"
+    ):
+        st.session_state.current_page = "login"
+        st.rerun()
+
+
+# ============================================================
+# CLOSE NAVIGATION CONTAINER
+# ============================================================
+
 st.markdown('</div>', unsafe_allow_html=True)
 
 # Define navigation functions
